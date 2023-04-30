@@ -6,7 +6,7 @@
         <div class="col-9">
             <x-common.flash/>
             <h2>{{__('other.General information')}}</h2>
-            <form method="POST" action="{{route('cabinet.users.change_information',compact('user'))}}">
+            <form method="POST" action="{{route('cabinet.user.change_information',compact('user'))}}">
                 @csrf
                 @method('PUT')
                 <input type="hidden" name="role" value="{{$user->role}}">
@@ -17,7 +17,7 @@
             </form>
 
             <h2>{{__('form.Password')}}</h2>
-            <form method="POST" action="{{route('cabinet.users.change_password',compact('user'))}}">
+            <form method="POST" action="{{route('cabinet.user.change_password',compact('user'))}}">
                 @csrf
                 @method('PUT')
                 <x-form.InputWithType type="password" name="password_old" value="{{old('password_old')}}" title="{{__('form.Password')}}" placeholder="{{__('form.Enter password')}}" disabled=""/>

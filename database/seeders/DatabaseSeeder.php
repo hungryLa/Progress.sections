@@ -4,7 +4,10 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use App\Models\Day;
+use App\Models\ModelSchool;
 use App\Models\Occupation;
+use App\Models\School;
+use App\Models\Section;
 use App\Models\TimetableDay;
 use App\Models\User;
 use Illuminate\Database\Seeder;
@@ -19,29 +22,30 @@ class DatabaseSeeder extends Seeder
     {
         User::create([
              'role' => User::ROLES['admin'],
-             'username' => 'admin',
+             'full_name' => 'admin',
              'email' => 'admin@mail.ru',
              'password' => Hash::make('password'),
          ]);
         User::create([
             'role' => User::ROLES['schools_owner'],
-            'username' => 'schools_owner',
+            'full_name' => 'schools_owner',
             'email' => 'schools_owner@mail.ru',
             'password' => Hash::make('password'),
         ]);
         User::create([
             'role' => User::ROLES['teacher'],
-            'username' => 'teacher',
+            'full_name' => 'teacher',
             'email' => 'teacher@mail.ru',
             'password' => Hash::make('password'),
         ]);
         User::create([
             'role' => User::ROLES['user'],
-            'username' => 'user',
+            'full_name' => 'user',
             'email' => 'user@mail.ru',
             'password' => Hash::make('password'),
         ]);
-//        Occupation::factory(10)->create();
-//        Day::factory(10)->create();
+        School::factory(40)->create();
+        Section::factory(40)->create();
+        ModelSchool::factory(10)->create();
     }
 }

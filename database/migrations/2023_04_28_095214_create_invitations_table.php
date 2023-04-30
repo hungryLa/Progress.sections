@@ -11,13 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('model_schools', function (Blueprint $table) {
+        Schema::create('invitations', function (Blueprint $table) {
             $table->id();
-            $table->unique(['model_type','model_id','school_id']);
-            $table->enum('status',\App\Models\ModelSchool::STATUS)->nullable();
-            $table->enum('model_type',\App\Models\ModelSchool::TYPES);
-            $table->unsignedBigInteger('model_id');
             $table->unsignedBigInteger('school_id');
+            $table->unsignedBigInteger('user_id');
+            $table->enum('status',\App\Models\Invitation::STATUS);
             $table->timestamps();
         });
     }
@@ -27,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('model_schools');
+        Schema::dropIfExists('invitations');
     }
 };

@@ -14,10 +14,9 @@ return new class extends Migration
         Schema::create('sections', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('school_id');
-            $table->unsignedBigInteger('teacher_id');
-            $table->unsignedBigInteger('occupation_id');
-            $table->json('workdays');
-            $table->unsignedSmallInteger('lesson_price');
+            $table->string('title');
+            $table->string('description');
+            $table->text('contents');
             $table->timestamps();
         });
     }

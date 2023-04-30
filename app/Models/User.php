@@ -14,6 +14,10 @@ class User extends Authenticatable implements MustVerifyEmail
 {
     use HasApiTokens, HasFactory, Notifiable;
 
+    const ROLES_FOR_REGISTER = [
+        'user' => 'user',
+        'teacher' => 'teacher',
+    ];
     const ROLES = [
         'admin' => 'admin',
         'schools_owner' => 'schools_owner',

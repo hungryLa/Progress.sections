@@ -10,6 +10,11 @@
                 <div class="card-body">
                     <form method="POST" action="{{ route('register') }}">
                         @csrf
+                        <x-form.Select name="role" label="{{__('form.Role')}}" default-value="{{__('form.Choose a role')}}" disabled="">
+                            @foreach(\App\Models\User::ROLES_FOR_REGISTER as $role)
+                                <option value="{{$role}}" {{$role == old('role') ? 'selected' : ''}}>{{__('form.'.$role)}}</option>
+                            @endforeach
+                        </x-form.Select>
 
                         <div class="row mb-3">
                             <label for="name" class="col-md-4 col-form-label text-md-end">{{ __('Name') }}</label>

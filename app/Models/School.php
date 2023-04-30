@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class School extends Model
@@ -41,6 +43,18 @@ class School extends Model
     public function sections(): HasMany
     {
         return $this->hasMany(Section::class,'school_id');
+    }
+
+    public function teachers(): BelongsToMany
+    {
+        return $this->belongsToMany(Teacher::class,'model_schools','school_id','model_id')->where([
+            'model_type' => Teacher::TYPE,
+        ]);
+    }
+
+    public function invitations(): HasMany
+    {
+        return $this->hasMany(Invitation::class,'school_id');
     }
 
 }

@@ -12,7 +12,7 @@ class Section extends Model
 {
     use HasFactory;
 
-    const TYPE = 'sections';
+    const TYPE = 'section';
     protected $guarded = [];
 
     public function users(): BelongsToMany

@@ -1,5 +1,7 @@
 <?php
 return [
+    'Accept' => 'Принять',
+    'Cancel' => 'Отклонить',
     'Logout' => 'Выйти',
     'Control panel' => 'Панель управления',
     'General information' => 'Общая информация',
@@ -21,6 +23,15 @@ return [
     'The user is successfully linked' => 'Пользователь успешно привязан',
     'The user has been successfully unlinked' => 'Пользователь успешно откреплен',
 
+    'Invitation' => 'Приглашение',
+    'Invitations' => 'Приглашения',
+    'invitation' => 'Приглашение',
+    'To invite' => 'Пригласить',
+    'Already invited' => 'Уже приглашен',
+    'The invitation was successfully sent' => 'Приглашение было успешно отправлено',
+    'Invitation accepted' => 'Приглашение принято',
+    'Invitation declined' => 'Приглашение отклонено',
+
     "Image" => "Изображение",
     "Add image" => "Добавить изображение",
     "Delete images" => "Удалить изображения",
@@ -40,6 +51,13 @@ return [
     'Link an account' => 'Привязать аккаунт',
 
     'Schools' => 'Школы',
+    'School' => 'Школа',
+    'Type of school' => 'Вид школы',
+    'Select type of school' => 'Выберите вид школы',
+    'musical' => 'Музыкальная',
+    'sport' => 'Спортивная',
+    'creative' => 'Творческая',
+
     'Sections' => 'Секции',
 
     'Reservations' => 'Брони',
@@ -48,6 +66,8 @@ return [
     'Types of classes' => 'Виды занятий',
 
     'Teachers' => 'Преподаватели',
+    'Teacher' => 'Преподаватель',
+    'The teacher has been successfully unlinked' => 'Преподаватель успешно откреплен',
 
     'Types of occupations' => 'Виды занятий',
     'Types of occupation' => 'Вид занятий',

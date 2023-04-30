@@ -2,20 +2,26 @@
 
 @section('content')
     <div class="row">
-        <x-cabinet.sidebar/>
+        <div class="col-3">
+            @if(\Illuminate\Support\Facades\Auth::user()->hasRole(\App\Models\User::ROLES['admin']))
+                <a href="{{route('cabinet.user.index')}}">{{__('other.List of users')}}</a>
+                <a href="{{route('cabinet.occupations.index')}}">{{__('other.Types of classes')}}</a>
+            @endif
+            @if(\Illuminate\Support\Facades\Auth::user()->hasRole(\App\Models\User::ROLES['schools_owner']))
+                <a href="{{route('school.show',compact('school'))}}">{{__('other.School')}}</a>
+                {{--        <a href="{{route('cabinet.teachers.index')}}">{{__('other.Teachers')}}</a>--}}
+            @endif
+            <form method="POST" action="{{route('logout')}}">
+                @csrf
+                <button class="btn">{{__('other.Logout')}}</button>
+            </form>
+        </div>
         <div class="col-9">
             <x-common.flash/>
-            <a class="btn btn-success" href="{{route('section.create')}}">{{__('other.Add a record')}}</a>
+            <a class="btn btn-success" href="{{route('section.create',compact('school'))}}">{{__('other.Add a record')}}</a>
             @if(count($sections) != 0)
                 @foreach($sections as $section)
-                    <div class="card" style="width: 18rem;">
-                        <img src="{{asset("storage/".$section->images()->first()->path)}}" class="card-img-top" alt="...">
-                        <div class="card-body">
-                            <h5 class="card-title">{{$section->title}}</h5>
-                            <p class="card-text">{{$section->description}}</p>
-                            <a href="{{route('cabinet.sections.show',compact('section'))}}" class="btn btn-primary">{{__('other.Go over')}}</a>
-                        </div>
-                    </div>
+                    <x-sections.showCard :school="$school" :section="$section"/>
                 @endforeach
             @endif
         </div>

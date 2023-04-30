@@ -4,11 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\User\ChangePasswordRequest;
 use App\Http\Requests\User\StoreRequest;
+use App\Models\ModelSchool;
 use App\Models\ModelUser;
+use App\Models\Teacher;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use voku\helper\ASCII;
 
 class UserController extends Controller
@@ -37,11 +40,12 @@ class UserController extends Controller
     {
         try {
             $success = User::create([
-               'role' => $request->role,
-               'username' => $request->username,
-               'full_name' => $request->full_name,
-               'email' => $request->email,
-               'password' => Hash::make($request->password),
+                'role' => $request->role,
+                'username' => $request->username,
+                'full_name' => $request->full_name,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+                'remember_token' => Str::random(15),
             ]);
             if($success){
                 session()->flash('success','other.Record successfully added');
@@ -140,7 +144,7 @@ class UserController extends Controller
     }
 
     public function settings(User $user){
-        return view('cabinet.settings',compact('user'));
+        return view('cabinet.users.settings',compact('user'));
     }
 
     public function change_information(Request $request, User $user){
@@ -156,7 +160,7 @@ class UserController extends Controller
         }catch (\Exception $exception){
             return $exception->getMessage();
         }
-        return redirect()->route('cabinet.users.settings',compact('user'));
+        return redirect()->route('cabinet.user.settings',compact('user'));
     }
 
     public function change_password(ChangePasswordRequest $request, User $user){
@@ -174,6 +178,6 @@ class UserController extends Controller
         }catch (\Exception $exception){
             return $exception->getMessage();
         }
-        return redirect()->route('cabinet.users.settings',compact('user'));
+        return redirect()->route('cabinet.user.settings',compact('user'));
     }
 }

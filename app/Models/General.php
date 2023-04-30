@@ -17,7 +17,8 @@ class General extends Model
     ];
 
     const TYPES = self::TYPES_WITHOUT_SCHOOL + [
-        School::TYPE => School::TYPE,
+        'school' => School::TYPE,
+        'section' => Section::TYPE,
     ];
 
 

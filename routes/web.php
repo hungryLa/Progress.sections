@@ -12,6 +12,7 @@ use App\Http\Controllers\FileController;
 
 use App\Http\Controllers\CabinetController;
 use App\Http\Controllers\SchoolController;
+use App\Http\Controllers\InvitationController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -43,19 +44,24 @@ Route::group(['prefix' => 'cabinet','middleware' => 'auth'],function(){
         Route::get('{user}/settings',[UserController::class,'settings'])->name('cabinet.user.settings');
         Route::put('{user}/change_information',[UserController::class, 'change_information'])->name('cabinet.user.change_information');
         Route::put('{user}/change_password',[UserController::class,'change_password'])->name('cabinet.user.change_password');
+
     });
 
     Route::group(['prefix' => 'schools'],function (){
        Route::get('',[SchoolController::class,'index'])->name('school.index');
-       Route::get('create',[SchoolController::class,'create'])->name('school.create');
-       Route::post('store',[SchoolController::class,'store'])->name('school.store');
+       Route::group(['middleware' => 'role:schools_owner'],function (){
+           Route::get('create',[SchoolController::class,'create'])->name('school.create');
+           Route::post('store',[SchoolController::class,'store'])->name('school.store');
+       });
        Route::get('{school}/show',[SchoolController::class,'show'])->name('school.show');
-       Route::get('{school}/edit',[SchoolController::class,'edit'])->name('school.edit');
-       Route::put('{school}/update',[SchoolController::class,'update'])->name('school.update');
-       Route::delete('{school}/delete',[SchoolController::class,'destroy'])->name('school.delete');
+       Route::group(['middleware' => 'role:schools_owner'],function (){
+           Route::get('{school}/edit',[SchoolController::class,'edit'])->name('school.edit');
+           Route::put('{school}/update',[SchoolController::class,'update'])->name('school.update');
+           Route::delete('{school}/delete',[SchoolController::class,'destroy'])->name('school.delete');
+       });
     });
 
-    Route::group(['prefix' => 'sections'], function (){
+    Route::group(['prefix' => 'schools/{school}/sections'], function (){
        Route::get('',[SectionController::class,'index'])->name('section.index');
        Route::get('create',[SectionController::class,'create'])->name('section.create');
        Route::post('store',[SectionController::class,'store'])->name('section.store');
@@ -65,13 +71,20 @@ Route::group(['prefix' => 'cabinet','middleware' => 'auth'],function(){
        Route::delete('{section}/delete',[SectionController::class,'destroy'])->name('section.delete');
     });
 
-    Route::group(['prefix' => 'teachers','middleware' => 'role:sections_admin'],function(){
-        Route::get('',[TeacherController::class,'index'])->name('cabinet.teachers.index');
-        Route::get('create',[TeacherController::class,'create'])->name('cabinet.teachers.create');
-        Route::post('store',[TeacherController::class,'store'])->name('cabinet.teachers.store');
-        Route::get('{teacher}/edit',[TeacherController::class,'edit'])->name('cabinet.teachers.edit');
-        Route::put('{teacher}/update',[TeacherController::class,'update'])->name('cabinet.teachers.update');
-        Route::delete('{teacher}/delete',[TeacherController::class,'destroy'])->name('cabinet.teachers.delete');
+    Route::group(['prefix' => 'schools/{school}/teachers','middleware' => 'role:schools_owner'],function(){
+        Route::get('',[TeacherController::class,'index'])->name('teacher.index');
+        Route::get('create',[TeacherController::class,'create'])->name('teacher.create');
+        Route::post('store',[TeacherController::class,'store'])->name('teacher.store');
+        Route::get('{teacher}/edit',[TeacherController::class,'edit'])->name('teacher.edit');
+        Route::put('{teacher}/update',[TeacherController::class,'update'])->name('teacher.update');
+        Route::post('{teacher}/invite',[TeacherController::class,'invite'])->name('teacher.invite');
+        Route::delete('{teacher}/unlink',[TeacherController::class,'unlink'])->name('teacher.unlink');
+    });
+
+    Route::group(['prefix' => 'invitations','middleware' => 'role:teacher'],function(){
+        Route::get('invitations',[InvitationController::class,'index'])->name('invitations.index');
+        Route::post('{invitation}/accept',[InvitationController::class,'accept'])->name('invitations.accept');
+        Route::delete('{invitation}/cancel',[InvitationController::class,'cancel'])->name('invitations.cancel');
     });
 
     Route::group(['prefix' => 'occupations'],function(){
@@ -95,6 +108,8 @@ Route::group(['prefix' => 'cabinet','middleware' => 'auth'],function(){
         Route::post('changeImage', [FileController::class,'changeImage'])->name('cabinet.files.changeImage');
     });
 });
-Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Auth::routes([
+    'verify' => true
+]);

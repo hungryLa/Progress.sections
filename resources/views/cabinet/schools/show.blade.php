@@ -2,16 +2,7 @@
 
 @section('content')
     <div class="row">
-        <div class="col-3">
-
-            @if(\Illuminate\Support\Facades\Auth::user()->hasRole(\App\Models\User::ROLES['schools_owner']))
-                <a href="">{{__('other.Reservations')}}</a>
-                <a href="">{{__('other.Schedules')}}</a>
-                <a href="{{route('section.index',compact('school'))}}">{{__('other.Sections')}}</a>
-                <a href="{{route('school.edit',compact('school'))}}">{{__('other.Edit')}}</a>
-            @endif
-            <a href="{{route('school.index')}}">{{__('other.Go back')}}</a>
-        </div>
+        <x-cabinet.school_sidebar :school="$school"/>
         <div class="col-9">
             <x-common.flash/>
             @if(count($images) != 0)

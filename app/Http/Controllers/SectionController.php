@@ -3,36 +3,28 @@
 namespace App\Http\Controllers;
 
 use App\Models\File;
-use App\Models\ModelSection;
 use App\Models\School;
 use App\Models\Section;
-use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class SectionController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index(School $school)
     {
-        if($request->school){
-            $school = School::find($request->school);
             $sections = $school->sections;
-            return view('cabinet.sections.index',compact('sections'));
-        }else{
-            $sections = Auth::user()->sections;
-            return view('cabinet.sections.index',compact('sections'));
-        }
+            return view('cabinet.sections.index',compact('school','sections'));
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Request $request)
     {
-        return view('cabinet.sections.create');
+        $school = School::find($request->school);
+        return view('cabinet.sections.create',compact('school'));
     }
 
     /**
@@ -42,50 +34,63 @@ class SectionController extends Controller
     {
         try {
             $section = Section::create([
+                'school_id' => $request->school,
                 'title' => $request->title,
                 'description' => $request->description,
-                'address' => $request->address,
-                'phone_number' => $request->phone_number,
+                'contents' => $request->contents,
             ]);
-            FileController::storeFile($request, Section::TYPE, $section->id, File::TYPE['image'],'images');
-            $success = ModelSection::create([
-               'model_type' => User::TYPE,
-               'model_id' => Auth::user()->id,
-               'section_id' => $section->id,
-            ]);
-            if($success){
+            if($request->hasFile('images')){
+                FileController::storeFile($request, Section::TYPE, $section->id, File::TYPE['image'],'images');
+            }
+            if($section){
                 session()->flash('success',__('other.Record successfully added'));
             }
         }catch (\Exception $exception){
             return $exception->getMessage();
         }
-        return redirect()->route('cabinet.sections.index');
+        if ($request->school){
+            $school = School::find($request->school);
+            return redirect()->route('section.index',compact('school'));
+        }
+
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Section $section)
+    public function show(School $school, Section $section)
     {
-        $image = $section->images()->orderBy('position','asc')->first();
-        return view('cabinet.sections.show',compact('section','image'));
+        $images = $section->images;
+        return view('cabinet.sections.show',compact('school','section','images'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Section $section)
+    public function edit(School $school, Section $section)
     {
         $images = $section->images()->orderBy('position','asc')->get();
-        return view('cabinet.sections.edit',compact('section','images'));
+        return view('cabinet.sections.edit',compact('school','section','images'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Section $section)
+    public function update(Request $request,School $school,  Section $section)
     {
-        //
+        try {
+            $success = $section->update([
+                'title' => $request->title,
+                'description' => $request->description,
+                'contents' => $request->contents,
+            ]);
+            if($success){
+                session()->flash('success',__('other.Information changed successfully'));
+            }
+        }catch (\Exception $exception){
+            return $exception->getMessage();
+        }
+        return redirect()->route('section.edit',compact('school','section'));
     }
 
     /**
@@ -94,10 +99,6 @@ class SectionController extends Controller
     public function destroy(Section $section)
     {
         try {
-            ModelSection::where([
-                'model_type' => User::TYPE,
-                'section_id' =>$section->id
-            ])->delete();
             if(count($section->images) != 0){
                 foreach ($section->images as $file){
                     FileController::deleteFile($file->id);

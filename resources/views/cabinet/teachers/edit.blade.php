@@ -8,8 +8,6 @@
             <form method="POST" action="{{route('cabinet.teachers.update',compact('teacher'))}}">
                 @csrf
                 @method('PUT')
-                <x-form.inputText name="username" title="{{__('form.Username')}}"
-                                  placeholder="{{__('form.Enter your username')}}" value="{{$teacher->username}}" disabled=""/>
                 <x-form.inputText name="full_name" title="{{__('form.Full name')}}"
                                   placeholder="{{__('form.Enter a full name')}}" value="{{$teacher->full_name}}" disabled=""/>
                 <x-form.inputText name="email" title="{{__('form.Email address')}}"
