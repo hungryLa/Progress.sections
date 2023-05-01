@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\User\UserResource;
 use Illuminate\Http\Request;
 
 class AuthController extends Controller
@@ -31,7 +32,7 @@ class AuthController extends Controller
         }
         $data = [];
         $data['token'] = $this->respondWithToken($token);
-        $data['user'] = response()->json(auth()->user());
+        $data['user'] = new UserResource(response()->json(auth()->user()));
         return $data;
     }
 
