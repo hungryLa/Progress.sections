@@ -1,0 +1,35 @@
+.header {
+    background-color: var(--white);
+    z-index: 999;
+
+    &__inner {
+        padding: 2rem 0;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    &__logo {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: .6rem;
+
+        span {
+            font-size: var(--m);
+        }
+    }
+
+
+    &.sticky {
+        position: sticky;
+        top: 0;
+    }
+
+    @media screen and (max-width: 480px) {
+        &__number {
+            display: none;
+        }
+    }
+}

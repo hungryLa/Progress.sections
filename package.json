@@ -5,16 +5,20 @@
         "build": "vite build"
     },
     "devDependencies": {
-        "@popperjs/core": "^2.11.6",
-        "@vitejs/plugin-vue": "^4.0.0",
+        "@types/react": "^18.0.28",
+        "@types/react-dom": "^18.0.11",
         "axios": "^1.1.2",
-        "bootstrap": "^5.2.3",
         "laravel-vite-plugin": "^0.7.2",
-        "sass": "^1.56.1",
-        "vite": "^4.0.0",
-        "vue": "^3.2.37"
+        "vite": "^4.3.0"
     },
     "dependencies": {
-        "vue-router": "^4.1.6"
+        "@reduxjs/toolkit": "^1.9.5",
+        "@vitejs/plugin-react": "^4.0.0",
+        "react": "^18.2.0",
+        "react-dom": "^18.2.0",
+        "react-redux": "^8.0.5",
+        "react-router-dom": "^6.11.0",
+        "sass": "^1.62.1",
+        "swiper": "^9.2.4"
     }
 }

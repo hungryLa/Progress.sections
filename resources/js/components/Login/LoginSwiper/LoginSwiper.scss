@@ -1,0 +1,22 @@
+.login__swiper {
+    width: 100%;
+    height: auto;
+}
+
+.login__slide {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding-bottom: 4rem;
+
+
+    img {
+        height: auto;
+    }
+
+    h5 {
+        font-size: 2rem;
+        font-weight: 500;
+    }
+}

@@ -1,0 +1,171 @@
+:root {
+    // COLORS
+    --white: #FFF;
+    --gray: rgba(241, 241, 241, 1);
+    --beige: #FFF1E9;
+    --blue: rgba(44, 61, 115, 1);
+    --blue-transparent: rgba(44, 61, 115, 0.05);
+    --orange: rgba(242, 68, 5, 1);
+    --orange-transparent: rgba(242, 68, 5, .5);
+
+    // CONTAINER
+    --container-offset: 1.2rem;
+    --container-width: 132rem;
+
+    // FONTS
+    --xxl: 4rem;
+    --xl: 2.4rem;
+    --l: 2rem;
+    --m: 1.6rem;
+    --s: 1.4rem;
+
+
+    --transition: .25s all linear;
+    --radius: 1rem;
+    --shadow: 0 0 2.5rem rgb(0 0 0 / 5%);
+}
+
+/* RESET AND BASE STYLES  */
+
+html {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 10px;
+    line-height: 150%;
+    color: var(--blue);
+}
+
+* {
+    padding: 0;
+    margin: 0;
+    border: none;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+:focus,
+:active {
+    outline: none;
+}
+
+a:focus,
+a:active {
+    outline: none;
+}
+
+a, a:link, a:visited {
+    color: inherit;
+    text-decoration: none;
+}
+
+a:hover {
+    color: inherit;
+    text-decoration: none;
+}
+
+aside, nav, footer, header, section, main {
+    display: block;
+}
+
+h1, h2, h3, h4, h5, h6, p {
+    font-size: inherit;
+    font-weight: inherit;
+}
+
+ul, ul li {
+    list-style: none;
+}
+
+img {
+    vertical-align: top;
+}
+
+img, svg {
+    max-width: 100%;
+    height: auto;
+}
+
+address {
+    font-style: normal;
+}
+
+input, textarea, button, select {
+    font-family: inherit;
+    font-size: inherit;
+    color: inherit;
+    background-color: transparent;
+}
+
+input::-ms-clear {
+    display: none;
+}
+
+button, input[type="submit"] {
+    display: inline-block;
+    box-shadow: none;
+    background: transparent none;
+    cursor: pointer;
+}
+
+input:focus, input:active,
+button:focus, button:active {
+    outline: none;
+}
+
+button::-moz-focus-inner {
+    padding: 0;
+    border: 0;
+}
+
+label {
+    cursor: pointer;
+}
+
+legend {
+    display: block;
+}
+
+img {
+    max-width: 100%;
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+}
+
+#root {
+    height: 100vh;
+    position: relative;
+    font-size: var(--m);
+}
+
+.page {
+    display: grid;
+    min-height: 100%;
+    grid-template-rows: auto 1fr auto;
+
+    .content {
+        padding: 2rem 0;
+        position: relative;
+        .container {
+            display: grid;
+            grid-template-columns: minmax(28.5rem, 33rem) 1fr;
+
+            @media screen and (max-width: 1280px) {
+                grid-template-columns: 1fr;
+            }
+        }
+    }
+
+    &-guest {
+        .content {
+            padding: 0;
+            .container {
+                display: grid;
+                grid-template-columns: 1fr;
+            }
+        }
+    }
+}

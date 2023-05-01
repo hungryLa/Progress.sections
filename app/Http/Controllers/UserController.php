@@ -22,7 +22,8 @@ class UserController extends Controller
     public function index()
     {
         $users = User::orderBy('id','desc')->get();
-        return view('cabinet.users.index',compact('users'));
+        $data['users'] = $users;
+        return $data;
     }
 
     /**

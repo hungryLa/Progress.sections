@@ -1,0 +1,19 @@
+.login {
+    background-color: var(--beige);
+
+    &__inner {
+        padding: 8rem 0;
+
+        display: grid;
+        grid-template-columns: repeat(2, minmax(30rem, 50%));
+        grid-gap: 24px;
+
+        @media screen and (max-width: 1280px){
+            grid-template-columns: 1fr;
+        }
+    }
+
+    &__swiper {
+        width: 100%;
+    }
+}
