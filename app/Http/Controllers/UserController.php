@@ -27,14 +27,6 @@ class UserController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        return view('cabinet.users.create');
-    }
-
-    /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
@@ -54,15 +46,6 @@ class UserController extends Controller
         }catch (\Exception $exception){
             return $exception->getMessage();
         }
-        return redirect()->route('cabinet.users.index');
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(User $user)
-    {
-        //
     }
 
     /**
@@ -70,7 +53,8 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-        return view('cabinet.users.edit',compact('user'));
+        $data['user'] = $user;
+        return $data;
     }
 
     /**
@@ -91,7 +75,6 @@ class UserController extends Controller
         }catch (\Exception $exception){
             return $exception->getMessage();
         }
-        return redirect()->route('cabinet.users.index');
     }
 
     /**
@@ -107,7 +90,6 @@ class UserController extends Controller
         }catch (\Exception $exception){
             return $exception->getMessage();
         }
-        return redirect()->route('cabinet.users.index');
     }
 
     public function link_user(Request $request){
@@ -126,7 +108,6 @@ class UserController extends Controller
         }catch (\Exception $exception){
             return $exception->getMessage();
         }
-        return redirect()->back();
     }
 
     public function unlink_user(User $user){
@@ -141,12 +122,11 @@ class UserController extends Controller
         }catch (\Exception $exception){
             return $exception->getMessage();
         }
-        return redirect()->back();
     }
 
-    public function settings(User $user){
-        return view('cabinet.users.settings',compact('user'));
-    }
+//    public function settings(User $user){
+//        return view('cabinet.users.settings',compact('user'));
+//    }
 
     public function change_information(Request $request, User $user){
         try {
@@ -161,7 +141,7 @@ class UserController extends Controller
         }catch (\Exception $exception){
             return $exception->getMessage();
         }
-        return redirect()->route('cabinet.user.settings',compact('user'));
+//        return redirect()->route('cabinet.user.settings',compact('user'));
     }
 
     public function change_password(ChangePasswordRequest $request, User $user){
@@ -179,6 +159,6 @@ class UserController extends Controller
         }catch (\Exception $exception){
             return $exception->getMessage();
         }
-        return redirect()->route('cabinet.user.settings',compact('user'));
+//        return redirect()->route('cabinet.user.settings',compact('user'));
     }
 }

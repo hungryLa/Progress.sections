@@ -14,8 +14,10 @@ class InvitationController extends Controller
 
     public function index(){
         $teacher = Teacher::find(Auth::user())->first();
-        $invitations = $teacher->invitations()->where('status',Invitation::STATUS['invitation'])->get();
-        return view('cabinet.invitations.index',compact('teacher','invitations'));
+        $data['teacher'] = $teacher;
+        $data['invitations'] = $teacher->invitations()->where('status',Invitation::STATUS['invitation'])->get();
+        return $data;
+//        return view('cabinet.invitations.index',compact('teacher','invitations'));
     }
     public function accept(Invitation $invitation){
         try {
@@ -33,7 +35,7 @@ class InvitationController extends Controller
         }catch (\Exception $exception){
             return $exception->getMessage();
         }
-        return redirect()->route('invitations.index');
+//        return redirect()->route('invitations.index');
     }
 
     public function cancel(Invitation $invitation){
@@ -47,6 +49,6 @@ class InvitationController extends Controller
         }catch (\Exception $exception){
             return $exception->getMessage();
         }
-        return redirect()->route('invitations.index');
+//        return redirect()->route('invitations.index');
     }
 }

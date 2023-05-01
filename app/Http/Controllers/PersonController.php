@@ -13,9 +13,10 @@ class PersonController extends Controller
      */
     public function index()
     {
-        $linked_users = Auth::user()->linked_users;
-        $people = Auth::user()->people;
-        return view('cabinet.people.index',compact('linked_users','people'));
+        $data['linked_users'] = Auth::user()->linked_users;
+        $data['people'] = Auth::user()->people;
+        return $data;
+//        return view('cabinet.people.index',compact('linked_users','people'));
     }
 
     /**
@@ -44,7 +45,7 @@ class PersonController extends Controller
         }catch (\Exception $exception){
             return $exception->getMessage();
         }
-        return redirect()->route('cabinet.people.index');
+//        return redirect()->route('cabinet.people.index');
     }
 
     /**
@@ -84,6 +85,6 @@ class PersonController extends Controller
         }catch (\Exception $exception){
             return $exception->getMessage();
         }
-        return redirect()->route('cabinet.people.index');
+//        return redirect()->route('cabinet.people.index');
     }
 }

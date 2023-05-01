@@ -35,16 +35,18 @@ class SchoolController extends Controller
         else{
             $schools = School::where('status',School::STATUS['active'])->orderBy('id')->get();
         }
-        return view('cabinet.schools.index',compact('schools'));
+        $data['schools'] = $schools;
+        return $data;
+//        return view('cabinet.schools.index',compact('schools'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        return view('cabinet.schools.create');
-    }
+//    /**
+//     * Show the form for creating a new resource.
+//     */
+//    public function create()
+//    {
+//        return view('cabinet.schools.create');
+//    }
 
     /**
      * Store a newly created resource in storage.
@@ -74,7 +76,7 @@ class SchoolController extends Controller
         }catch (Exception $exception){
             return $exception->getMessage();
         }
-        return redirect()->route('school.index');
+//        return redirect()->route('school.index');
     }
 
     /**
@@ -83,7 +85,9 @@ class SchoolController extends Controller
     public function show(School $school)
     {
         $images = $school->images;
-        return view('cabinet.schools.show',compact('school','images'));
+        $data['images'] = $images;
+        return $data;
+//        return view('cabinet.schools.show',compact('school','images'));
     }
 
     /**
@@ -92,7 +96,9 @@ class SchoolController extends Controller
     public function edit(School $school)
     {
         $images = $school->images;
-        return view('cabinet.schools.edit',compact('school','images'));
+        $data['images'] = $images;
+        return $data;
+//        return view('cabinet.schools.edit',compact('school','images'));
     }
 
     /**
@@ -115,7 +121,7 @@ class SchoolController extends Controller
         }catch (Exception $exception){
             return $exception->getMessage();
         }
-        return redirect()->route('school.edit',compact('school'));
+//        return redirect()->route('school.edit',compact('school'));
     }
 
     /**
@@ -139,6 +145,6 @@ class SchoolController extends Controller
         }catch (\Exception $exception){
             return $exception->getMessage();
         }
-        return redirect()->route('school.index');
+//        return redirect()->route('school.index');
     }
 }

@@ -43,15 +43,11 @@ Route::group([
     Route::post('refresh', [AuthController::class,'refresh']);
     Route::post('me', [AuthController::class,'me']);
 });
-Route::get('',[GeneralController::class,'main_page'])->name('website.main_page');
 Route::group(['middleware' => 'jwt.auth'],function (){
     Route::group(['prefix' => 'cabinet','middleware' => 'auth'],function(){
-        Route::get('',[CabinetController::class,'main'])->name('cabinet.main');
-
         Route::group(['prefix' => 'users'],function(){
             Route::group(['middleware' => 'role:admin'],function(){
                 Route::get('index',[UserController::class,'index'])->name('cabinet.user.index');
-                Route::get('create',[UserController::class,'create'])->name('cabinet.user.create');
                 Route::post('store',[UserController::class,'store'])->name('cabinet.user.store');
             });
             Route::post('link_user',[UserController::class,'link_user'])->name('cabinet.user.link_user');
@@ -93,10 +89,10 @@ Route::group(['middleware' => 'jwt.auth'],function (){
 
         Route::group(['prefix' => 'schools/{school}/teachers','middleware' => 'role:schools_owner'],function(){
             Route::get('',[TeacherController::class,'index'])->name('teacher.index');
-            Route::get('create',[TeacherController::class,'create'])->name('teacher.create');
+//            Route::get('create',[TeacherController::class,'create'])->name('teacher.create');
             Route::post('store',[TeacherController::class,'store'])->name('teacher.store');
-            Route::get('{teacher}/edit',[TeacherController::class,'edit'])->name('teacher.edit');
-            Route::put('{teacher}/update',[TeacherController::class,'update'])->name('teacher.update');
+//            Route::get('{teacher}/edit',[TeacherController::class,'edit'])->name('teacher.edit');
+//            Route::put('{teacher}/update',[TeacherController::class,'update'])->name('teacher.update');
             Route::post('{teacher}/invite',[TeacherController::class,'invite'])->name('teacher.invite');
             Route::delete('{teacher}/unlink',[TeacherController::class,'unlink'])->name('teacher.unlink');
         });
@@ -109,9 +105,9 @@ Route::group(['middleware' => 'jwt.auth'],function (){
 
         Route::group(['prefix' => 'occupations'],function(){
             Route::get('index',[OccupationController::class,'index'])->name('cabinet.occupations.index');
-            Route::get('create',[OccupationController::class,'create'])->name('cabinet.occupations.create');
+//            Route::get('create',[OccupationController::class,'create'])->name('cabinet.occupations.create');
             Route::post('store',[OccupationController::class,'store'])->name('cabinet.occupations.store');
-            Route::get('{occupation}/edit',[OccupationController::class,'edit'])->name('cabinet.occupations.edit');
+//            Route::get('{occupation}/edit',[OccupationController::class,'edit'])->name('cabinet.occupations.edit');
             Route::delete('{occupation}/delete',[OccupationController::class,'destroy'])->name('cabinet.occupations.delete');
         });
 

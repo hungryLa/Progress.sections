@@ -13,17 +13,18 @@ class OccupationController extends Controller
      */
     public function index()
     {
-        $occupations = Occupation::orderBy('title')->get();
-        return view('cabinet.occupations.index',compact('occupations'));
+        $data['occupations'] = Occupation::orderBy('title')->get();
+        return $data;
+//        return view('cabinet.occupations.index',compact('occupations'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        return view('cabinet.occupations.create');
-    }
+//    /**
+//     * Show the form for creating a new resource.
+//     */
+//    public function create()
+//    {
+//        return view('cabinet.occupations.create');
+//    }
 
     /**
      * Store a newly created resource in storage.
@@ -43,7 +44,7 @@ class OccupationController extends Controller
         }catch (\Exception $exception){
             return $exception->getMessage();
         }
-        return redirect()->route('cabinet.occupations.index');
+//        return redirect()->route('cabinet.occupations.index');
     }
 
     /**
@@ -83,6 +84,6 @@ class OccupationController extends Controller
         }catch (\Exception $exception){
             return $exception->getMessage();
         }
-        return redirect()->route('cabinet.occupations.index');
+//        return redirect()->route('cabinet.occupations.index');
     }
 }

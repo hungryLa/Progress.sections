@@ -21,20 +21,21 @@ class TeacherController extends Controller
      */
     public function index(School $school)
     {
-        $active_teachers = $school->teachers;
-        $invitations = $school->invitations()->where('status',Invitation::STATUS['invitation'])->get();
+        $data['active_teachers'] = $school->teachers;
+        $data['invitations'] = $school->invitations()->where('status',Invitation::STATUS['invitation'])->get();
         $teachers = Teacher::where('role',User::ROLES['teacher'])->get();
-        $teachers = $teachers->diff($active_teachers);
-        return view('cabinet.teachers.index',compact('school','active_teachers','teachers','invitations'));
+        $data['teachers'] = $teachers->diff($data['active_teachers']);
+        return $data;
+//        return view('cabinet.teachers.index',compact('school','active_teachers','teachers','invitations'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create(School $school)
-    {
-        return view('cabinet.teachers.create',compact('school'));
-    }
+//    /**
+//     * Show the form for creating a new resource.
+//     */
+//    public function create(School $school)
+//    {
+//        return view('cabinet.teachers.create',compact('school'));
+//    }
 
     /**
      * Store a newly created resource in storage.
@@ -61,24 +62,16 @@ class TeacherController extends Controller
         }catch (\Exception $exception){
             return $exception->getMessage();
         }
-        return redirect()->route('teacher.index',compact('school'));
+//        return redirect()->route('teacher.index',compact('school'));
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Teacher $teacher)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(School $school, Teacher $teacher)
-    {
-        return view('cabinet.teachers.edit',compact('teacher'));
-    }
+//    /**
+//     * Show the form for editing the specified resource.
+//     */
+//    public function edit(School $school, Teacher $teacher)
+//    {
+//        return view('cabinet.teachers.edit',compact('teacher'));
+//    }
 
     /**
      * Update the specified resource in storage.
@@ -96,7 +89,7 @@ class TeacherController extends Controller
         }catch (\Exception $exception){
             return $exception->getMessage();
         }
-        return redirect()->route('cabinet.teachers.index');
+//        return redirect()->route('cabinet.teachers.index');
     }
 
     public function invite(School $school,Teacher $teacher){
@@ -106,18 +99,13 @@ class TeacherController extends Controller
                 'user_id' => $teacher->id,
                 'status' => Invitation::STATUS['invitation'],
             ]);
-//            $success = ModelUser::create([
-//                'model_type' => ModelUser::TYPES['invitation'],
-//                'model_id' => $invitation->id,
-//                'user_id' => $teacher->id,
-//            ]);
             if($invitation){
                 session()->flash('success',__('other.The invitation was successfully sent'));
             }
         }catch (\Exception $exception){
             return $exception->getMessage();
         }
-        return redirect()->route('teacher.index',compact('school','teacher'));
+//        return redirect()->route('teacher.index',compact('school','teacher'));
     }
     public function unlink(School $school, Teacher $teacher)
     {
@@ -133,6 +121,6 @@ class TeacherController extends Controller
         }catch (\Exception $exception){
             return $exception->getMessage();
         }
-        return redirect()->route('teacher.index',compact('school'));
+//        return redirect()->route('teacher.index',compact('school'));
     }
 }
