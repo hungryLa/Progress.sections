@@ -9,8 +9,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class User extends Authenticatable implements MustVerifyEmail
+class User extends Authenticatable implements MustVerifyEmail, JWTSubject
 {
     use HasApiTokens, HasFactory, Notifiable;
 
@@ -48,6 +49,16 @@ class User extends Authenticatable implements MustVerifyEmail
         'email_verified_at' => 'datetime',
     ];
 
+    public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
+
+    public function getJWTCustomClaims(): array
+    {
+        return [];
+    }
+
     public function hasRole($role){
         if($this->role == $role){
             return true;
@@ -82,5 +93,4 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->belongsToMany(Section::class,'model_sections','model_id','section_id');
     }
-
 }
