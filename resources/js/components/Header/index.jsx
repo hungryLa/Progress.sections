@@ -4,7 +4,6 @@ import {Container} from "../Container";
 import {useEffect, useState} from "react";
 import {Menu} from "../Menu";
 import {useDispatch} from "react-redux";
-import {changeToAdmin, changeToGuest, changeToSectionAdmin} from "../../store/userSlice";
 import {toggleMenu} from "../../store/menuSlice";
 
 export const Header = () => {
@@ -30,11 +29,6 @@ export const Header = () => {
                         <img src="/images/progress.svg" alt="Progress logo image"/>
                         <span>EDU.PROGRESS</span>
                     </NavLink>
-                    <div>
-                        <button onClick={() => dispatch(changeToGuest())}>Guest</button>
-                        <button onClick={() => dispatch(changeToAdmin())}>Admin</button>
-                        <button onClick={() => dispatch(changeToSectionAdmin())}>Section Admin</button>
-                    </div>
                     <div className="header__info">
                         <a className="header__number" href={'tel:+79961234567'}>+7 (996) 123-45-67</a>
                         <button className="header__burger" onClick={() => dispatch(toggleMenu())}>x</button>

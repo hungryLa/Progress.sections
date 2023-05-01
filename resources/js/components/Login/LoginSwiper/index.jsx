@@ -36,10 +36,10 @@ export const LoginSwiper = () => {
             touchRatio={1.5}
             effect={'slide'}
             pagination={{clickable: true}}
-            autoplay={{
-                delay: 2500,
-                disableOnInteraction: false
-            }}
+            // autoplay={{
+            //     delay: 2500,
+            //     disableOnInteraction: false
+            // }}
             className={'login__swiper'}
         >
             {swiperItems.map(item => (

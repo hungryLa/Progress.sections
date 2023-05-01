@@ -7,6 +7,7 @@ import {useSelector} from "react-redux";
 
 export const UnauthorizedLayout = () => {
     const isActive = useSelector((state) => state.menu.isActive)
+
     return (
         <div className='page page-guest'>
             <Header/>

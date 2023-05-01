@@ -1,6 +1,12 @@
 .login {
     background-color: var(--beige);
 
+    form {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+    }
+
     &__inner {
         padding: 8rem 0;
 

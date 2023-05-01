@@ -1,93 +1,102 @@
 import './Sidebar.scss';
-import {NavLink} from "react-router-dom";
-import {useSelector} from "react-redux";
+import {Navigate, NavLink, useNavigate} from "react-router-dom";
+import {useDispatch, useSelector} from "react-redux";
+import {logout} from "../../store/authSlice";
+import {useEffect} from "react";
+import {persistor} from "../../store";
 
 
 const navigationLinks = {
     sectionAdmin: [
         {
             title: 'Список секций',
-            path: '/sections'
+            path: '/school_owner/sections'
         },
         {
             title: 'Создать секцию',
-            path: '/sections/new'
+            path: '/school_owner/sections/new'
         },
         {
             title: 'Виды занятий',
-            path: '/lessons'
+            path: '/school_owner/lessons'
         },
         {
             title: 'Преподаватели',
-            path: '/teachers'
+            path: '/school_owner/teachers'
         },
         {
             title: 'Расписания',
-            path: '/schedules'
+            path: '/school_owner/schedules'
         },
         {
             title: 'Настройки',
-            path: '/settings'
+            path: '/school_owner/settings'
         },
         {
             title: 'Выписки',
-            path: '/extracts'
-        },
-        {
-            title: 'Выйти',
-            path: '/logout'
-        },
+            path: '/school_owner/extracts'
+        }
     ],
     mainAdmin: [
         {
             title: 'Список пользователей',
-            path: '/users'
+            path: '/admin/users'
         },
         {
             title: 'Создать пользователя',
-            path: '/users/new'
+            path: '/admin/users/new'
         },
         {
             title: 'Список секций',
-            path: '/sections'
+            path: '/admin/sections'
         },
         {
             title: 'Комиссия',
-            path: '/commission'
+            path: '/admin/commission'
         },
         {
             title: 'Выписки',
-            path: '/extracts'
+            path: '/admin/extracts'
         },
         {
             title: 'Настройки',
-            path: '/settings'
-        },
-        {
-            title: 'Выйти',
-            path: '/logout'
-        },
+            path: '/admin/settings'
+        }
     ],
 }
 
 export const Sidebar = () => {
-    const userType = useSelector((state) => state.user.type)
+    const user = useSelector((state) => state.auth.user)
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
+
+    const logoutHandler = async () => {
+        await dispatch(logout())
+        await persistor.purge();
+        await navigate('/')
+    }
+
+    // useEffect(() => {
+    //     console.log(user)
+    // })
+
     return (
         <aside className={'sidebar'}>
             <nav>
                 <ul>
-                    {userType === 'Admin' && navigationLinks.mainAdmin.map(link => (
+                    {user && user.role === 'admin' && navigationLinks.mainAdmin.map(link => (
                             <li key={link.title}>
                                 <NavLink to={link.path}>{link.title}</NavLink>
                             </li>
                         )
                     )}
-                    {userType === 'SectionAdmin' && navigationLinks.sectionAdmin.map(link => (
+                    {user && user.role === 'school_owner' && navigationLinks.sectionAdmin.map(link => (
                             <li key={link.title}>
                                 <NavLink to={link.path}>{link.title}</NavLink>
                             </li>
                         )
                     )}
+                    <li><button onClick={() => logoutHandler()}><Navigate to={'/'} replace /></button></li>
                 </ul>
             </nav>
         </aside>
