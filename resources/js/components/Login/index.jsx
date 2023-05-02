@@ -32,7 +32,8 @@ export const Login = () => {
             console.log(user.role)
             if(user.role === 'admin') navigate('/users')
             if(user.role === 'schools_owner') navigate('/sections')
-            // if(user.role === 'user') navigate('/')
+            if(user.role === 'user') navigate('/schedule')
+            if(user.role === 'teacher') navigate('/schedule')
         } catch (error) {
             dispatch(setError(error.response.status));
         }

@@ -44,13 +44,24 @@ export const App = () => {
                     </Route>
                 )}
 
-
                 {user && user.role === 'user' && (
-                    <Route element={<AuthorizedLayout/>}>
-                        <Route/>
+                    <Route path={'/'} element={<AuthorizedLayout/>}>
+                        <Route path={'/schedule'} element={<h1>Моё расписание</h1>}/>
+                        <Route path={'/sections'} element={<h1>Список секций</h1>}/>
+                        <Route path={'/accounts'} element={<h1>Аккаунты</h1>}/>
+                        <Route path={'/extracts'} element={<h1>Выписки</h1>}/>
+                        <Route path={'/settings'} element={<h1>Настройки</h1>}/>
                     </Route>
                 )}
-                {/*<Route path={'*'} element={<Navigate to={'/'}/>}/>*/}
+
+                {user && user.role === 'teacher' && (
+                    <Route path={'/'} element={<AuthorizedLayout/>}>
+                        <Route path={'/schedule'} element={<h1>Моё расписание</h1>}/>
+                        <Route path={'/settings'} element={<h1>Настройки</h1>}/>
+                    </Route>
+                )}
+
+                <Route path={'*'} element={<h1>Ты дебил???</h1>}/>
             </Routes>
         </BrowserRouter>
     )

@@ -63,6 +63,36 @@ const navigationLinks = {
             path: 'settings'
         }
     ],
+    user: [
+        {
+            title: 'Мое расписание',
+            path: 'schedule'
+        },
+        {
+            title: 'Список секций',
+            path: 'sections'
+        },
+        {
+            title: 'Аккаунты',
+            path: 'accounts'
+        },
+        {
+            title: 'Выписки',
+            path: 'extracts'
+        },
+        {
+            title: 'Настройки',
+            path: 'settings'
+        }],
+    teacher: [
+        {
+            title: 'Мое расписание',
+            path: 'schedule'
+        },
+        {
+            title: 'Настройки',
+            path: 'settings'
+        }]
 }
 
 export const Sidebar = () => {
@@ -96,7 +126,21 @@ export const Sidebar = () => {
                             </li>
                         )
                     )}
-                    <li><button onClick={() => logoutHandler()}>Выйти</button></li>
+                    {user && user.role === 'user' && navigationLinks.user.map(link => (
+                            <li key={link.title}>
+                                <NavLink to={link.path}>{link.title}</NavLink>
+                            </li>
+                        )
+                    )}
+                    {user && user.role === 'teacher' && navigationLinks.teacher.map(link => (
+                            <li key={link.title}>
+                                <NavLink to={link.path}>{link.title}</NavLink>
+                            </li>
+                        )
+                    )}
+                    <li>
+                        <button onClick={() => logoutHandler()}>Выйти</button>
+                    </li>
                 </ul>
             </nav>
         </aside>
