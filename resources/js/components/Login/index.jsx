@@ -5,7 +5,7 @@ import React, {useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import api from "../../middlewares/auth.middleware";
 import { setError, setToken, setUser} from "../../store/authSlice";
-import {Navigate, useNavigate} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import {Title} from "../Title";
 
 export const Login = () => {
@@ -30,8 +30,8 @@ export const Login = () => {
             await dispatch(setUser(user));
             await dispatch(setError(''));
             console.log(user.role)
-            if(user.role === 'admin') navigate('/admin/users')
-            if(user.role === 'school_owner') navigate('/school_owner/sections')
+            if(user.role === 'admin') navigate('/users')
+            if(user.role === 'schools_owner') navigate('/sections')
             // if(user.role === 'user') navigate('/')
         } catch (error) {
             dispatch(setError(error.response.status));

@@ -1,5 +1,5 @@
 import './Sidebar.scss';
-import {Navigate, NavLink, useNavigate} from "react-router-dom";
+import {NavLink, useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {logout} from "../../store/authSlice";
 import {useEffect} from "react";
@@ -10,57 +10,57 @@ const navigationLinks = {
     sectionAdmin: [
         {
             title: 'Список секций',
-            path: '/school_owner/sections'
+            path: '/sections'
         },
         {
             title: 'Создать секцию',
-            path: '/school_owner/sections/new'
+            path: '/sections/new'
         },
         {
             title: 'Виды занятий',
-            path: '/school_owner/lessons'
+            path: '/lessons'
         },
         {
             title: 'Преподаватели',
-            path: '/school_owner/teachers'
+            path: '/teachers'
         },
         {
             title: 'Расписания',
-            path: '/school_owner/schedules'
+            path: '/schedules'
         },
         {
             title: 'Настройки',
-            path: '/school_owner/settings'
+            path: '/settings'
         },
         {
             title: 'Выписки',
-            path: '/school_owner/extracts'
+            path: '/extracts'
         }
     ],
     mainAdmin: [
         {
             title: 'Список пользователей',
-            path: '/admin/users'
+            path: 'users'
         },
         {
             title: 'Создать пользователя',
-            path: '/admin/users/new'
+            path: 'users/new'
         },
         {
             title: 'Список секций',
-            path: '/admin/sections'
+            path: 'sections'
         },
         {
             title: 'Комиссия',
-            path: '/admin/commission'
+            path: 'commission'
         },
         {
             title: 'Выписки',
-            path: '/admin/extracts'
+            path: 'extracts'
         },
         {
             title: 'Настройки',
-            path: '/admin/settings'
+            path: 'settings'
         }
     ],
 }
@@ -73,12 +73,12 @@ export const Sidebar = () => {
     const logoutHandler = async () => {
         await dispatch(logout())
         await persistor.purge();
-        await navigate('/')
+        await navigate('/', {replace: true})
     }
 
-    // useEffect(() => {
-    //     console.log(user)
-    // })
+    useEffect(() => {
+        console.log(user)
+    })
 
     return (
         <aside className={'sidebar'}>
@@ -90,13 +90,13 @@ export const Sidebar = () => {
                             </li>
                         )
                     )}
-                    {user && user.role === 'school_owner' && navigationLinks.sectionAdmin.map(link => (
+                    {user && user.role === 'schools_owner' && navigationLinks.sectionAdmin.map(link => (
                             <li key={link.title}>
                                 <NavLink to={link.path}>{link.title}</NavLink>
                             </li>
                         )
                     )}
-                    <li><button onClick={() => logoutHandler()}><Navigate to={'/'} replace /></button></li>
+                    <li><button onClick={() => logoutHandler()}>Выйти</button></li>
                 </ul>
             </nav>
         </aside>
