@@ -21,8 +21,9 @@ class ModelSchoolFactory extends Factory
     public function definition(): array
     {
         return [
-            'model_type' => $this->faker->randomElement(ModelSchool::TYPES),
-            'model_id' => User::where('role', User::ROLES['schools_owner'])->first()->id,
+            'status' => ModelSchool::STATUS['works'],
+            'model_type' => ModelSchool::TYPES['teacher'],
+            'model_id' => User::where('role',User::ROLES['teacher'])->get()->random()->id,
             'school_id' => School::get()->random()->id,
         ];
     }

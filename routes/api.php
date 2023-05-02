@@ -15,6 +15,7 @@ use App\Http\Controllers\FileController;
 use App\Http\Controllers\CabinetController;
 use App\Http\Controllers\SchoolController;
 use App\Http\Controllers\InvitationController;
+use App\Http\Controllers\TimetableController;
 
 /*
 |--------------------------------------------------------------------------
@@ -61,6 +62,10 @@ Route::group(['middleware' => 'jwt.auth'],function (){
             Route::put('{user}/change_information',[UserController::class, 'change_information'])->name('cabinet.user.change_information');
             Route::put('{user}/change_password',[UserController::class,'change_password'])->name('cabinet.user.change_password');
 
+        });
+
+        Route::group(['prefix' => 'teachers/{teacher}/timetables'],function (){
+            Route::get('',[TimetableController::class,'index'])->name('cabinet.timetables.index');
         });
 
         Route::group(['prefix' => 'schools'],function (){

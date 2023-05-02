@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -74,12 +75,6 @@ class User extends Authenticatable implements MustVerifyEmail, JWTSubject
             ->where('model_type',ModelUser::TYPES['users']);
     }
 
-    public function teachers(): BelongsToMany
-    {
-        return $this->belongsToMany(User::class,'model_users','user_id','model_id')
-            ->where('model_type',ModelUser::TYPES['teachers']);
-    }
-
     public function people(): HasMany
     {
         return $this->hasMany(Person::class,'user_id');
@@ -92,5 +87,9 @@ class User extends Authenticatable implements MustVerifyEmail, JWTSubject
     public function sections(): BelongsToMany
     {
         return $this->belongsToMany(Section::class,'model_sections','model_id','section_id');
+    }
+
+    public function teacher(): BelongsTo{
+        return $this->belongsTo(Teacher::class,'user_id');
     }
 }

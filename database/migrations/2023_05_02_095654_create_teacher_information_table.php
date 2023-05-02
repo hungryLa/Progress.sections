@@ -11,14 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('days', function (Blueprint $table) {
+        Schema::create('teacher_information', function (Blueprint $table) {
             $table->id();
-            $table->time('lesson_time');
-            $table->time('workday_start');
-            $table->time('workday_end');
-            $table->boolean('rest')->default(true);
-            $table->time('rest_start')->nullable();
-            $table->time('rest_end')->nullable();
+            $table->unsignedBigInteger('teacher_id');
+            $table->json('occupations');
+            $table->text('teaching_experience');
+            $table->text('about_me');
             $table->timestamps();
         });
     }
@@ -28,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('days');
+        Schema::dropIfExists('teacher_information');
     }
 };

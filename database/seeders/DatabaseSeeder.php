@@ -8,7 +8,11 @@ use App\Models\ModelSchool;
 use App\Models\Occupation;
 use App\Models\School;
 use App\Models\Section;
+use App\Models\Teacher;
+use App\Models\TeacherInformation;
+use App\Models\Timetable;
 use App\Models\TimetableDay;
+use App\Models\TimetableSection;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -44,8 +48,15 @@ class DatabaseSeeder extends Seeder
             'email' => 'user@mail.ru',
             'password' => Hash::make('password'),
         ]);
+        User::factory(5)->create();
+        Teacher::factory(5)->create();
+        Occupation::factory(20)->create();
+        TeacherInformation::factory(5)->create();
+        Timetable::factory(10)->create();
         School::factory(40)->create();
         Section::factory(40)->create();
+        TimetableSection::factory(10)->create();
         ModelSchool::factory(10)->create();
+
     }
 }
