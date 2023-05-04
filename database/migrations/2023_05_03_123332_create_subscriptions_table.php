@@ -13,11 +13,14 @@ return new class extends Migration
     {
         Schema::create('subscriptions', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('school_id');
             $table->unsignedBigInteger('section_id')->nullable();
+            $table->enum('status',\App\Models\Subscription::STATUS);
             $table->enum('type',\App\Models\Subscription::TYPES);
+            $table->unsignedInteger('price');
+            $table->string('title');
             $table->unsignedInteger('value');
+            $table->text('contents');
             $table->timestamps();
         });
     }

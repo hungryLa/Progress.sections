@@ -15,6 +15,7 @@ use App\Http\Controllers\SchoolController;
 use App\Http\Controllers\CommunicationController;
 use App\Http\Controllers\TimetableController;
 use App\Http\Controllers\TimetableSectionController;
+use App\Http\Controllers\SubscriptionController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -103,6 +104,24 @@ Route::group(['prefix' => 'cabinet','middleware' => 'auth'],function(){
         Route::put('{teacher}/update',[TeacherController::class,'update'])->name('teacher.update');
         Route::post('{teacher}/invite',[TeacherController::class,'invite'])->name('teacher.invite');
         Route::delete('{teacher}/unlink',[TeacherController::class,'unlink'])->name('teacher.unlink');
+    });
+
+    Route::group(['prefix' => 'users/{user}/subscriptions'],function (){
+        Route::get('',[SubscriptionController::class,'user_index'])->name('user.subscription.index');
+    });
+    Route::group(['prefix' => 'schools/{school}/subscriptions'],function (){
+        Route::get('', [SubscriptionController::class,'index'])->name('school.subscription.index');
+        Route::group(['middleware' => 'role:schools_owner'],function (){
+            Route::get('create', [SubscriptionController::class,'create'])->name('school.subscription.create');
+            Route::post('store', [SubscriptionController::class,'store'])->name('school.subscription.store');
+        });
+        Route::get('{subscription}', [SubscriptionController::class,'show'])->name('school.subscription.show');
+        Route::group(['middleware' => 'role:schools_owner'],function () {
+            Route::get('{subscription}/edit', [SubscriptionController::class, 'edit'])->name('school.subscription.edit');
+            Route::put('{subscription}/update', [SubscriptionController::class,'update'])->name('school.subscription.update');
+            Route::delete('{subscription}/delete', [SubscriptionController::class,'destroy'])->name('school.subscription.delete');
+        });
+        Route::post('{subscription}/buy',[SubscriptionController::class,'buy'])->name('school.subscription.buy');
     });
 
     Route::group(['prefix' => 'communications','middleware' => 'role:schools_owner,teacher'],function(){

@@ -19,6 +19,7 @@ class General extends Model
     const TYPES = self::TYPES_WITHOUT_SCHOOL + [
         'school' => School::TYPE,
         'section' => Section::TYPE,
+        'subscription' => Subscription::TYPE,
     ];
 
 

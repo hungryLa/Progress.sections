@@ -2,6 +2,7 @@
 return [
     'Accept' => 'Принять',
     'Cancel' => 'Отклонить',
+    'Buy' => 'Купить',
     'Logout' => 'Выйти',
     'Control panel' => 'Панель управления',
     'General information' => 'Общая информация',
@@ -70,11 +71,10 @@ return [
     'Submit an application' => 'Подать заявку',
 
     'Sections' => 'Секции',
+    'Select a section' => 'Выберите секцию',
 
     'Reservations' => 'Брони',
     'Schedules' => 'Расписания',
-
-    'Types of classes' => 'Виды занятий',
 
     'Teachers' => 'Преподаватели',
     'Teacher' => 'Преподаватель',
@@ -103,5 +103,10 @@ return [
     'Type of occupations' => 'Вид занятий',
     'Type of occupation' => 'Вид занятия',
     'Choose the type of activity' => 'Выберите вид занятия',
+
+    'Subscriptions' => 'Абонементы',
+    'Subscription' => 'Абонемент',
+    'Subscription successfully purchased' => 'Абонемент успешно приобретён',
+    'This subscription is still in use' => 'Данный абонемент пока используется',
 
 ];

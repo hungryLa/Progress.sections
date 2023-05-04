@@ -4,6 +4,7 @@ return [
     'Status' => 'Статус',
     'Select the status' => 'Выберите статус',
     'active' => 'Активна',
+    'inactive' => 'Не активна',
     'not active' => 'Не активна',
 
     'Role' => 'Роль',
@@ -50,4 +51,12 @@ return [
     'Price of trial lesson' => 'Стоимость пробного занятия',
     'Count in group' => 'Макс. кол-во людей в группе',
     'Price of group lesson' => 'Стоимость груповых занятий',
+
+    'Subscription type' => 'Тип абонемента',
+    'Choose a subscription type' => 'Выберите тип абонемента',
+    'deposit' => 'Депозит',
+    'section card' => 'Карта секции',
+    'Value' => 'Значение',
+    'Specify the number of classes or the amount of the deposit' => 'Укажите количество занятий или сумму депозита',
+
 ];
