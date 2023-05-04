@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\User\ChangePasswordRequest;
 use App\Http\Requests\User\StoreRequest;
+use App\Mail\WelcomeMail;
 use App\Models\ModelSchool;
 use App\Models\ModelUser;
 use App\Models\Teacher;
@@ -11,6 +12,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use voku\helper\ASCII;
 
@@ -27,25 +29,35 @@ class UserController extends Controller
         return view('cabinet.users.index', compact('users'));
     }
 
+    public function create(){
+        return view('cabinet.users.create');
+    }
+
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreRequest $request)
     {
         try {
-            $success = User::create([
+            $password = Str::random(10);
+            $user = User::create([
                 'role' => $request->role,
                 'full_name' => $request->full_name,
                 'email' => $request->email,
-                'password' => Hash::make($request->password),
+                'password' => Hash::make($password),
                 'remember_token' => Str::random(15),
             ]);
+            $data['password'] = $password;
+            $data['user'] = $user;
+            $success = Mail::to($user->email)->send(new WelcomeMail($data));
             if($success){
-                session()->flash('success','other.Record successfully added');
+                session()->flash('success',__('other.Record successfully added'));
             }
         }catch (\Exception $exception){
             return $exception->getMessage();
         }
+
+
         return redirect()->route('cabinet.user.index');
     }
 

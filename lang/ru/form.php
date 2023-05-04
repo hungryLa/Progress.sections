@@ -10,7 +10,7 @@ return [
     'Role' => 'Роль',
     'Choose a role' => 'Выберите роль',
     'admin' => 'Админ',
-    'sections_admin' => 'Админ секций',
+    'schools_owner' => 'Владелец школ',
     'teacher' => 'Преподаватель',
     'user' => 'Пользователь',
     'Title' => 'Название',

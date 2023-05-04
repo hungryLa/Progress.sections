@@ -23,6 +23,7 @@ return [
     'Create a user' => 'Создать пользователя',
     'The user is successfully linked' => 'Пользователь успешно привязан',
     'The user has been successfully unlinked' => 'Пользователь успешно откреплен',
+    'Creating a user' => 'Создание пользователя',
 
     'Invitation' => 'Приглашение',
     'Invitations' => 'Приглашения',
