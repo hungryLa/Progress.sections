@@ -11,6 +11,7 @@
                 @method('PUT')
                 <input type="hidden" name="role" value="{{$user->role}}">
                 <x-form.inputText name="full_name" value="{{$user->full_name}}" title="{{__('form.Full name')}}" placeholder="{{__('form.Enter a full name')}}" disabled=""/>
+                <x-form.inputText name="phone_number" value="{{$user->phone_number}}" title="{{__('form.Phone number')}}" placeholder="{{__('form.Enter the phone number')}}" disabled=""/>
                 <x-form.inputText name="email" value="{{$user->email}}" title="{{__('form.Email address')}}" placeholder="{{__('form.Enter a email address')}}" disabled=""/>
                 <button class="btn btn-success">{{__('other.Apply changes')}}</button>
             </form>

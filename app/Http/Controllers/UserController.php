@@ -137,6 +137,7 @@ class UserController extends Controller
         try {
             $success = $user->update([
                 'full_name' => $request->full_name,
+                'phone_number' => $request->phone_number,
                 'email' => $request->email,
             ]);
             if($success){

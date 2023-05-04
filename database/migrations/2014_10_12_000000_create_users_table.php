@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->enum('role',\App\Models\User::ROLES)->default(\App\Models\User::ROLES['user']);
             $table->string('full_name');
+            $table->string('phone_number')->nullable();
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
