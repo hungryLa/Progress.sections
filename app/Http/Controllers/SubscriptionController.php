@@ -129,20 +129,20 @@ class SubscriptionController extends Controller
         return redirect()->route('school.subscription.index',compact('school'));
     }
 
-    public function buy(School $school,Subscription $subscription){
-        try {
-            $success = SubscriptionUser::create([
-                'user_id' => \Auth::user()->id,
-                'subscription_id' => $subscription->id,
-                'price_subscription' => $subscription->price,
-                'deposit' => $subscription->value,
-            ]);
-            if ($success){
-                session()->flash('success',__('other.Subscription successfully purchased'));
-            }
-        }catch (\Exception $exception){
-            return $exception->getMessage();
-        }
-        return redirect()->route('school.subscription.index',compact('school'));
-    }
+//    public function buy(School $school,Subscription $subscription){
+//        try {
+//            $success = SubscriptionUser::create([
+//                'user_id' => \Auth::user()->id,
+//                'subscription_id' => $subscription->id,
+//                'price_subscription' => $subscription->price,
+//                'deposit' => $subscription->value,
+//            ]);
+//            if ($success){
+//                session()->flash('success',__('other.Subscription successfully purchased'));
+//            }
+//        }catch (\Exception $exception){
+//            return $exception->getMessage();
+//        }
+//        return redirect()->route('school.subscription.index',compact('school'));
+//    }
 }

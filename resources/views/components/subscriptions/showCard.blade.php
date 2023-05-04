@@ -7,7 +7,7 @@ $pathImage = count($subscription->images) != 0 ? asset("storage/".$subscription-
         <h5 class="card-title">{{$subscription->title}}</h5>
         <p class="card-text">{{$subscription->price}} руб.</p>
         <a href="{{route('school.subscription.show',compact('school','subscription'))}}" class="btn btn-primary">{{__('other.Go over')}}</a>
-        <form method="POST" action="{{route('school.subscription.buy',compact('school','subscription'))}}">
+        <form method="POST" action="{{route('payments.storePayment',compact('school','subscription'))}}">
             @csrf
             <button class="btn btn-success">{{__('other.Buy')}}</button>
         </form>

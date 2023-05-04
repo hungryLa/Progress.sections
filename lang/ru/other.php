@@ -109,4 +109,7 @@ return [
     'Subscription successfully purchased' => 'Абонемент успешно приобретён',
     'This subscription is still in use' => 'Данный абонемент пока используется',
 
+    'The payment was successful' => 'Оплата прошла успешно',
+    'Payment failed' => 'Оплата не прошла',
+
 ];

@@ -16,6 +16,7 @@ use App\Http\Controllers\CommunicationController;
 use App\Http\Controllers\TimetableController;
 use App\Http\Controllers\TimetableSectionController;
 use App\Http\Controllers\SubscriptionController;
+use App\Http\Controllers\PaymentController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -121,7 +122,13 @@ Route::group(['prefix' => 'cabinet','middleware' => 'auth'],function(){
             Route::put('{subscription}/update', [SubscriptionController::class,'update'])->name('school.subscription.update');
             Route::delete('{subscription}/delete', [SubscriptionController::class,'destroy'])->name('school.subscription.delete');
         });
-        Route::post('{subscription}/buy',[SubscriptionController::class,'buy'])->name('school.subscription.buy');
+//        Route::post('buy',[SubscriptionController::class,'buy'])->name('school.subscription.buy');
+    });
+
+    Route::group(['prefix' => 'payments'],function (){
+       Route::post('storePayment',[PaymentController::class,'storePayment'])->name('payments.storePayment');
+       Route::get('successPay',[PaymentController::class,'successPay'])->name('payments.successPay');
+       Route::get('failPay',[PaymentController::class,'failPay'])->name('payments.failPay');
     });
 
     Route::group(['prefix' => 'communications','middleware' => 'role:schools_owner,teacher'],function(){
