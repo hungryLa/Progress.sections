@@ -22,8 +22,9 @@ class UserController extends Controller
     public function index()
     {
         $users = User::orderBy('id','desc')->get();
-        $data['users'] = $users;
-        return $data;
+//        $data['users'] = $users;
+//        return $data;
+        return view('cabinet.users.index', compact('users'));
     }
 
     /**
@@ -34,7 +35,6 @@ class UserController extends Controller
         try {
             $success = User::create([
                 'role' => $request->role,
-                'username' => $request->username,
                 'full_name' => $request->full_name,
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
@@ -46,6 +46,7 @@ class UserController extends Controller
         }catch (\Exception $exception){
             return $exception->getMessage();
         }
+        return redirect()->route('cabinet.user.index');
     }
 
     /**
@@ -53,8 +54,9 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-        $data['user'] = $user;
-        return $data;
+//        $data['user'] = $user;
+//        return $data;
+        return view('cabinet.users.edit',compact('user'));
     }
 
     /**
@@ -65,7 +67,6 @@ class UserController extends Controller
         try {
             $success = $user->update([
                'role' => $request->role,
-               'username' => $request->username,
                'full_name' => $request->full_name,
                'email' => $request->email,
             ]);
@@ -75,6 +76,7 @@ class UserController extends Controller
         }catch (\Exception $exception){
             return $exception->getMessage();
         }
+        return redirect()->route('cabinet.user.edit',compact('user'));
     }
 
     /**
@@ -90,6 +92,7 @@ class UserController extends Controller
         }catch (\Exception $exception){
             return $exception->getMessage();
         }
+        return redirect()->back();
     }
 
     public function link_user(Request $request){
@@ -108,6 +111,7 @@ class UserController extends Controller
         }catch (\Exception $exception){
             return $exception->getMessage();
         }
+        return redirect()->back();
     }
 
     public function unlink_user(User $user){
@@ -122,16 +126,16 @@ class UserController extends Controller
         }catch (\Exception $exception){
             return $exception->getMessage();
         }
+        return redirect()->back();
     }
 
-//    public function settings(User $user){
-//        return view('cabinet.users.settings',compact('user'));
-//    }
+    public function settings(User $user){
+        return view('cabinet.users.settings',compact('user'));
+    }
 
     public function change_information(Request $request, User $user){
         try {
             $success = $user->update([
-                'username' => $request->username,
                 'full_name' => $request->full_name,
                 'email' => $request->email,
             ]);
@@ -141,7 +145,7 @@ class UserController extends Controller
         }catch (\Exception $exception){
             return $exception->getMessage();
         }
-//        return redirect()->route('cabinet.user.settings',compact('user'));
+        return redirect()->route('cabinet.user.settings',compact('user'));
     }
 
     public function change_password(ChangePasswordRequest $request, User $user){
@@ -159,6 +163,6 @@ class UserController extends Controller
         }catch (\Exception $exception){
             return $exception->getMessage();
         }
-//        return redirect()->route('cabinet.user.settings',compact('user'));
+        return redirect()->route('cabinet.user.settings',compact('user'));
     }
 }

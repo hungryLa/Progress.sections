@@ -10,7 +10,6 @@
                 @csrf
                 @method('PUT')
                 <input type="hidden" name="role" value="{{$user->role}}">
-                <x-form.inputText name="username" value="{{$user->username}}" title="{{__('form.Username')}}" placeholder="{{__('form.Enter your username')}}" disabled=""/>
                 <x-form.inputText name="full_name" value="{{$user->full_name}}" title="{{__('form.Full name')}}" placeholder="{{__('form.Enter a full name')}}" disabled=""/>
                 <x-form.inputText name="email" value="{{$user->email}}" title="{{__('form.Email address')}}" placeholder="{{__('form.Enter a email address')}}" disabled=""/>
                 <button class="btn btn-success">{{__('other.Apply changes')}}</button>

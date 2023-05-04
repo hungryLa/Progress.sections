@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('schools', function (Blueprint $table) {
             $table->id();
             $table->enum('status',\App\Models\School::STATUS);
+            $table->boolean('recruitment_open')->default(false);
             $table->enum('type',\App\Models\School::SCHOOL_TYPES);
             $table->string('title');
             $table->string('description');

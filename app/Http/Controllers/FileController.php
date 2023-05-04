@@ -13,12 +13,12 @@ class FileController extends Controller
     public function storeImages(Request $request, $modelType, $model, $fileType){
         self::storeFile($request, $modelType, $model, $fileType);
         session()->flash('success',__('other.Files uploaded successfully'));
-//        return redirect()->back();
+        return redirect()->back();
     }
     public function storeFiles(Request $request, $modelType, $model, $fileType){
         self::storeFile($request, $modelType, $model, $fileType);
         session()->flash('success',__('other.Files uploaded successfully'));
-//        return redirect()->back();
+        return redirect()->back();
     }
 
     static function storeFile(Request $request, $modelType, $modelId, $fileType, $key = "files")
@@ -62,14 +62,14 @@ class FileController extends Controller
                 }
             }else{
                 session()->flash('warning',__('other.No file selected'));
-//                return redirect()->back();
+                return redirect()->back();
             }
 
         } catch (\Exception $exception) {
             return $exception->getMessage();
         }
         session()->flash('success',__('other.Files successfully deleted'));
-//        return redirect()->back();
+        return redirect()->back();
     }
 
     static function deleteFile($file_id){
@@ -122,7 +122,7 @@ class FileController extends Controller
         }catch (\Exception $exception){
             return $exception->getMessage();
         }
-//        return redirect()->back();
+        return redirect()->back();
 
     }
 }

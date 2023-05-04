@@ -14,6 +14,7 @@ use App\Models\Timetable;
 use App\Models\TimetableDay;
 use App\Models\TimetableSection;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -25,34 +26,38 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         User::create([
-             'role' => User::ROLES['admin'],
-             'full_name' => 'admin',
-             'email' => 'admin@mail.ru',
-             'password' => Hash::make('password'),
+            'role' => User::ROLES['admin'],
+            'full_name' => 'admin',
+            'email' => 'admin@mail.ru',
+            'password' => Hash::make('password'),
+            'email_verified_at' => Carbon::now(),
          ]);
         User::create([
             'role' => User::ROLES['schools_owner'],
             'full_name' => 'schools_owner',
             'email' => 'schools_owner@mail.ru',
             'password' => Hash::make('password'),
+            'email_verified_at' => Carbon::now(),
         ]);
         User::create([
             'role' => User::ROLES['teacher'],
             'full_name' => 'teacher',
             'email' => 'teacher@mail.ru',
             'password' => Hash::make('password'),
+            'email_verified_at' => Carbon::now(),
         ]);
         User::create([
             'role' => User::ROLES['user'],
             'full_name' => 'user',
             'email' => 'user@mail.ru',
             'password' => Hash::make('password'),
+            'email_verified_at' => Carbon::now(),
         ]);
         User::factory(5)->create();
         Teacher::factory(5)->create();
         Occupation::factory(20)->create();
         TeacherInformation::factory(5)->create();
-        Timetable::factory(10)->create();
+        Timetable::factory(30)->create();
         School::factory(40)->create();
         Section::factory(40)->create();
         TimetableSection::factory(10)->create();

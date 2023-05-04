@@ -6,7 +6,8 @@
         <a href="{{route('school.index')}}">{{__('other.Schools')}}</a>
     @elseif(\Illuminate\Support\Facades\Auth::user()->hasRole(\App\Models\User::ROLES['teacher']))
         <a href="{{route('school.index')}}">{{__('other.Schools')}}</a>
-        <a href="{{route('invitations.index')}}">{{__('other.Invitations')}}</a>
+        <a href="{{route('timetables.index',['teacher' => Auth::user()->id])}}">{{__('other.Timetables')}}</a>
+        <a href="{{route('communications.invitation.index',['teacher' => Auth::user()->id])}}">{{__('other.Invitations')}}</a>
     @elseif(\Illuminate\Support\Facades\Auth::user()->hasRole(\App\Models\User::ROLES['user']))
         <a href="{{route('cabinet.people.index')}}">{{__('other.People')}}</a>
     @endif

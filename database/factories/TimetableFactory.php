@@ -21,8 +21,9 @@ class TimetableFactory extends Factory
     public function definition(): array
     {
         return [
-            'teacher_id' => User::where('role',User::ROLES['teacher'])->get()->random()->id,
-            'days_week' => TimetableDaysWeek::fromArray([
+            'type' => $this->faker->randomElement(Timetable::TYPES),
+            'model_id' => User::where('role',User::ROLES['teacher'])->get()->random()->id,
+            'weekday' => TimetableDaysWeek::fromArray([
                'which_days' => [
                    $this->faker->randomElement(Timetable::DAYS_WEEK),
                    $this->faker->randomElement(Timetable::DAYS_WEEK),
@@ -31,7 +32,7 @@ class TimetableFactory extends Factory
             'lesson_time' => $this->faker->time,
             'workday_start' => $this->faker->time,
             'workday_end' => $this->faker->time,
-            'rest' => $this->faker->boolean,
+            'without_rest' => $this->faker->boolean,
             'rest_start' => $this->faker->time,
             'rest_end' => $this->faker->time,
         ];

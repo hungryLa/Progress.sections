@@ -14,7 +14,14 @@ class Timetable extends Model
     use HasFactory;
 
     protected $casts = [
-        'days_week' => TimetableDaysWeek::class,
+        'weekday' => TimetableDaysWeek::class,
+    ];
+
+    protected $guarded = [];
+
+    const TYPES = [
+        'school' => School::TYPE,
+        'teacher' => Teacher::TYPE,
     ];
 
     const DAYS_WEEK = [
@@ -29,6 +36,11 @@ class Timetable extends Model
 
     public function teacher(): BelongsTo
     {
-        return $this->belongsTo(Teacher::class,'teacher_id');
+        return $this->belongsTo(Teacher::class,'model_id')->where('type',Timetable::TYPES['teacher']);
+    }
+
+    public function school(): BelongsTo
+    {
+        return $this->belongsTo(School::class, 'model_id')->where('type',Timetable::TYPES['school']);
     }
 }

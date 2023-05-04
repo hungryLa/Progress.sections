@@ -20,6 +20,7 @@ class SchoolController extends Controller
     public function index()
     {
         $user = Auth::user();
+        $all_schools = [];
         if($user->hasRole(User::ROLES['admin'])){
             $schools = School::orderBy('id')->get();
         }
@@ -28,6 +29,9 @@ class SchoolController extends Controller
         }
         elseif ($user->hasRole(User::ROLES['teacher'])){
             $schools = $user->schools()->orderBy('id')->get();
+            $all_schools = School::where('status',School::STATUS['active'])->get();
+            $all_schools = $all_schools->diff($schools);
+            return view('cabinet.schools.index',compact('schools','all_schools'));
         }
         elseif ($user->hasRole(User::ROLES['user'])){
             $schools = School::where('status',School::STATUS['active'])->orderBy('id')->get();
@@ -35,18 +39,18 @@ class SchoolController extends Controller
         else{
             $schools = School::where('status',School::STATUS['active'])->orderBy('id')->get();
         }
-        $data['schools'] = $schools;
-        return $data;
-//        return view('cabinet.schools.index',compact('schools'));
+//        $data['schools'] = $schools;
+//        return $data;
+        return view('cabinet.schools.index',compact('schools','all_schools'));
     }
 
-//    /**
-//     * Show the form for creating a new resource.
-//     */
-//    public function create()
-//    {
-//        return view('cabinet.schools.create');
-//    }
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        return view('cabinet.schools.create');
+    }
 
     /**
      * Store a newly created resource in storage.
@@ -56,6 +60,7 @@ class SchoolController extends Controller
         try {
             $school = School::create([
                 'status' => $request->status,
+                'recruitment_open' => $request->recruitment_open,
                 'type' => $request->type,
                 'title' => $request->title,
                 'description' => $request->description,
@@ -76,7 +81,7 @@ class SchoolController extends Controller
         }catch (Exception $exception){
             return $exception->getMessage();
         }
-//        return redirect()->route('school.index');
+        return redirect()->route('school.index');
     }
 
     /**
@@ -85,9 +90,9 @@ class SchoolController extends Controller
     public function show(School $school)
     {
         $images = $school->images;
-        $data['images'] = $images;
-        return $data;
-//        return view('cabinet.schools.show',compact('school','images'));
+//        $data['images'] = $images;
+//        return $data;
+        return view('cabinet.schools.show',compact('school','images'));
     }
 
     /**
@@ -96,9 +101,9 @@ class SchoolController extends Controller
     public function edit(School $school)
     {
         $images = $school->images;
-        $data['images'] = $images;
-        return $data;
-//        return view('cabinet.schools.edit',compact('school','images'));
+//        $data['images'] = $images;
+//        return $data;
+        return view('cabinet.schools.edit',compact('school','images'));
     }
 
     /**
@@ -121,7 +126,7 @@ class SchoolController extends Controller
         }catch (Exception $exception){
             return $exception->getMessage();
         }
-//        return redirect()->route('school.edit',compact('school'));
+        return redirect()->route('school.edit',compact('school'));
     }
 
     /**
@@ -145,6 +150,6 @@ class SchoolController extends Controller
         }catch (\Exception $exception){
             return $exception->getMessage();
         }
-//        return redirect()->route('school.index');
+        return redirect()->route('school.index');
     }
 }

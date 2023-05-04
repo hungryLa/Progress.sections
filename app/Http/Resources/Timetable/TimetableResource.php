@@ -23,6 +23,6 @@ class TimetableResource extends JsonResource
             'rest' => $this->rest,
             'rest_start' => $this->rest_start,
             'rest_end' => $this->rest_end,
-        ]
+        ];
     }
 }

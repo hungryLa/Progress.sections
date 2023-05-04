@@ -16,19 +16,19 @@
                 </tr>
                 </thead>
                 <tbody>
-                @foreach($invitations as $invitation)
+                @foreach($communications as $communication)
                     <tr>
-                        <th scope="row">{{__('other.'.$invitation->status)}}</th>
-                        <td>{{__('other.'.$invitation->school->type)}}</td>
-                        <td>{{$invitation->school->title}}</td>
+                        <th scope="row">{{__('other.'.$communication->status)}}</th>
+                        <td>{{__('other.'.$communication->school->type)}}</td>
+                        <td>{{$communication->school->title}}</td>
                         <td>
-                            <form method="POST" action="{{route('invitations.accept',compact('invitation'))}}">
+                            <form method="POST" action="{{route('communications.accept',compact('communication'))}}">
                                 @csrf
                                 <button class="btn btn-success">{{__('other.Accept')}}</button>
                             </form>
                         </td>
                         <td>
-                            <form method="POST" action="{{route('invitations.cancel',compact('invitation'))}}">
+                            <form method="POST" action="{{route('communications.cancel',compact('communication'))}}">
                                 @csrf
                                 @method('DELETE')
                                 <button class="btn btn-danger">{{__('other.Cancel')}}</button>

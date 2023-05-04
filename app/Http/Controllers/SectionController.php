@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\File;
+use App\Models\Occupation;
 use App\Models\School;
 use App\Models\Section;
 use Illuminate\Http\Request;
@@ -15,9 +16,9 @@ class SectionController extends Controller
     public function index(School $school)
     {
             $sections = $school->sections;
-            $data['sections'] = $sections;
-            return $data;
-//            return view('cabinet.sections.index',compact('school','sections'));
+//            $data['sections'] = $sections;
+//            return $data;
+            return view('cabinet.sections.index',compact('school','sections'));
     }
 
     /**
@@ -26,9 +27,10 @@ class SectionController extends Controller
     public function create(Request $request)
     {
         $school = School::find($request->school);
-        $data['school'] = $school;
-        return $data;
-//        return view('cabinet.sections.create',compact('school'));
+        $occupations = Occupation::orderBy('title')->get();
+//        $data['school'] = $school;
+//        return $data;
+        return view('cabinet.sections.create',compact('school','occupations'));
     }
 
     /**
@@ -39,7 +41,7 @@ class SectionController extends Controller
         try {
             $section = Section::create([
                 'school_id' => $request->school,
-                'title' => $request->title,
+                'occupation_id' => $request->occupation_id,
                 'description' => $request->description,
                 'contents' => $request->contents,
             ]);
@@ -55,8 +57,8 @@ class SectionController extends Controller
         if ($request->school){
             $school = School::find($request->school);
             $data['school'] = $school;
-            return $data;
-//            return redirect()->route('section.index',compact('school'));
+//            return $data;
+            return redirect()->route('section.index',compact('school'));
         }
 
     }
@@ -67,9 +69,9 @@ class SectionController extends Controller
     public function show(School $school, Section $section)
     {
         $images = $section->images;
-        $data['images'] = $images;
-        return $data;
-//        return view('cabinet.sections.show',compact('school','section','images'));
+//        $data['images'] = $images;
+//        return $data;
+        return view('cabinet.sections.show',compact('school','section','images'));
     }
 
     /**
@@ -78,9 +80,9 @@ class SectionController extends Controller
     public function edit(School $school, Section $section)
     {
         $images = $section->images()->orderBy('position','asc')->get();
-        $data['images'] = $images;
-        return $data;
-//        return view('cabinet.sections.edit',compact('school','section','images'));
+//        $data['images'] = $images;
+//        return $data;
+        return view('cabinet.sections.edit',compact('school','section','images'));
     }
 
     /**
@@ -90,7 +92,7 @@ class SectionController extends Controller
     {
         try {
             $success = $section->update([
-                'title' => $request->title,
+                'occupation_id' => $request->occupation_id,
                 'description' => $request->description,
                 'contents' => $request->contents,
             ]);
@@ -100,7 +102,7 @@ class SectionController extends Controller
         }catch (\Exception $exception){
             return $exception->getMessage();
         }
-//        return redirect()->route('section.edit',compact('school','section'));
+        return redirect()->route('section.edit',compact('school','section'));
     }
 
     /**
@@ -121,6 +123,6 @@ class SectionController extends Controller
         }catch (\Exception $exception){
             return $exception->getMessage();
         }
-//        return redirect()->route('cabinet.sections.index');
+        return redirect()->route('cabinet.sections.index');
     }
 }

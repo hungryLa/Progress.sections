@@ -22,7 +22,6 @@ class TimetableSectionFactory extends Factory
         return [
             'section_id' => Section::get()->random()->id,
             'timetable_id' => Timetable::get()->random()->id,
-            'occupation_id' => Occupation::get()->random()->id,
 
             'lesson_price' => random_int(1000,5000),
             'trial_price' => random_int(500,4000),

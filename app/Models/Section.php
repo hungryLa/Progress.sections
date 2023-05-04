@@ -31,4 +31,18 @@ class Section extends Model
     {
         return $this->belongsTo(School::class,'school_id');
     }
+
+    public function timetables() : HasMany
+    {
+        return $this->hasMany(TimetableSection::class,'section_id');
+    }
+
+    public function occupation(): BelongsTo{
+        return $this->belongsTo(Occupation::class,'occupation_id');
+    }
+
+    public function subscription(): HasMany
+    {
+        return $this->hasMany(Subscription::class,'section_id');
+    }
 }

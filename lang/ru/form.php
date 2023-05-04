@@ -43,4 +43,11 @@ return [
     "You entered an incorrect password" => "Вы ввели неверный пароль",
     "New password" => "Новый пароль",
     "Enter new password" => "Введите новый пароль",
+
+    'Price' => 'Цена',
+    'Specify the price' => 'Укажите стоимость',
+    'Price of lesson' => 'Стоимость занятия',
+    'Price of trial lesson' => 'Стоимость пробного занятия',
+    'Count in group' => 'Макс. кол-во людей в группе',
+    'Price of group lesson' => 'Стоимость груповых занятий',
 ];
