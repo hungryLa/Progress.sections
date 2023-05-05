@@ -2,7 +2,7 @@
     <ul class="list-group">
         @if(\Illuminate\Support\Facades\Auth::user()->hasRole(\App\Models\User::ROLES['admin']))
             <li class="list-group-item"><a href="{{route('cabinet.user.index')}}">{{__('other.List of users')}}</a></li>
-            <li class="list-group-item"><a href="{{route('cabinet.occupations.index')}}">{{__('other.Types of classes')}}</a></li>
+            <li class="list-group-item"><a href="{{route('cabinet.occupations.index')}}">{{__('other.Types of occupations')}}</a></li>
         @elseif(\Illuminate\Support\Facades\Auth::user()->hasRole(\App\Models\User::ROLES['schools_owner']))
             <li class="list-group-item"><a href="{{route('school.index')}}">{{__('other.Schools')}}</a></li>
         @elseif(\Illuminate\Support\Facades\Auth::user()->hasRole(\App\Models\User::ROLES['teacher']))

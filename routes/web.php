@@ -33,7 +33,7 @@ use App\Http\Controllers\PaymentController;
 
 Route::get('/',[GeneralController::class,'main_page'])->name('website.main_page');
 
-Route::group(['prefix' => 'cabinet','middleware' => 'auth'],function(){
+Route::group(['prefix' => 'cabinet','middleware' => ['auth','verified']],function(){
     Route::get('',[CabinetController::class,'main'])->name('cabinet.main');
 
     Route::group(['prefix' => 'users'],function(){
@@ -166,7 +166,16 @@ Route::group(['prefix' => 'cabinet','middleware' => 'auth'],function(){
     });
 });
 
+
+
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+Route::post('/email/verification', function (Request $request) {
+    $request->user()->sendEmailVerificationNotification();
+    session(['email' => __('send')]);
+
+    return back()->with('message', 'На указанную почту отправлено письмо со ссылкой для подтверждения электронной почты.');
+})->middleware(['auth', 'throttle:6,1'])->name('verification.send');
 Auth::routes([
     'verify' => true
 ]);

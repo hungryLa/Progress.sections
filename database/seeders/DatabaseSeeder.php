@@ -54,14 +54,14 @@ class DatabaseSeeder extends Seeder
             'email_verified_at' => Carbon::now(),
         ]);
         User::factory(5)->create();
-        Teacher::factory(5)->create();
-        Occupation::factory(20)->create();
-        TeacherInformation::factory(5)->create();
+        Teacher::factory(20)->create();
+        Occupation::factory(10)->create();
+        TeacherInformation::factory(20)->create();
         Timetable::factory(30)->create();
         School::factory(40)->create();
-        Section::factory(40)->create();
+        Section::factory(80)->create();
         TimetableSection::factory(10)->create();
-        ModelSchool::factory(10)->create();
+        ModelSchool::factory(80)->create();
 
     }
 }
