@@ -2,14 +2,12 @@ import {NavLink} from "react-router-dom";
 import './Header.scss';
 import {Container} from "../Container";
 import {useEffect, useState} from "react";
-import {Menu} from "../Menu";
-import {useDispatch} from "react-redux";
-import {toggleMenu} from "../../store/menuSlice";
+import useMenuStore from "../../store/useMenuStore";
 
 export const Header = () => {
     const [isSticky, setIsSticky] = useState(false)
 
-    const dispatch = useDispatch()
+    const toggleMenu = useMenuStore(state => state.toggleMenu)
 
     useEffect(() => {
        const handleScroll = () => {
@@ -31,7 +29,7 @@ export const Header = () => {
                     </NavLink>
                     <div className="header__info">
                         <a className="header__number" href={'tel:+79961234567'}>+7 (996) 123-45-67</a>
-                        <button className="header__burger" onClick={() => dispatch(toggleMenu())}>x</button>
+                        <button className="header__burger" onClick={() => toggleMenu()}>x</button>
                     </div>
                 </div>
             </Container>

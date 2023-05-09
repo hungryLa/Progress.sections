@@ -1,9 +1,6 @@
 import './Sidebar.scss';
 import {Navigate, NavLink, useNavigate} from "react-router-dom";
-import {useDispatch, useSelector} from "react-redux";
-import {logout} from "../../store/authSlice";
-import {useEffect} from "react";
-import {persistor} from "../../store";
+import useAuthStore from '../../store/useAuthStore';
 
 
 const navigationLinks = {
@@ -40,45 +37,42 @@ const navigationLinks = {
     mainAdmin: [
         {
             title: 'Список пользователей',
-            path: '/admin/users'
+            path: '/users'
         },
         {
             title: 'Создать пользователя',
-            path: '/admin/users/new'
+            path: '/users/new'
         },
         {
             title: 'Список секций',
-            path: '/admin/sections'
+            path: '/sections'
         },
         {
             title: 'Комиссия',
-            path: '/admin/commission'
+            path: '/commission'
         },
         {
             title: 'Выписки',
-            path: '/admin/extracts'
+            path: '/extracts'
         },
         {
             title: 'Настройки',
-            path: '/admin/settings'
+            path: '/settings'
         }
     ],
 }
 
 export const Sidebar = () => {
-    const user = useSelector((state) => state.auth.user)
-    const dispatch = useDispatch()
+    const user = useAuthStore((state) => state.user)
     const navigate = useNavigate()
 
     const logoutHandler = async () => {
-        await dispatch(logout())
-        await persistor.purge();
+        await useAuthStore.reset()
+        await localStorage.removeItem('token')
         await navigate('/')
     }
 
-    // useEffect(() => {
-    //     console.log(user)
-    // })
+    
 
     return (
         <aside className={'sidebar'}>

@@ -3,11 +3,11 @@ import {Footer} from "../../components/Footer";
 import {Outlet} from "react-router-dom";
 import {Sidebar} from "../../components/Sidebar";
 import {Container} from "../../components/Container";
-import {useSelector} from "react-redux";
 import {Menu} from "../../components/Menu";
+import useMenuStore from "../../store/useMenuStore";
 
 export const AuthorizedLayout = () => {
-    const isActive = useSelector((state) => state.menu.isActive)
+    const isActive = useMenuStore((state) => state.menuActive)
     return (
         <div className='page'>
             <Header />
