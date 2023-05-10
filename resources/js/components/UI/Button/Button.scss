@@ -37,4 +37,39 @@
             color: var(--white);
         }
     }
+
+    &-white {
+        background-color: var(--white);
+        border: 1px solid var(--white);
+
+        &:hover {
+            border-color: var(--orange);
+            background-color: var(--white);
+            color: var(--orange);
+        }
+
+        &:active {
+            background-color: var(--orange-darken);
+            color: var(--white);
+            border-color: var(--orange-darken);
+        }
+    }
+
+    &-blue {
+        background-color: var(--blue);
+        border: 1px solid var(--blue);
+        color: var(--white);
+
+        &:hover {
+            border-color: var(--orange);
+            background-color: var(--orange);
+            color: var(--white);
+        }
+
+        &:active {
+            background-color: var(--orange-darken);
+            color: var(--white);
+            border-color: var(--orange-darken);
+        }
+    }
 }

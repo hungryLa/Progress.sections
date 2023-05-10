@@ -8,6 +8,9 @@ const useAuthStore = create(
             user: null,
             token: '',
             error: null,
+            clearError: () => {
+                set({error: ''})
+            },
             login: async (email, password) => {
                 try {
                     const response = await api.post(`/login?email=${email}&password=${password}`)

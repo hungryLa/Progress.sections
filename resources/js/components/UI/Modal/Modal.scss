@@ -4,7 +4,7 @@
     top: 50vh;
     left: 50%;
     transform: translate(-50%, -50%);
-    //display: none;
+    display: none;
     transition: var(--transition);
     margin: 0 auto;
     width: 100%;
@@ -28,7 +28,6 @@
 
     &-active {
         display: block;
-
     }
 
     &__buttons {
