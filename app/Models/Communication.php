@@ -6,17 +6,23 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Invitation extends Model
+class Communication extends Model
 {
     use HasFactory;
 
     protected $guarded = [];
 
-    const TYPE = 'invitation';
+    const TYPE = 'communication';
+
+    const TYPES = [
+        'invitation' => 'invitation',
+        'job request' => 'job request',
+    ];
 
     const STATUS = [
         'accepted' => 'accepted',
-        'invitation' => 'invitation',
+        'invited' => 'invited',
+        'The application has been sent' => 'The application has been sent',
         'rejected' => 'rejected',
     ];
 
@@ -28,5 +34,9 @@ class Invitation extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class,'user_id');
+    }
+    public function teacher(): BelongsTo
+    {
+        return $this->belongsTo(Teacher::class,'user_id');
     }
 }

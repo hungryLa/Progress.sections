@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\User\ChangePasswordRequest;
 use App\Http\Requests\User\StoreRequest;
+use App\Mail\WelcomeMail;
 use App\Models\ModelSchool;
 use App\Models\ModelUser;
 use App\Models\Teacher;
@@ -11,6 +12,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use voku\helper\ASCII;
 
@@ -22,30 +24,41 @@ class UserController extends Controller
     public function index()
     {
         $users = User::orderBy('id','desc')->get();
-        $data['users'] = $users;
-        return $data;
+//        $data['users'] = $users;
+//        return $data;
+        return view('cabinet.users.index', compact('users'));
+    }
+
+    public function create(){
+        return view('cabinet.users.create');
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreRequest $request)
     {
         try {
-            $success = User::create([
+            $password = Str::random(10);
+            $user = User::create([
                 'role' => $request->role,
-                'username' => $request->username,
                 'full_name' => $request->full_name,
                 'email' => $request->email,
-                'password' => Hash::make($request->password),
+                'password' => Hash::make($password),
                 'remember_token' => Str::random(15),
             ]);
+            $data['password'] = $password;
+            $data['user'] = $user;
+            $success = Mail::to($user->email)->send(new WelcomeMail($data));
             if($success){
-                session()->flash('success','other.Record successfully added');
+                session()->flash('success',__('other.Record successfully added'));
             }
         }catch (\Exception $exception){
             return $exception->getMessage();
         }
+
+
+        return redirect()->route('cabinet.user.index');
     }
 
     /**
@@ -53,8 +66,9 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-        $data['user'] = $user;
-        return $data;
+//        $data['user'] = $user;
+//        return $data;
+        return view('cabinet.users.edit',compact('user'));
     }
 
     /**
@@ -65,7 +79,6 @@ class UserController extends Controller
         try {
             $success = $user->update([
                'role' => $request->role,
-               'username' => $request->username,
                'full_name' => $request->full_name,
                'email' => $request->email,
             ]);
@@ -75,6 +88,7 @@ class UserController extends Controller
         }catch (\Exception $exception){
             return $exception->getMessage();
         }
+        return redirect()->route('cabinet.user.edit',compact('user'));
     }
 
     /**
@@ -90,6 +104,7 @@ class UserController extends Controller
         }catch (\Exception $exception){
             return $exception->getMessage();
         }
+        return redirect()->back();
     }
 
     public function link_user(Request $request){
@@ -108,6 +123,7 @@ class UserController extends Controller
         }catch (\Exception $exception){
             return $exception->getMessage();
         }
+        return redirect()->back();
     }
 
     public function unlink_user(User $user){
@@ -122,17 +138,18 @@ class UserController extends Controller
         }catch (\Exception $exception){
             return $exception->getMessage();
         }
+        return redirect()->back();
     }
 
-//    public function settings(User $user){
-//        return view('cabinet.users.settings',compact('user'));
-//    }
+    public function settings(User $user){
+        return view('cabinet.users.settings',compact('user'));
+    }
 
     public function change_information(Request $request, User $user){
         try {
             $success = $user->update([
-                'username' => $request->username,
                 'full_name' => $request->full_name,
+                'phone_number' => $request->phone_number,
                 'email' => $request->email,
             ]);
             if($success){
@@ -141,7 +158,7 @@ class UserController extends Controller
         }catch (\Exception $exception){
             return $exception->getMessage();
         }
-//        return redirect()->route('cabinet.user.settings',compact('user'));
+        return redirect()->route('cabinet.user.settings',compact('user'));
     }
 
     public function change_password(ChangePasswordRequest $request, User $user){
@@ -159,6 +176,6 @@ class UserController extends Controller
         }catch (\Exception $exception){
             return $exception->getMessage();
         }
-//        return redirect()->route('cabinet.user.settings',compact('user'));
+        return redirect()->route('cabinet.user.settings',compact('user'));
     }
 }

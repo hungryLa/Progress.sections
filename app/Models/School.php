@@ -45,6 +45,11 @@ class School extends Model
         return $this->hasMany(Section::class,'school_id');
     }
 
+    public function timetables(): HasMany
+    {
+        return $this->hasMany(Timetable::class,'model_id')->where('type',Timetable::TYPES['school']);
+    }
+
     public function teachers(): BelongsToMany
     {
         return $this->belongsToMany(Teacher::class,'model_schools','school_id','model_id')->where([
@@ -54,7 +59,17 @@ class School extends Model
 
     public function invitations(): HasMany
     {
-        return $this->hasMany(Invitation::class,'school_id');
+        return $this->hasMany(Communication::class,'school_id')->where('type', Communication::TYPES['invitation']);
+    }
+
+    public function applications(): HasMany
+    {
+        return $this->hasMany(Communication::class,'school_id')->where('type', Communication::TYPES['job request']);
+    }
+
+    public function subscriptions(): HasMany
+    {
+        return $this->hasMany(Subscription::class,'school_id');
     }
 
 }

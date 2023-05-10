@@ -14,6 +14,6 @@ class ModelUser extends Model
     const TYPES = [
         'school' => School::TYPE,
         'users' => User::TYPE,
-        'invitation' => Invitation::TYPE,
+        'communication' => Communication::TYPE,
     ];
 }

@@ -5,6 +5,7 @@ namespace Database\Factories;
 use App\Models\Occupation;
 use App\Models\User;
 use App\Structures\TeacherOccupations;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -27,6 +28,7 @@ class TeacherFactory extends Factory
             'email' => $this->faker->email,
             'password' => Hash::make('password'),
             'remember_token' => Str::random(10),
+            'email_verified_at' => Carbon::now(),
         ];
     }
 }

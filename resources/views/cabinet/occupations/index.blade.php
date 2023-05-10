@@ -5,7 +5,7 @@
         <x-cabinet.sidebar/>
         <div class="col-9">
             <x-common.flash/>
-            <a href="{{route('cabinet.occupations.create')}}">{{__('other.Add a record')}}</a>
+            <a class="btn btn-success" href="{{route('cabinet.occupations.create')}}">{{__('other.Add a record')}}</a>
             <table class="table">
                 <thead>
                 <tr>
@@ -20,7 +20,6 @@
                     <tr>
                         <td>{{$occupation->title}}</td>
                         @if(Auth::user()->hasRole(\App\Models\User::ROLES['admin']))
-                            <td><a class="btn btn-warning" href="{{route('cabinet.occupations.edit',compact('occupation'))}}">{{__('other.Change')}}</a></td>
                             <td>
                                 <form method="POST" action="{{route('cabinet.occupations.delete',compact('occupation'))}}">
                                     @csrf

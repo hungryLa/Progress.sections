@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('sections', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('school_id');
-            $table->string('title');
+            $table->unsignedBigInteger('occupation_id');
             $table->string('description');
             $table->text('contents');
             $table->timestamps();

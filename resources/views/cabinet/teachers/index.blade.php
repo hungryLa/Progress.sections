@@ -24,7 +24,7 @@
                             <td>{{$active_teacher->full_name}}</td>
                             <td>{{$active_teacher->email}}</td>
                             <td>
-                                <form method="POST" action="{{route('teacher.unlink',['school' => $school,'teacher' => $active_teacher])}}">
+                                <form method="POST" action="{{route('communications.teacher.unlink',['school' => $school,'teacher' => $active_teacher])}}">
                                     @csrf
                                     @method('DELETE')
                                     <button class="btn btn-danger">{{__('other.Unlink')}}</button>
@@ -71,9 +71,9 @@
                             <th scope="row">{{$teacher->id}}</th>
                             <td>{{$teacher->full_name}}</td>
                             <td>{{$teacher->email}}</td>
-                            @if(count($teacher->invitations()->where(['school_id' => $school->id, 'status' => \App\Models\Invitation::STATUS['invitation']])->get()) == 0)
+                            @if(count($teacher->invitations()->where(['school_id' => $school->id, 'status' => \App\Models\Communication::STATUS['invited']])->get()) == 0)
                             <td>
-                                <form method="POST" action="{{route('teacher.invite',['school' => $school,'teacher' => $teacher])}}">
+                                <form method="POST" action="{{route('communications.teacher.invite',['school' => $school,'teacher' => $teacher])}}">
                                     @csrf
                                     <button class="btn btn-success">{{__('other.To invite')}}</button>
                                 </form>

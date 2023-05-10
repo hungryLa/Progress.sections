@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Occupation;
 use App\Models\School;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -19,7 +20,7 @@ class SectionFactory extends Factory
     {
         return [
             'school_id' => School::get()->random()->id,
-            'title' => $this->faker->text(40),
+            'occupation_id' => Occupation::get()->random()->id,
             'description' => $this->faker->text(80),
             'contents' => $this->faker->text(200),
         ];

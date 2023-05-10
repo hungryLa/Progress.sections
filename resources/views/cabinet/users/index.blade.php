@@ -5,7 +5,7 @@
         <x-cabinet.sidebar/>
         <div class="col-9">
             <x-common.flash/>
-            <a href="{{route('cabinet.users.create')}}">{{__('other.Create a user')}}</a>
+            <a href="{{route('cabinet.user.create')}}">{{__('other.Create a user')}}</a>
             <table class="table">
                 <thead>
                 <tr>
@@ -23,9 +23,9 @@
                         <td>{{__('form.'.$user->role)}}</td>
                         <td>{{$user->full_name}}</td>
                         <td>{{$user->email}}</td>
-                        <td><a class="btn btn-warning" href="{{route('cabinet.users.edit',compact('user'))}}">{{__('other.Change')}}</a></td>
+                        <td><a class="btn btn-warning" href="{{route('cabinet.user.edit',compact('user'))}}">{{__('other.Change')}}</a></td>
                         <td>
-                            <form method="POST" action="{{route('cabinet.users.delete',compact('user'))}}">
+                            <form method="POST" action="{{route('cabinet.user.delete',compact('user'))}}">
                                 @csrf
                                 @method('DELETE')
                                 <button class="btn btn-danger">{{__('other.Delete')}}</button>

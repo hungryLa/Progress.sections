@@ -11,11 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('invitations', function (Blueprint $table) {
+        Schema::create('payments', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('school_id');
             $table->unsignedBigInteger('user_id');
-            $table->enum('status',\App\Models\Invitation::STATUS);
+            $table->unsignedBigInteger('amount');
+            $table->string('uuid')->unique();
             $table->timestamps();
         });
     }
@@ -25,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('invitations');
+        Schema::dropIfExists('payments');
     }
 };

@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Teacher extends Model
@@ -25,8 +26,20 @@ class Teacher extends Model
         ])->first();
     }
 
+    public function schools():BelongsToMany{
+        return $this->belongsToMany(School::class,'model_schools','model_id','school_id');
+    }
+
+    public function communications(){
+        return $this->hasMany(Communication::class,'user_id');
+    }
+
     public function invitations(){
-        return $this->hasMany(Invitation::class,'user_id');
+        return $this->hasMany(Communication::class,'user_id')->where('type',Communication::TYPES['invitation']);
+    }
+
+    public function job_requests(){
+        return $this->hasMany(Communication::class,'user_id')->where('type',Communication::TYPES['job request']);
     }
 
     public function user(): BelongsTo{
@@ -35,7 +48,12 @@ class Teacher extends Model
 
     public function timetables(): HasMany
     {
-        return $this->hasMany(Timetable::class,'teacher_id');
+        return $this->hasMany(Timetable::class,'model_id')->where('type',Timetable::TYPES['teacher']);
+    }
+
+    public function timetable_sections(): HasMany
+    {
+        return $this->hasMany(TimetableSection::class,'teacher_id');
     }
 
     public function information(): BelongsTo

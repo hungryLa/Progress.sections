@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('section_id');
             $table->unsignedBigInteger('timetable_id');
-            $table->unsignedBigInteger('occupation_id');
 
             $table->unsignedSmallInteger('lesson_price');
             $table->unsignedSmallInteger('trial_price')->nullable();

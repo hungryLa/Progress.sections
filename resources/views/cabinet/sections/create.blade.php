@@ -8,8 +8,11 @@
             <form method="POST" action="{{route('section.store',compact('school'))}}" enctype="multipart/form-data">
                 @csrf
                 <x-form.File name="images[]" title="{{__('form.Gallery')}}" multiple="multiple"/>
-                <x-form.inputText name="title" title="{{__('form.Title')}}"
-                                  placeholder="{{__('form.Enter the title')}}" value="{{old('title')}}" disabled=""/>
+                <x-form.Select name="occupation_id" label="{{__('other.Type of occupations')}}" default-value="{{__('other.Choose the type of activity')}}" disabled="">
+                    @foreach($occupations as $occupation)
+                        <option value="{{$occupation->id}}" {{$occupation->id == old('occupation_id') ? 'selected' : ''}}>{{$occupation->title}}</option>
+                    @endforeach
+                </x-form.Select>
                 <x-form.inputText name="description" title="{{__('form.Description')}}"
                                   placeholder="{{__('form.Enter the description')}}" value="{{old('description')}}" disabled=""/>
                 <x-form.Textarea name="contents" value="{{old('contents')}}" title="{{__('form.Contents')}}"

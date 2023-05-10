@@ -6,7 +6,7 @@
 
             @if(\Illuminate\Support\Facades\Auth::user()->hasRole(\App\Models\User::ROLES['schools_owner']))
                 <a href="">{{__('other.Reservations')}}</a>
-                <a href="">{{__('other.Schedules')}}</a>
+                <a href="{{route('sections.timetables.index',compact('section'))}}">{{__('other.Timetables')}}</a>
             @endif
             <a href="{{route('section.index',compact('school'))}}">{{__('other.Go back')}}</a>
         </div>
@@ -18,8 +18,8 @@
             <form>
                 @csrf
                 @method('PUT')
-                <x-form.inputText name="title" title="{{__('form.Title')}}"
-                                  placeholder="{{__('form.Enter the title')}}" value="{{$section->title}}" disabled="disabled"/>
+                <x-form.inputText name="title" title="{{__('other.Type of occupation')}}"
+                                  placeholder="{{__('other.Choose the type of activity')}}" value="{{$section->occupation->title}}" disabled="disabled"/>
                 <x-form.inputText name="description" title="{{__('form.Description')}}"
                                   placeholder="{{__('form.Enter the description')}}" value="{{$section->description}}" disabled="disabled"/>
                 <x-form.Textarea name="contents" value="{{$section->description}}" title="{{__('form.Contents')}}"

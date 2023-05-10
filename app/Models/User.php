@@ -69,6 +69,11 @@ class User extends Authenticatable implements MustVerifyEmail, JWTSubject
         }
     }
 
+    public function getTeacher(){
+        $teacher = Teacher::find($this->id);
+        return $teacher;
+    }
+
     public function linked_users(): BelongsToMany
     {
         return $this->belongsToMany(User::class,'model_users','user_id','model_id')
@@ -91,5 +96,11 @@ class User extends Authenticatable implements MustVerifyEmail, JWTSubject
 
     public function teacher(): BelongsTo{
         return $this->belongsTo(Teacher::class,'user_id');
+    }
+
+    public function subscriptions(): BelongsToMany
+    {
+        return $this->belongsToMany(Subscription::class,'subscription_users')
+            ->withPivot(['price_subscription','deposit','remaining_classes']);
     }
 }

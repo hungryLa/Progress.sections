@@ -13,12 +13,13 @@ return new class extends Migration
     {
         Schema::create('timetables', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('teacher_id');
-            $table->json('days_week');
+            $table->enum('type', \App\Models\Timetable::TYPES);
+            $table->unsignedBigInteger('model_id');
+            $table->json('weekday');
             $table->time('lesson_time');
             $table->time('workday_start');
             $table->time('workday_end');
-            $table->boolean('rest')->default(true);
+            $table->boolean('without_rest')->default(false);
             $table->time('rest_start')->nullable();
             $table->time('rest_end')->nullable();
             $table->timestamps();

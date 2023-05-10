@@ -20,9 +20,11 @@
             <x-common.flash/>
             <a class="btn btn-success" href="{{route('section.create',compact('school'))}}">{{__('other.Add a record')}}</a>
             @if(count($sections) != 0)
-                @foreach($sections as $section)
-                    <x-sections.showCard :school="$school" :section="$section"/>
-                @endforeach
+                <div class="row">
+                    @foreach($sections as $section)
+                        <x-sections.showCard :school="$school" :section="$section"/>
+                    @endforeach
+                </div>
             @endif
         </div>
     </div>
