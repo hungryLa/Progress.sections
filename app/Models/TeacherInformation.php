@@ -11,6 +11,7 @@ class TeacherInformation extends Model
 {
     use HasFactory;
 
+    protected $table = 'teacher_information';
     protected $guarded = [];
     protected $casts = [
         'occupations' => TeacherOccupations::class,

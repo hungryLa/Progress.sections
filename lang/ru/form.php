@@ -59,4 +59,9 @@ return [
     'Value' => 'Значение',
     'Specify the number of classes or the amount of the deposit' => 'Укажите количество занятий или сумму депозита',
 
+    'Teaching experience' => 'Преподавательский опыт',
+    'Describe your teaching experience' => 'Опишите свой преподавательский опыт',
+    'About me' => 'Обо мне',
+    'Provide information about yourself' => 'Укажите информацию о себе',
+
 ];
