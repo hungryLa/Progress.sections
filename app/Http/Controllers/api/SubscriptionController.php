@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\FileController;
 use App\Http\Requests\Subscriptions\StoreRequest;
+use App\Http\Resources\SubscriptionRecource;
 use App\Models\File;
 use App\Models\School;
 use App\Models\Subscription;
@@ -23,11 +24,12 @@ class SubscriptionController extends Controller
         } else {
             $subscriptions = $school->subscriptions()->where('status', Subscription::STATUS['active'])->get();
         }
+        return SubscriptionRecource::collection($subscriptions);
     }
 
     public function user_index(User $user)
     {
-        return $user->subscriptions;
+        return SubscriptionRecource::collection($user->subscriptions);
     }
 
     /**
@@ -35,7 +37,7 @@ class SubscriptionController extends Controller
      */
     public function create(School $school)
     {
-        return $school->sections;
+        return SubscriptionRecource::collection($school->sections);
     }
 
     /**
@@ -76,7 +78,7 @@ class SubscriptionController extends Controller
      */
     public function show(School $school, Subscription $subscription)
     {
-        return $school->sections;
+        return SubscriptionRecource::collection($school->sections);
     }
 
     /**
@@ -84,7 +86,7 @@ class SubscriptionController extends Controller
      */
     public function edit(School $school, Subscription $subscription)
     {
-        return $school->sections;
+        return SubscriptionRecource::collection($school->sections);
     }
 
     /**

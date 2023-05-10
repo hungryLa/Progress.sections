@@ -34,19 +34,18 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::group([
     'namespace' => 'api',
     'middleware' => 'api',
-    'prefix' => 'auth'
-
 ], function ($router) {
     Route::post('login', [AuthController::class, 'login']);
     Route::post('logout', [AuthController::class, 'logout']);
     Route::post('refresh', [AuthController::class, 'refresh']);
     Route::post('me', [AuthController::class, 'me']);
 });
+
 Route::group(['middleware' => 'jwt.auth'], function () {
-    Route::group(['prefix' => 'cabinet', 'middleware' => ['auth', 'verified']], function () {
+    Route::group(['prefix' => 'cabinet', 'middleware' => 'verified'], function () {
         Route::group(['prefix' => 'users'], function () {
             Route::group(['middleware' => 'role:admin'], function () {
-                Route::get('index', [UserController::class, 'index'])->name('cabinet.user.index');
+                Route::get('', [UserController::class, 'index']);
                 Route::get('create', [UserController::class, 'create'])->name('cabinet.user.create');
                 Route::post('store', [UserController::class, 'store'])->name('cabinet.user.store');
             });
@@ -113,7 +112,7 @@ Route::group(['middleware' => 'jwt.auth'], function () {
                 Route::get('create', [SchoolController::class, 'create'])->name('school.create');
                 Route::post('store', [SchoolController::class, 'store'])->name('school.store');
             });
-            Route::get('{school}/show', [SchoolController::class, 'show'])->name('school.show');
+            Route::get('{school}', [SchoolController::class, 'show'])->name('school.show');
             Route::group(['middleware' => 'role:schools_owner'], function () {
                 Route::get('{school}/edit', [SchoolController::class, 'edit'])->name('school.edit');
                 Route::put('{school}/update', [SchoolController::class, 'update'])->name('school.update');
@@ -179,7 +178,7 @@ Route::group(['middleware' => 'jwt.auth'], function () {
         });
 
         Route::group(['prefix' => 'occupations'], function () {
-            Route::get('index', [OccupationController::class, 'index'])->name('cabinet.occupations.index');
+            Route::get('', [OccupationController::class, 'index'])->name('cabinet.occupations.index');
             Route::get('create', [OccupationController::class, 'create'])->name('cabinet.occupations.create');
             Route::post('store', [OccupationController::class, 'store'])->name('cabinet.occupations.store');
             Route::get('{occupation}/edit', [OccupationController::class, 'edit'])->name('cabinet.occupations.edit');
@@ -188,7 +187,7 @@ Route::group(['middleware' => 'jwt.auth'], function () {
         });
 
         Route::group(['prefix' => 'people'], function () {
-            Route::get('index', [PersonController::class, 'index'])->name('cabinet.people.index');
+            Route::get('', [PersonController::class, 'index'])->name('cabinet.people.index');
             Route::post('store', [PersonController::class, 'store'])->name('cabinet.people.store');
             Route::post('{person}/delete', [PersonController::class, 'destroy'])->name('cabinet.people.delete');
         });

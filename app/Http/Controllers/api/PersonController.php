@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\PersonRecource;
+use App\Http\Resources\User\UserResource;
 use App\Models\Person;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -11,8 +13,8 @@ class PersonController extends Controller
 {
     public function index()
     {
-        $data['linked_users'] = Auth::user()->linked_users;
-        $data['people'] = Auth::user()->people;
+        $data['linked_users'] = UserResource::collection(Auth::user()->linked_users);
+        $data['people'] = PersonRecource::collection(Auth::user()->people);
         return $data;
     }
 

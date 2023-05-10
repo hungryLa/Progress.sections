@@ -4,6 +4,10 @@ namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\TimetableSection\StoreRequest;
+use App\Http\Resources\SchoolRecource;
+use App\Http\Resources\SectionRecource;
+use App\Http\Resources\TimetableSectionRecource;
+use App\Http\Resources\User\UserResource;
 use App\Models\Section;
 use App\Models\TimetableSection;
 use Illuminate\Http\Request;
@@ -12,16 +16,16 @@ class TimetableSectionController extends Controller
 {
     public function index(Section $section)
     {
-        $data['section'] = $section;
-        $data['timetables'] = $section->timetables;
+        $data['section'] = new SectionRecource($section);
+        $data['timetables'] = TimetableSectionRecource::collection($section->timetables);
         return $data;
     }
 
     public function create(Section $section)
     {
-        $data['school'] = $section->school;
-        $data['teachers'] = $data['school']->teachers;
-        $data['school_timetables'] = $data['school']->timetables;
+        $data['school'] = new SchoolRecource($section->school);
+        $data['teachers'] = UserResource::collection($data['school']->teachers);
+        $data['school_timetables'] = TimetableSectionRecource::collection($data['school']->timetables);
         return $data;
     }
 
@@ -46,9 +50,9 @@ class TimetableSectionController extends Controller
 
     public function edit(Section $section, TimetableSection $timetableSection)
     {
-        $data['school'] = $section->school;
-        $data['teachers'] = $data['school']->teachers;
-        $data['timetableSection'] = $timetableSection;
+        $data['school'] = new SchoolRecource($section->school);
+        $data['teachers'] = UserResource::collection($data['school']->teachers);
+        $data['school_timetables'] = TimetableSectionRecource::collection($data['school']->timetables);
         return $data;
     }
 

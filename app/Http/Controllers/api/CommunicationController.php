@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\CommunicationRecource;
+use App\Http\Resources\SchoolRecource;
+use App\Http\Resources\User\UserResource;
 use App\Models\Communication;
 use App\Models\ModelSchool;
 use App\Models\School;
@@ -18,19 +21,23 @@ class CommunicationController extends Controller
     public function index()
     {
         $teacher = Teacher::find(Auth::user())->first();
-        $data['teacher'] = $teacher;
-        $data['communications'] = $teacher->invitations()->where('status', Communication::STATUS['invited'])->get();
+        $data['teacher'] = new UserResource($teacher);
+        $data['communications'] = CommunicationRecource::collection(
+            $teacher->invitations()->where('status', Communication::STATUS['invited'])->get()
+        );
         return $data;
     }
 
     public function application_index(Request $request)
     {
         $school = School::find($request->school);
-        $data['school'] = $school;
-        $data['communications'] = $school->applications()->where(
-            'status',
-            Communication::STATUS['The application has been sent']
-        )->get();
+        $data['school'] = new SchoolRecource($school);
+        $data['communications'] = CommunicationRecource::collection(
+            $school->applications()->where(
+                'status',
+                Communication::STATUS['The application has been sent']
+            )->get()
+        );
         return $data;
     }
 

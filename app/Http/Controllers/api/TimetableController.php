@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\SchoolRecource;
 use App\Http\Resources\Timetable\TimetableResource;
+use App\Http\Resources\User\UserResource;
 use App\Models\School;
 use App\Models\Teacher;
 use App\Models\Timetable;
@@ -15,28 +17,16 @@ class TimetableController extends Controller
     public function index(Request $request)
     {
         if ($request->teacher) {
-            $data['teacher'] = Teacher::find($request->teacher);
-            $data['timetables'] = $data['teacher']->timetables;
+            $teacher = Teacher::find($request->teacher);
+            $timetables = $teacher->timetables;
         } elseif ($request->school) {
-            $data['school'] = School::find($request->school);
-            $data['timetables'] = $data['school']->timetables;
+            $school = School::find($request->school);
+            $timetables = $school->timetables;
         }
+        $data['school'] = new SchoolRecource($school);
+        $data['teacher'] = new UserResource($teacher);
+        $data['timetables'] = TimetableResource::collection($timetables);
         return $data;
-    }
-
-    public function api_index(Teacher $teacher)
-    {
-        $data['timetables'] = TimetableResource::collection($teacher->timetables);
-        return $data;
-    }
-
-    public function create(Request $request)
-    {
-        if ($request->teacher) {
-            return Teacher::find($request->teacher);
-        } elseif ($request->school) {
-            return School::find($request->school);
-        }
     }
 
     public function store(Request $request)
@@ -70,13 +60,6 @@ class TimetableController extends Controller
         } catch (\Exception $exception) {
             return $exception->getMessage();
         }
-    }
-
-    public function edit(Request $request, Timetable $timetable)
-    {
-        $data['teacher'] = Teacher::find($request->teacher);
-        $data['timetable'] = $timetable;
-        return $data;
     }
 
     public function update(Request $request, Timetable $timetable)
