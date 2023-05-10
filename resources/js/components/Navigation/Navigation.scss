@@ -1,3 +1,32 @@
 .navigation {
 
+    &__item {
+        padding: 1rem 1rem 1rem 0;
+        transition: var(--transition);
+
+        &-link{
+            text-decoration: none;
+            font-size: var(--s);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        &:hover {
+            color: var(--orange);
+        }
+    }
+    &-sidebar {
+        @media screen and (max-width: 1280px) {
+            display: none;
+        }
+    }
+
+    &-menu {
+        display: none;
+
+        @media screen and (max-width: 1280px) {
+            display: flex;
+        }
+    }
 }

@@ -20,6 +20,7 @@ const useAuthStore = create(
                     })
                     localStorage.setItem('token', access_token)
                 } catch (error) {
+                    console.log(error)
                     if(error.response.status === 401) {
                         set({
                             user: null,

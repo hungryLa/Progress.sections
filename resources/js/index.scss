@@ -9,7 +9,7 @@
     --orange-transparent: rgba(242, 68, 5, .5);
 
     // CONTAINER
-    --container-offset: 1.2rem;
+    --container-offset: 2rem;
     --container-width: 132rem;
 
     // FONTS
@@ -148,13 +148,34 @@ img {
     .content {
         padding: 2rem 0;
         position: relative;
-        .content__inner {
+
+        &__title {
+            margin: 5rem 0;
+
+            @media screen and (max-width: 1280px) {
+                margin: 3.6rem 0;
+            }
+
+            @media screen and (max-width: 992px) {
+                margin-top: 0;
+            }
+
+            @media screen and (max-width: 768px) {
+                margin: 0 0 3.2rem 0;
+            }
+        }
+
+        &__inner {
             display: grid;
             grid-template-columns: minmax(28.5rem, 33rem) 1fr;
 
             @media screen and (max-width: 1280px) {
                 grid-template-columns: 1fr;
             }
+        }
+
+        @media screen and (max-width: 768px) {
+            padding: 1.2rem 0;
         }
     }
 

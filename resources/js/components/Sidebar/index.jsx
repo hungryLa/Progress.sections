@@ -14,10 +14,10 @@ export const Sidebar = () => {
 
     return (
         <aside className={'sidebar'}>
-            {user?.role === 'admin' && <Navigation navigationLinks={navigationLinks.mainAdmin}/>}
-            {user?.role === 'schools_owner' && <Navigation navigationLinks={navigationLinks.sectionAdmin}/>}
-            {user?.role === 'user' && <Navigation navigationLinks={navigationLinks.user}/>}
-            {user?.role === 'teacher' && <Navigation navigationLinks={navigationLinks.teacher}/>}
+            {user?.role === 'admin' && <Navigation place={'sidebar'} navigationLinks={navigationLinks.mainAdmin}/>}
+            {user?.role === 'schools_owner' && <Navigation place={'sidebar'} navigationLinks={navigationLinks.sectionAdmin}/>}
+            {user?.role === 'user' && <Navigation place={'sidebar'} navigationLinks={navigationLinks.user}/>}
+            {user?.role === 'teacher' && <Navigation place={'sidebar'} navigationLinks={navigationLinks.teacher}/>}
         </aside>
     )
 }

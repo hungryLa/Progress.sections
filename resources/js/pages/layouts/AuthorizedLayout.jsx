@@ -6,6 +6,7 @@ import {Container} from "../../components/Container";
 import {useSelector} from "react-redux";
 import {Menu} from "../../components/Menu";
 import useMenuStore from "../../store/useMenuStore";
+import {Title} from "../../components/UI/Title";
 
 export const AuthorizedLayout = () => {
     const isMenuActive = useMenuStore(store => store.isMenuActive)
@@ -14,6 +15,7 @@ export const AuthorizedLayout = () => {
             <Header />
             <section className='content'>
                 <Container>
+                    <Title className={'content__title'}>Личный кабинет</Title>
                     <div className="content__inner">
                         <Sidebar />
                         <main>

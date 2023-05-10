@@ -26,8 +26,7 @@ class TimetableController extends Controller
     }
 
     public function api_index(Teacher $teacher){
-        $data['timetables'] = TimetableResource::collection($teacher->timetables);
-        dd($data);
+        $data['timetables'] = $teacher->timetables;
         return $data;
     }
 
