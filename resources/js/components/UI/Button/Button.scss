@@ -1,0 +1,40 @@
+.button {
+    border-radius: 1rem;
+    border: 0;
+    padding: 1.5rem 1rem;
+    transition: var(--transition);
+
+    &-green {
+        background-color: var(--green);
+        border: 1px solid var(--green);
+        color: var(--white);
+
+        &:hover {
+            color: var(--green);
+            background-color: var(--white);
+        }
+
+        &:active {
+            background-color: var(--green-darken);
+            border-color: var(--green-darken);
+            color: var(--white);
+        }
+    }
+
+    &-gray {
+        background-color: var(--gray-light);
+        border: 1px solid var(--gray-darken);
+        color: var(--blue);
+
+        &:hover {
+            background-color: var(--gray-darken);
+            border-color: var(--gray-light);
+        }
+
+        &:active {
+            background-color: var(--gray-darkest);
+            border-color: var(--gray-darkest);
+            color: var(--white);
+        }
+    }
+}

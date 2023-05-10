@@ -7,6 +7,11 @@
     --blue-transparent: rgba(44, 61, 115, 0.05);
     --orange: rgba(242, 68, 5, 1);
     --orange-transparent: rgba(242, 68, 5, .5);
+    --green-darken: rgb(25, 135, 84);
+    --green: #41BE94;
+    --gray-light: #DAE4F8;
+    --gray-darken: #DEDEDE;
+    --gray-darkest: #6f6f6f;
 
     // CONTAINER
     --container-offset: 2rem;
@@ -31,6 +36,10 @@ html {
     font-family: 'Montserrat', sans-serif;
     font-size: 10px;
     color: var(--blue);
+}
+
+body {
+    position: relative;
 }
 
 * {
