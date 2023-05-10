@@ -28,15 +28,7 @@ class AuthController extends Controller
         if (!$token = auth()->attempt($credentials)) {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
-        $data = [
-            'access_token' => $token,
-            'refresh_token' => auth()->refresh(),
-            'user' => auth()->user()
-        ];
-//        $data['token'] = $this->respondWithToken($token);
-//        $data['refresh_token'] = $this->respondWithToken(auth()->refresh());
-//        $data['user'] = new UserResource(auth()->user());
-        return $data;
+        return $this->respondWithToken($token);
     }
 
     /**

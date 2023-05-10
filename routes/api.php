@@ -34,19 +34,18 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::group([
     'namespace' => 'api',
     'middleware' => 'api',
-    'prefix' => 'auth'
-
 ], function ($router) {
     Route::post('login', [AuthController::class, 'login']);
     Route::post('logout', [AuthController::class, 'logout']);
     Route::post('refresh', [AuthController::class, 'refresh']);
     Route::post('me', [AuthController::class, 'me']);
 });
+
 Route::group(['middleware' => 'jwt.auth'], function () {
-    Route::group(['prefix' => 'cabinet', 'middleware' => ['auth', 'verified']], function () {
+    Route::group(['prefix' => 'cabinet', 'middleware' => 'verified'], function () {
         Route::group(['prefix' => 'users'], function () {
             Route::group(['middleware' => 'role:admin'], function () {
-                Route::get('index', [UserController::class, 'index'])->name('cabinet.user.index');
+                Route::get('', [UserController::class, 'index']);
                 Route::get('create', [UserController::class, 'create'])->name('cabinet.user.create');
                 Route::post('store', [UserController::class, 'store'])->name('cabinet.user.store');
             });
