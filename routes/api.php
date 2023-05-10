@@ -2,14 +2,17 @@
 
 use App\Http\Controllers\api\AuthController;
 use App\Http\Controllers\api\CommunicationController;
-use App\Http\Controllers\FileController;
-use App\Http\Controllers\OccupationController;
-use App\Http\Controllers\PersonController;
-use App\Http\Controllers\SchoolController;
-use App\Http\Controllers\SectionController;
-use App\Http\Controllers\TeacherController;
-use App\Http\Controllers\TimetableController;
-use App\Http\Controllers\UserController;
+use App\Http\Controllers\api\FileController;
+use App\Http\Controllers\api\OccupationController;
+use App\Http\Controllers\api\PaymentController;
+use App\Http\Controllers\api\PersonController;
+use App\Http\Controllers\api\SchoolController;
+use App\Http\Controllers\api\SectionController;
+use App\Http\Controllers\api\SubscriptionController;
+use App\Http\Controllers\api\TeacherController;
+use App\Http\Controllers\api\TimetableController;
+use App\Http\Controllers\api\TimetableSectionController;
+use App\Http\Controllers\api\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -40,11 +43,7 @@ Route::group([
     Route::post('me', [AuthController::class, 'me']);
 });
 Route::group(['middleware' => 'jwt.auth'], function () {
-    Route::get('/', [GeneralController::class, 'main_page'])->name('website.main_page');
-
     Route::group(['prefix' => 'cabinet', 'middleware' => ['auth', 'verified']], function () {
-        Route::get('', [CabinetController::class, 'main'])->name('cabinet.main');
-
         Route::group(['prefix' => 'users'], function () {
             Route::group(['middleware' => 'role:admin'], function () {
                 Route::get('index', [UserController::class, 'index'])->name('cabinet.user.index');
@@ -70,8 +69,7 @@ Route::group(['middleware' => 'jwt.auth'], function () {
             Route::post(
                 '{user}/createOrUpdateTeacherInformation',
                 [UserController::class, 'createOrUpdateTeacherInformation']
-            )
-                ->name('cabinet.user.createOrUpdateTeacherInformation');
+            )->name('cabinet.user.createOrUpdateTeacherInformation');
         });
 
         Route::group(['prefix' => 'schools/{school}/teachers', 'middleware' => 'role:schools_owner'], function () {
@@ -154,7 +152,6 @@ Route::group(['middleware' => 'jwt.auth'], function () {
                     'school.subscription.delete'
                 );
             });
-//        Route::post('buy',[SubscriptionController::class,'buy'])->name('school.subscription.buy');
         });
 
         Route::group(['prefix' => 'payments'], function () {
@@ -164,26 +161,21 @@ Route::group(['middleware' => 'jwt.auth'], function () {
         });
 
         Route::group(['prefix' => 'communications', 'middleware' => 'role:schools_owner,teacher'], function () {
-            Route::get('invitations', [CommunicationController::class, 'invitation_index'])->name(
-                'communications.invitation.index'
-            );
-            Route::get('applications', [CommunicationController::class, 'application_index'])->name(
-                'communications.application.index'
-            );
-            Route::post('invite', [CommunicationController::class, 'send_invitation'])->name(
-                'communications.teacher.invite'
-            );
+            Route::get('invitations', [CommunicationController::class, 'invitation_index'])
+                ->name('communications.invitation.index');
+            Route::get('applications', [CommunicationController::class, 'application_index'])
+                ->name('communications.application.index');
+            Route::post('invite', [CommunicationController::class, 'send_invitation'])
+                ->name('communications.teacher.invite');
             Route::delete('unlink', [CommunicationController::class, 'unlink'])->name('communications.teacher.unlink');
             Route::post('submit_application', [CommunicationController::class, 'submit_application'])
                 ->name('communications.school.submit_application');
             Route::delete('cancel_application', [CommunicationController::class, 'cancel_application'])
                 ->name('communications.school.cancel_application');
-            Route::post('{communication}/accept', [CommunicationController::class, 'accept'])->name(
-                'communications.accept'
-            );
-            Route::delete('{communication}/cancel', [CommunicationController::class, 'cancel'])->name(
-                'communications.cancel'
-            );
+            Route::post('{communication}/accept', [CommunicationController::class, 'accept'])
+                ->name('communications.accept');
+            Route::delete('{communication}/cancel', [CommunicationController::class, 'cancel'])
+                ->name('communications.cancel');
         });
 
         Route::group(['prefix' => 'occupations'], function () {
@@ -191,9 +183,8 @@ Route::group(['middleware' => 'jwt.auth'], function () {
             Route::get('create', [OccupationController::class, 'create'])->name('cabinet.occupations.create');
             Route::post('store', [OccupationController::class, 'store'])->name('cabinet.occupations.store');
             Route::get('{occupation}/edit', [OccupationController::class, 'edit'])->name('cabinet.occupations.edit');
-            Route::delete('{occupation}/delete', [OccupationController::class, 'destroy'])->name(
-                'cabinet.occupations.delete'
-            );
+            Route::delete('{occupation}/delete', [OccupationController::class, 'destroy'])
+                ->name('cabinet.occupations.delete');
         });
 
         Route::group(['prefix' => 'people'], function () {

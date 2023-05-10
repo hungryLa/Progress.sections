@@ -59,8 +59,7 @@ Route::group(['prefix' => 'cabinet', 'middleware' => ['auth', 'verified']], func
         Route::post(
             '{user}/createOrUpdateTeacherInformation',
             [UserController::class, 'createOrUpdateTeacherInformation']
-        )
-            ->name('cabinet.user.createOrUpdateTeacherInformation');
+        )->name('cabinet.user.createOrUpdateTeacherInformation');
     });
 
     Route::group(['prefix' => 'schools/{school}/teachers', 'middleware' => 'role:schools_owner'], function () {
