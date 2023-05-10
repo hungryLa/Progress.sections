@@ -8,10 +8,6 @@ import useAuthStore from "../../store/useAuthStore";
 export const Sidebar = () => {
     const user = useAuthStore(({user}) => user)
 
-    useEffect(() => {
-        console.log(user)
-    })
-
     return (
         <aside className={'sidebar'}>
             {user?.role === 'admin' && <Navigation place={'sidebar'} navigationLinks={navigationLinks.mainAdmin}/>}

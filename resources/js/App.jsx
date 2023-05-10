@@ -5,6 +5,7 @@ import {MainPage} from "./pages/Main.page";
 import {AuthorizedLayout} from "./pages/layouts/AuthorizedLayout";
 import {Timetables} from "./pages/Teacher/Timetables";
 import useAuthStore from "./store/useAuthStore";
+import {Users} from "./pages/Admin/Users";
 
 
 export const App = () => {
@@ -22,7 +23,7 @@ export const App = () => {
 
                 {user && user.role === 'admin' && (
                     <Route path={'/'} element={<AuthorizedLayout/>}>
-                        <Route index path={'users'} element={<h1>Список пользователей</h1>}/>
+                        <Route index path={'users'} element={<Users />}/>
                         <Route path={'users/new'} element={<h1>Создать пользователя</h1>}/>
                         <Route path={'sections'} element={<h1>Список секций</h1>}/>
                         <Route path={'commission'} element={<h1>Комиссия</h1>}/>

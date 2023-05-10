@@ -10,7 +10,6 @@ import useAuthStore from "../../store/useAuthStore";
 export const Menu = ({isActive}) => {
     const user = useAuthStore((state) => state.user)
 
-    console.log(user)
     useEffect(() => {
         isActive ? document.body.style.overflow = 'hidden' : document.body.style.overflow = 'auto'
     }, [isActive])

@@ -10,17 +10,14 @@ const useAuthStore = create(
             error: null,
             login: async (email, password) => {
                 try {
-                    const response = await api.post(`/auth/login?email=${email}&password=${password}`)
-                    console.log(response)
-                    const {user, access_token} = await response.data
+                    const response = await api.post(`/login?email=${email}&password=${password}`)
+                    const {access_token} = await response.data
                     set({
-                        user,
                         token: access_token,
                         error: ''
                     })
                     localStorage.setItem('token', access_token)
                 } catch (error) {
-                    console.log(error)
                     if(error.response.status === 401) {
                         set({
                             user: null,
@@ -29,6 +26,18 @@ const useAuthStore = create(
                         })
                         localStorage.removeItem('token')
                     }
+                }
+                try {
+                    const response = await api.post('/me')
+                    set({
+                        user: await response.data
+                    })
+                } catch(error) {
+                    set({
+                        user: null,
+                        token: '',
+                        error: "Неверный логин или пароль"
+                    })
                 }
             },
             logout: async () => {

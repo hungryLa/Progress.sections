@@ -15,7 +15,6 @@ export const Login = () => {
     const error = useAuthStore(({error}) => error)
 
     useEffect(() => {
-        // if(user && user.role === 'admin') navigate('/users')
         if(user) {
             switch (user.role) {
                 case 'admin':
