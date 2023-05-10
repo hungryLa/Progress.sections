@@ -1,7 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\api;
 
+use App\Http\Controllers\Controller;
+use App\Http\Controllers\FileController;
 use App\Http\Requests\School\StoreRequest;
 use App\Http\Requests\School\UpdateRequest;
 use App\Models\File;
@@ -35,20 +37,10 @@ class SchoolController extends Controller
         } else {
             $schools = School::where('status', School::STATUS['active'])->orderBy('id')->get();
         }
-        return view('cabinet.schools.index', compact('schools', 'all_schools'));
+        $data['schools'] = $schools;
+        return $data;
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        return view('cabinet.schools.create');
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(StoreRequest $request)
     {
         try {
@@ -75,7 +67,6 @@ class SchoolController extends Controller
         } catch (Exception $exception) {
             return $exception->getMessage();
         }
-        return redirect()->route('school.index');
     }
 
     /**
@@ -83,9 +74,8 @@ class SchoolController extends Controller
      */
     public function show(School $school)
     {
-        $images = $school->images;
-
-        return view('cabinet.schools.show', compact('school', 'images'));
+        $data['images'] = $school->images;
+        return $data;
     }
 
     /**
@@ -93,8 +83,8 @@ class SchoolController extends Controller
      */
     public function edit(School $school)
     {
-        $images = $school->images;
-        return view('cabinet.schools.edit', compact('school', 'images'));
+        $data['images'] = $school->images;
+        return $data;
     }
 
     /**
@@ -117,7 +107,6 @@ class SchoolController extends Controller
         } catch (Exception $exception) {
             return $exception->getMessage();
         }
-        return redirect()->route('school.edit', compact('school'));
     }
 
     /**
@@ -141,6 +130,5 @@ class SchoolController extends Controller
         } catch (\Exception $exception) {
             return $exception->getMessage();
         }
-        return redirect()->route('school.index');
     }
 }

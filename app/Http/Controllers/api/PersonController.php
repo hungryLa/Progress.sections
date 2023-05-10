@@ -1,29 +1,19 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\api;
 
+use App\Http\Controllers\Controller;
 use App\Models\Person;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class PersonController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        $linked_users = Auth::user()->linked_users;
-        $people = Auth::user()->people;
-        return view('cabinet.people.index', compact('linked_users', 'people'));
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+        $data['linked_users'] = Auth::user()->linked_users;
+        $data['people'] = Auth::user()->people;
+        return $data;
     }
 
     /**
@@ -44,31 +34,6 @@ class PersonController extends Controller
         } catch (\Exception $exception) {
             return $exception->getMessage();
         }
-        return redirect()->route('cabinet.people.index');
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Person $person)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Person $person)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Person $person)
-    {
-        //
     }
 
     /**
@@ -84,6 +49,5 @@ class PersonController extends Controller
         } catch (\Exception $exception) {
             return $exception->getMessage();
         }
-        return redirect()->route('cabinet.people.index');
     }
 }

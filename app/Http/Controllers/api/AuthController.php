@@ -1,10 +1,8 @@
 <?php
 
-namespace App\Http\Controllers\api;
+namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\User\UserResource;
-use Illuminate\Http\Request;
 
 class AuthController extends Controller
 {
@@ -27,7 +25,7 @@ class AuthController extends Controller
     {
         $credentials = request(['email', 'password']);
 
-        if (! $token = auth()->attempt($credentials)) {
+        if (!$token = auth()->attempt($credentials)) {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
         $data = [
@@ -76,7 +74,7 @@ class AuthController extends Controller
     /**
      * Get the token array structure.
      *
-     * @param  string $token
+     * @param  string  $token
      *
      * @return \Illuminate\Http\JsonResponse
      */

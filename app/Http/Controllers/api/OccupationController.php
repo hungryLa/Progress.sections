@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\api;
 
+use App\Http\Controllers\Controller;
 use App\Models\Occupation;
 use Illuminate\Http\Request;
 
@@ -12,18 +13,7 @@ class OccupationController extends Controller
      */
     public function index()
     {
-        $occupations = Occupation::orderBy('title')->get();
-//        $data['occupations'] = Occupation::orderBy('title')->get();
-//        return $data;
-        return view('cabinet.occupations.index', compact('occupations'));
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        return view('cabinet.occupations.create');
+        return Occupation::orderBy('title')->get();
     }
 
     /**
@@ -44,13 +34,20 @@ class OccupationController extends Controller
         } catch (\Exception $exception) {
             return $exception->getMessage();
         }
-        return redirect()->route('cabinet.occupations.index');
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(string $id)
+    {
+        //
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Occupation $occupation)
+    public function update(Request $request, string $id)
     {
         //
     }
@@ -68,6 +65,5 @@ class OccupationController extends Controller
         } catch (\Exception $exception) {
             return $exception->getMessage();
         }
-        return redirect()->route('cabinet.occupations.index');
     }
 }
