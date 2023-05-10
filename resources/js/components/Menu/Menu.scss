@@ -18,7 +18,16 @@
         transform: translateY(0%);
     }
 
-    &_inner {
+    &__inner {
+        width: inherit;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        grid-gap: 2.4rem;
 
+        &-wide {
+            grid-template-columns: 1fr;
+        }
     }
 }
+
+

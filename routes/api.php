@@ -44,7 +44,7 @@ Route::group([
     Route::post('refresh', [AuthController::class,'refresh']);
     Route::post('me', [AuthController::class,'me']);
 });
-Route::group(['middleware' => 'jwt.auth'],function (){
+Route::group(['middleware' => 'jwt.auth', 'prefix' => 'api'],function (){
     Route::group(['prefix' => 'cabinet','middleware' => 'auth'],function(){
         Route::group(['prefix' => 'users'],function(){
             Route::group(['middleware' => 'role:admin'],function(){

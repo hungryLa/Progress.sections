@@ -5,20 +5,23 @@ import {Sidebar} from "../../components/Sidebar";
 import {Container} from "../../components/Container";
 import {useSelector} from "react-redux";
 import {Menu} from "../../components/Menu";
+import useMenuStore from "../../store/useMenuStore";
 
 export const AuthorizedLayout = () => {
-    const isActive = useSelector((state) => state.menu.isActive)
+    const isMenuActive = useMenuStore(store => store.isMenuActive)
     return (
         <div className='page'>
             <Header />
             <section className='content'>
                 <Container>
-                    <Sidebar />
-                    <main>
-                        <Outlet />
-                    </main>
+                    <div className="content__inner">
+                        <Sidebar />
+                        <main>
+                            <Outlet />
+                        </main>
+                    </div>
                 </Container>
-                <Menu isActive={isActive} />
+                <Menu isActive={isMenuActive} />
             </section>
             <Footer />
         </div>

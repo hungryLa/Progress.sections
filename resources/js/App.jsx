@@ -3,12 +3,12 @@ import {BrowserRouter, Route, Routes} from "react-router-dom";
 import {UnauthorizedLayout} from "./pages/layouts/UnauthorizedLayout";
 import {MainPage} from "./pages/Main.page";
 import {AuthorizedLayout} from "./pages/layouts/AuthorizedLayout";
-import {useSelector} from "react-redux";
+import {Timetables} from "./pages/Teacher/Timetables";
+import useAuthStore from "./store/useAuthStore";
 
 
 export const App = () => {
-    const user = useSelector((state) => state.auth.user)
-
+    const user = useAuthStore(({user}) => user)
 
     useEffect(() => {
     }, [])
@@ -56,7 +56,7 @@ export const App = () => {
 
                 {user && user.role === 'teacher' && (
                     <Route path={'/'} element={<AuthorizedLayout/>}>
-                        <Route path={'/schedule'} element={<h1>Моё расписание</h1>}/>
+                        <Route path={'/timetables'} element={<Timetables />}/>
                         <Route path={'/settings'} element={<h1>Настройки</h1>}/>
                     </Route>
                 )}

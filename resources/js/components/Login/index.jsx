@@ -1,55 +1,55 @@
 import {Container} from "../Container";
 import './Login.scss'
 import {LoginSwiper} from "./LoginSwiper";
-import React, {useState} from "react";
-import {useDispatch, useSelector} from "react-redux";
-import api from "../../middlewares/auth.middleware";
-import { setError, setToken, setUser} from "../../store/authSlice";
+import React, {useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
-import {Title} from "../Title";
+import {Title} from "../UI/Title";
+import useAuthStore from "../../store/useAuthStore";
 
 export const Login = () => {
     const navigate = useNavigate()
-    const dispatch = useDispatch()
-    const [login, setLogin] = useState('admin@mail.ru')
+    const [email, setEmail] = useState('admin@mail.ru')
     const [password, setPassword] = useState('password')
+    const login = useAuthStore(({login}) => login)
+    const user = useAuthStore(({user}) => user)
+    const error = useAuthStore(({error}) => error)
 
-    // const user = useSelector(state => state.auth.user)
-    // const token = useSelector(state => state.auth.token)
-    const error = useSelector(state => state.auth.error)
+    useEffect(() => {
+        // if(user && user.role === 'admin') navigate('/users')
+        if(user) {
+            switch (user.role) {
+                case 'admin':
+                    navigate('/users')
+                    break
+                case 'teacher':
+                    navigate('/timetables')
+                    break
+                case 'schools_owner':
+                    navigate('/sections')
+                    break
+                default:
+                    navigate('/section')
+                    break
+            }
+        }
+
+    }, [user])
 
     const handleSubmit = async (e) => {
         e.preventDefault()
-
-        try {
-            const response = await api.post(`/auth/login?email=${login}&password=${password}`);
-            console.log(response)
-            const {user, access_token} = response.data
-            console.log(access_token, user)
-            await dispatch(setToken(access_token));
-            await dispatch(setUser(user));
-            await dispatch(setError(''));
-            console.log(user.role)
-            if(user.role === 'admin') navigate('/users')
-            if(user.role === 'schools_owner') navigate('/sections')
-            if(user.role === 'user') navigate('/schedule')
-            if(user.role === 'teacher') navigate('/schedule')
-        } catch (error) {
-            dispatch(setError(error.response.status));
-        }
+        await login(email, password)
     }
 
     return (
         <div className={'login'}>
             <Container>
                 <div className="login__inner">
-                    {/*{user.role === 'admin' && <Navigate to={'/admin/users'} />}*/}
                     <div className='login__form'>
                         <Title>Единая система оплаты дополнительного образования, секция и кружков</Title>
                         <form onSubmit={handleSubmit}>
-                            <input type="text" placeholder={'Login'} value={login} onChange={(e) => setLogin(e.target.value)}/>
+                            <input type="text" placeholder={'email@email.com'} value={email} onChange={(e) => setEmail(e.target.value)}/>
                             <input type="text" placeholder={'Password'} value={password} onChange={(e) => setPassword(e.target.value)}/>
-                            {error === 401 && 'Логин или пароль неверные, попробуйте еще раз'}
+                            {error && error}
                             <button type='submit'>Login</button>
                         </form>
                     </div>
