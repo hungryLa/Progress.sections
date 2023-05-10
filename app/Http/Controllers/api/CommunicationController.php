@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\api;
 
+use App\Http\Controllers\Controller;
 use App\Models\Communication;
 use App\Models\ModelSchool;
 use App\Models\School;
@@ -11,21 +12,26 @@ use Illuminate\Support\Facades\Auth;
 
 class CommunicationController extends Controller
 {
-    public function invitation_index()
+    /**
+     * Display a listing of the resource.
+     */
+    public function index()
     {
         $teacher = Teacher::find(Auth::user())->first();
-        $communications = $teacher->invitations()->where('status', Communication::STATUS['invited'])->get();
-        return view('cabinet.communications.invitations.index', compact('teacher', 'communications'));
+        $data['teacher'] = $teacher;
+        $data['communications'] = $teacher->invitations()->where('status', Communication::STATUS['invited'])->get();
+        return $data;
     }
 
     public function application_index(Request $request)
     {
         $school = School::find($request->school);
-        $communications = $school->applications()->where(
+        $data['school'] = $school;
+        $data['communications'] = $school->applications()->where(
             'status',
             Communication::STATUS['The application has been sent']
         )->get();
-        return view('cabinet.communications.applications.index', compact('school', 'communications'));
+        return $data;
     }
 
     public function submit_application(Request $request)
@@ -44,7 +50,6 @@ class CommunicationController extends Controller
         } catch (\Exception $exception) {
             return $exception->getMessage();
         }
-        return redirect()->back();
     }
 
     public function cancel_application(Request $request)
@@ -63,7 +68,6 @@ class CommunicationController extends Controller
         } catch (\Exception $exception) {
             return $exception->getMessage();
         }
-        return redirect()->back();
     }
 
     public function send_invitation(Request $request)
@@ -83,7 +87,6 @@ class CommunicationController extends Controller
         } catch (\Exception $exception) {
             return $exception->getMessage();
         }
-        return redirect()->route('teacher.index', compact('school', 'teacher'));
     }
 
     public function unlink(Request $request)
@@ -102,7 +105,6 @@ class CommunicationController extends Controller
         } catch (\Exception $exception) {
             return $exception->getMessage();
         }
-        return redirect()->route('teacher.index', compact('school'));
     }
 
     public function accept(Communication $communication)
@@ -127,7 +129,6 @@ class CommunicationController extends Controller
         } catch (\Exception $exception) {
             return $exception->getMessage();
         }
-        return redirect()->back();
     }
 
     public function cancel(Communication $communication)
@@ -144,6 +145,5 @@ class CommunicationController extends Controller
         } catch (\Exception $exception) {
             return $exception->getMessage();
         }
-        return redirect()->back();
     }
 }

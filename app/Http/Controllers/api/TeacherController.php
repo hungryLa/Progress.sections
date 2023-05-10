@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\api;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\Teacher\StoreRequest;
 use App\Http\Requests\Teacher\UpdateRequest;
 use App\Models\Communication;
@@ -19,19 +20,11 @@ class TeacherController extends Controller
      */
     public function index(School $school)
     {
-        $active_teachers = $school->teachers;
-        $invitations = $school->invitations()->where('status', Communication::STATUS['invited'])->get();
+        $data['active_teachers'] = $school->teachers;
+        $data['invitations'] = $school->invitations()->where('status', Invitation::STATUS['invitation'])->get();
         $teachers = Teacher::where('role', User::ROLES['teacher'])->get();
-        $teachers = $teachers->diff($active_teachers);
-        return view('cabinet.teachers.index', compact('school', 'active_teachers', 'teachers', 'invitations'));
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create(School $school)
-    {
-        return view('cabinet.teachers.create', compact('school'));
+        $data['teachers'] = $teachers->diff($data['active_teachers']);
+        return $data;
     }
 
     /**
@@ -59,15 +52,6 @@ class TeacherController extends Controller
         } catch (\Exception $exception) {
             return $exception->getMessage();
         }
-        return redirect()->route('teacher.index', compact('school'));
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(School $school, Teacher $teacher)
-    {
-        return view('cabinet.teachers.edit', compact('teacher'));
     }
 
     /**
@@ -86,7 +70,6 @@ class TeacherController extends Controller
         } catch (\Exception $exception) {
             return $exception->getMessage();
         }
-        return redirect()->route('cabinet.teachers.index');
     }
 
     public function invite(School $school, Teacher $teacher)
@@ -104,7 +87,6 @@ class TeacherController extends Controller
         } catch (\Exception $exception) {
             return $exception->getMessage();
         }
-        return redirect()->route('teacher.index', compact('school', 'teacher'));
     }
 
     public function unlink(School $school, Teacher $teacher)
@@ -121,6 +103,5 @@ class TeacherController extends Controller
         } catch (\Exception $exception) {
             return $exception->getMessage();
         }
-        return redirect()->route('teacher.index', compact('school'));
     }
 }

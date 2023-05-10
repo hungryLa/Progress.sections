@@ -4,7 +4,7 @@
     <div class="row">
         <x-cabinet.sidebar/>
         <div class="col-9">
-            f
+
         </div>
     </div>
 

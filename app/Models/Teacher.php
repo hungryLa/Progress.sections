@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Teacher extends Model
 {
@@ -56,8 +57,8 @@ class Teacher extends Model
         return $this->hasMany(TimetableSection::class,'teacher_id');
     }
 
-    public function information(): BelongsTo
+    public function information(): HasOne
     {
-        return $this->belongsTo(TeacherInformation::class,'teacher_id');
+        return $this->hasOne(TeacherInformation::class);
     }
 }

@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\api;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\User\ChangePasswordRequest;
 use App\Http\Requests\User\StoreRequest;
 use App\Mail\WelcomeMail;
@@ -22,15 +23,8 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::orderBy('id', 'desc')->get();
-//        $data['users'] = $users;
-//        return $data;
-        return view('cabinet.users.index', compact('users'));
-    }
-
-    public function create()
-    {
-        return view('cabinet.users.create');
+        $data['users'] = User::orderBy('id', 'desc')->get();
+        return $data;
     }
 
     /**
@@ -56,19 +50,6 @@ class UserController extends Controller
         } catch (\Exception $exception) {
             return $exception->getMessage();
         }
-
-
-        return redirect()->route('cabinet.user.index');
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(User $user)
-    {
-//        $data['user'] = $user;
-//        return $data;
-        return view('cabinet.users.edit', compact('user'));
     }
 
     /**
@@ -88,7 +69,6 @@ class UserController extends Controller
         } catch (\Exception $exception) {
             return $exception->getMessage();
         }
-        return redirect()->route('cabinet.user.edit', compact('user'));
     }
 
     /**
@@ -104,7 +84,6 @@ class UserController extends Controller
         } catch (\Exception $exception) {
             return $exception->getMessage();
         }
-        return redirect()->back();
     }
 
     public function link_user(Request $request)
@@ -124,7 +103,6 @@ class UserController extends Controller
         } catch (\Exception $exception) {
             return $exception->getMessage();
         }
-        return redirect()->back();
     }
 
     public function unlink_user(User $user)
@@ -140,7 +118,6 @@ class UserController extends Controller
         } catch (\Exception $exception) {
             return $exception->getMessage();
         }
-        return redirect()->back();
     }
 
     public function settings(User $user)
@@ -150,7 +127,6 @@ class UserController extends Controller
         if ($teacher) {
             $teacher_information = $teacher->information;
         }
-        return view('cabinet.users.settings', compact('user', 'teacher', 'teacher_information'));
     }
 
     public function change_information(Request $request, User $user)
@@ -167,7 +143,6 @@ class UserController extends Controller
         } catch (\Exception $exception) {
             return $exception->getMessage();
         }
-        return redirect()->route('cabinet.user.settings', compact('user'));
     }
 
     public function change_password(ChangePasswordRequest $request, User $user)
@@ -186,7 +161,6 @@ class UserController extends Controller
         } catch (\Exception $exception) {
             return $exception->getMessage();
         }
-        return redirect()->route('cabinet.user.settings', compact('user'));
     }
 
     public function createOrUpdateTeacherInformation(Request $request)
@@ -217,6 +191,5 @@ class UserController extends Controller
         } catch (\Exception $exception) {
             return $exception->getMessage();
         }
-        return redirect()->route('cabinet.user.settings', ['user' => $teacher->id]);
     }
 }
