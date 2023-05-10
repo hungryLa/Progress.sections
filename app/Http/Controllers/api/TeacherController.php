@@ -5,6 +5,8 @@ namespace App\Http\Controllers\api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Teacher\StoreRequest;
 use App\Http\Requests\Teacher\UpdateRequest;
+use App\Http\Resources\CommunicationRecource;
+use App\Http\Resources\User\UserResource;
 use App\Models\Communication;
 use App\Models\ModelSchool;
 use App\Models\School;
@@ -20,10 +22,11 @@ class TeacherController extends Controller
      */
     public function index(School $school)
     {
-        $data['active_teachers'] = $school->teachers;
-        $data['invitations'] = $school->invitations()->where('status', Invitation::STATUS['invitation'])->get();
+        $invitations = $school->invitations()->where('status', Communication::STATUS['invited'])->get();
         $teachers = Teacher::where('role', User::ROLES['teacher'])->get();
-        $data['teachers'] = $teachers->diff($data['active_teachers']);
+        $data['active_teachers'] = UserResource::collection($school->teachers);
+        $data['teachers'] = UserResource::collection($teachers->diff($data['active_teachers']));
+        $data['invitations'] = CommunicationRecource::collection($invitations);
         return $data;
     }
 

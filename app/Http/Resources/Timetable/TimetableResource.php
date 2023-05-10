@@ -15,12 +15,13 @@ class TimetableResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'teacher_id' => $this->teacher_id,
-            'days_week' => $this->days_week,
+            'type' => $this->type,
+            'model_id' => $this->model_id,
+            'weekday' => $this->weekday,
             'lesson_time' => $this->lesson_time,
             'workday_start' => $this->workday_start,
             'workday_end' => $this->workday_end,
-            'rest' => $this->rest,
+            'without_rest' => $this->without_rest,
             'rest_start' => $this->rest_start,
             'rest_end' => $this->rest_end,
         ];

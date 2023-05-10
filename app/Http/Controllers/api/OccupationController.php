@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\OccupationRecource;
 use App\Models\Occupation;
 use Illuminate\Http\Request;
 
@@ -13,7 +14,7 @@ class OccupationController extends Controller
      */
     public function index()
     {
-        return Occupation::orderBy('title')->get();
+        return OccupationRecource::collection(Occupation::orderBy('title')->get());
     }
 
     /**
@@ -34,14 +35,6 @@ class OccupationController extends Controller
         } catch (\Exception $exception) {
             return $exception->getMessage();
         }
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
     }
 
     /**

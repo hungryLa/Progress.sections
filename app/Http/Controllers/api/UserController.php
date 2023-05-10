@@ -5,6 +5,8 @@ namespace App\Http\Controllers\api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\ChangePasswordRequest;
 use App\Http\Requests\User\StoreRequest;
+use App\Http\Resources\TeacherInformationRecource;
+use App\Http\Resources\User\UserResource;
 use App\Mail\WelcomeMail;
 use App\Models\ModelUser;
 use App\Models\TeacherInformation;
@@ -23,8 +25,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        $data['users'] = User::orderBy('id', 'desc')->get();
-        return $data;
+        return UserResource::collection(User::orderBy('id', 'desc')->get());
     }
 
     /**
@@ -127,6 +128,9 @@ class UserController extends Controller
         if ($teacher) {
             $teacher_information = $teacher->information;
         }
+        $data['teacher'] = new UserResource($teacher);
+        $data['teacher_information'] = new TeacherInformationRecource($teacher_information);
+        return $data;
     }
 
     public function change_information(Request $request, User $user)

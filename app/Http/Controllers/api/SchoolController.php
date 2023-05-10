@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\FileController;
 use App\Http\Requests\School\StoreRequest;
 use App\Http\Requests\School\UpdateRequest;
+use App\Http\Resources\FileRecource;
+use App\Http\Resources\SchoolRecource;
 use App\Models\File;
 use App\Models\ModelSchool;
 use App\Models\School;
@@ -24,20 +26,20 @@ class SchoolController extends Controller
         $user = Auth::user();
         $all_schools = [];
         if ($user->hasRole(User::ROLES['admin'])) {
-            $schools = School::orderBy('id')->get();
+            $school = School::orderBy('id')->get();
         } elseif ($user->hasRole(User::ROLES['schools_owner'])) {
-            $schools = $user->schools()->orderBy('id')->get();
+            $school = $user->schools()->orderBy('id')->get();
         } elseif ($user->hasRole(User::ROLES['teacher'])) {
-            $schools = $user->schools()->orderBy('id')->get();
+            $school = $user->schools()->orderBy('id')->get();
             $all_schools = School::where('status', School::STATUS['active'])->get();
-            $all_schools = $all_schools->diff($schools);
-            return view('cabinet.schools.index', compact('schools', 'all_schools'));
+            $all_schools = $all_schools->diff($school);
         } elseif ($user->hasRole(User::ROLES['user'])) {
-            $schools = School::where('status', School::STATUS['active'])->orderBy('id')->get();
+            $school = School::where('status', School::STATUS['active'])->orderBy('id')->get();
         } else {
-            $schools = School::where('status', School::STATUS['active'])->orderBy('id')->get();
+            $school = School::where('status', School::STATUS['active'])->orderBy('id')->get();
         }
-        $data['schools'] = $schools;
+        $data['school'] = SchoolRecource::collection($school);
+        $data['all_schools'] = SchoolRecource::collection($all_schools);
         return $data;
     }
 
@@ -74,8 +76,7 @@ class SchoolController extends Controller
      */
     public function show(School $school)
     {
-        $data['images'] = $school->images;
-        return $data;
+        return FileRecource::collection($school->images);
     }
 
     /**
@@ -83,8 +84,7 @@ class SchoolController extends Controller
      */
     public function edit(School $school)
     {
-        $data['images'] = $school->images;
-        return $data;
+        return FileRecource::collection($school->images);
     }
 
     /**

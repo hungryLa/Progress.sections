@@ -4,8 +4,9 @@ namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\FileController;
+use App\Http\Resources\FileRecource;
+use App\Http\Resources\SectionRecource;
 use App\Models\File;
-use App\Models\Occupation;
 use App\Models\School;
 use App\Models\Section;
 use Illuminate\Http\Request;
@@ -17,18 +18,7 @@ class SectionController extends Controller
      */
     public function index(School $school)
     {
-        $data['sections'] = $school->sections;
-        return $data;
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create(Request $request)
-    {
-        $data['school'] = School::find($request->school);
-        $data['occupations'] = Occupation::orderBy('title')->get();
-        return $data;
+        return SectionRecource::collection($school->sections);
     }
 
     /**
@@ -63,8 +53,7 @@ class SectionController extends Controller
      */
     public function show(School $school, Section $section)
     {
-        $data['images'] = $section->images;
-        return $data;
+        return FileRecource::collection($section->images);
     }
 
     /**
@@ -72,8 +61,7 @@ class SectionController extends Controller
      */
     public function edit(School $school, Section $section)
     {
-        $data['images'] = $section->images()->orderBy('position', 'asc')->get();
-        return $data;
+        return FileRecource::collection($section->images()->orderBy('position', 'asc')->get());
     }
 
     /**
