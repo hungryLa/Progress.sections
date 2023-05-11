@@ -8,27 +8,34 @@ const useAuthStore = create(
             user: null,
             token: '',
             error: null,
+            expiresIn: null,
             clearError: () => {
                 set({error: ''})
             },
             login: async (email, password) => {
                 try {
                     const response = await api.post(`/login?email=${email}&password=${password}`)
-                    const {access_token} = await response.data
+                    console.log(response)
+                    const {access_token, expires_in} = await response.data
                     set({
                         token: access_token,
+                        expiresIn: expires_in,
                         error: ''
                     })
-                    localStorage.setItem('token', access_token)
-                } catch (error) {
-                    if(error.response.status === 401) {
-                        set({
-                            user: null,
-                            token: '',
-                            error: "Неверный логин или пароль"
-                        })
-                        localStorage.removeItem('token')
+                    if(!localStorage.getItem('token')) {
+                        localStorage.setItem('token', access_token)
                     }
+                } catch (error) {
+                    console.log(error);
+                    // if(error.response.status === 401) {
+                    //     set({
+                    //         user: null,
+                    //         token: '',
+                    //         error: "Неверный логин или пароль",
+                    //         expiresIn: null
+                    //     })
+                    //     localStorage.removeItem('token')
+                    // }
                 }
                 try {
                     const response = await api.post('/me')
@@ -49,7 +56,6 @@ const useAuthStore = create(
                     token: '',
                     error: ''
                 })
-                localStorage.removeItem('token')
             }
         }),
         {

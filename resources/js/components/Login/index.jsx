@@ -7,15 +7,16 @@ import { Title } from "../UI/Title";
 import useAuthStore from "../../store/useAuthStore";
 import { Input } from "../UI/Input";
 import { Button } from "../UI/Button";
+import {shallow} from "zustand/shallow";
 
 export const Login = () => {
     const navigate = useNavigate();
     const [email, setEmail] = useState("admin@mail.ru");
     const [password, setPassword] = useState("password");
-    const login = useAuthStore(({ login }) => login);
-    const user = useAuthStore(({ user }) => user);
-    const error = useAuthStore(({ error }) => error);
-    const clearError = useAuthStore(({clearError}) => clearError)
+    const login = useAuthStore(({ login }) => login, shallow);
+    const user = useAuthStore(({ user }) => user, shallow);
+    const error = useAuthStore(({ error }) => error, shallow);
+    const clearError = useAuthStore(({clearError}) => clearError, shallow)
 
     useEffect(() => {
         if (user) {
@@ -24,13 +25,13 @@ export const Login = () => {
                     navigate("/users");
                     break;
                 case "teacher":
-                    navigate("/timetables");
+                    navigate("/sections");
                     break;
                 case "schools_owner":
                     navigate("/sections");
                     break;
                 default:
-                    navigate("/section");
+                    navigate("/schedule");
                     break;
             }
         }

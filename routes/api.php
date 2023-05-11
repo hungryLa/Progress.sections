@@ -45,8 +45,7 @@ Route::group(['middleware' => 'jwt.auth'], function () {
     Route::group(['prefix' => 'cabinet', 'middleware' => ['auth', 'verified']], function () {
         Route::group(['prefix' => 'users'], function () {
             Route::group(['middleware' => 'role:admin'], function () {
-                Route::get('index', [UserController::class, 'index'])->name('cabinet.user.index');
-                Route::get('create', [UserController::class, 'create'])->name('cabinet.user.create');
+                Route::get('', [UserController::class, 'index'])->name('cabinet.user.index');
                 Route::post('store', [UserController::class, 'store'])->name('cabinet.user.store');
             });
             Route::post('link_user', [UserController::class, 'link_user'])->name('cabinet.user.link_user');

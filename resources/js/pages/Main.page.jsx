@@ -4,7 +4,7 @@ import {useEffect} from "react";
 
 export const MainPage = () => {
     useEffect(() => {
-        document.title = 'PROGRESS | Войти'
+        document.title = 'PROGRESS'
     }, [])
 
     return (

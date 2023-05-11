@@ -41,6 +41,7 @@
     &-white {
         background-color: var(--white);
         border: 1px solid var(--white);
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.05);
 
         &:hover {
             border-color: var(--orange);
@@ -71,5 +72,9 @@
             color: var(--white);
             border-color: var(--orange-darken);
         }
+    }
+
+    @media screen and (max-width: 480px) {
+        width: 100%;
     }
 }

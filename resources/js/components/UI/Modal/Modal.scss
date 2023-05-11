@@ -9,9 +9,13 @@
     margin: 0 auto;
     width: 100%;
     padding: 2rem;max-width: 84rem;
-    
+
     .title, p {
         text-align: center;
+    }
+
+    .title {
+        font-size: 3.6rem;
     }
 
 
@@ -42,9 +46,16 @@
 
     @media screen and (max-width: 768px) {
         max-width: 90%;
+
+        .title {
+            font-size: 2.8rem;
+        }
     }
 
     @media screen and (max-width: 480px) {
+        .title {
+            font-size: 2.4rem;
+        }
         &__buttons {
             flex-direction: column;
         }

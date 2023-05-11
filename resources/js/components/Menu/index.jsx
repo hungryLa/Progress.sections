@@ -1,36 +1,68 @@
 import {Container} from "../Container";
 import {Title} from "../UI/Title";
-import './Menu.scss';
-import {useSelector} from "react-redux";
 import {Navigation} from "../Navigation";
 import {navigationLinks} from "../../helpers/navigationLinks";
 import {useEffect} from "react";
 import useAuthStore from "../../store/useAuthStore";
+import './Menu.scss';
 
 export const Menu = ({isActive}) => {
-    const user = useAuthStore((state) => state.user)
+    const user = useAuthStore(({user}) => user)
 
     useEffect(() => {
-        isActive ? document.body.style.overflow = 'hidden' : document.body.style.overflow = 'auto'
+        const documentWidth = document.documentElement.clientWidth
+        const windowWidth = window.innerWidth
+        const scrollbarWidth = windowWidth - documentWidth
+        document.body.style.paddingRight = scrollbarWidth + 'px'
+        if(isActive) {
+            document.body.style.overflow = 'hidden'
+
+        } else {
+            document.body.style.overflow = 'auto'
+        }
     }, [isActive])
 
     return (
         <div className={`menu ${isActive ? 'menu-active' : ''}`}>
             <Container>
-                <div className={`menu__inner ${user === null ? 'menu__inner-wide' : ''}`}>
-                    {user && (
-                        <div className={'menu__navigation'}>
-                            <Title>Меню</Title>
-                            {user?.role === 'admin' &&
-                                <Navigation place={'menu'} navigationLinks={navigationLinks.mainAdmin}/>}
-                            {user?.role === 'schools_owner' &&
-                                <Navigation place={'menu'} navigationLinks={navigationLinks.sectionAdmin}/>}
-                            {user?.role === 'user' &&
-                                <Navigation place={'menu'} navigationLinks={navigationLinks.user}/>}
-                            {user?.role === 'teacher' &&
-                                <Navigation place={'menu'} navigationLinks={navigationLinks.teacher}/>}
-                        </div>
-                    )}
+                <div className={`menu__inner`}>
+
+                    <div className={'menu__navigation'}>
+                        {user?.role === 'admin' && (
+                            <>
+                                <Title>Меню</Title>
+                                <Navigation place={'menu'} navigationLinks={navigationLinks.mainAdmin}/>
+                            </>
+                        )}
+
+                        {user?.role === 'schools_owner' &&
+                            (
+                                <>
+                                    <Title>Меню</Title>
+                                    <Navigation place={'menu'} navigationLinks={navigationLinks.sectionAdmin}/>
+                                </>
+                            )
+                        }
+                        {user?.role === 'user' && (
+                            <>
+                                <Title>Меню</Title>
+                                <Navigation place={'menu'} navigationLinks={navigationLinks.user}/>
+                            </>
+                        )}
+                        {user?.role === 'teacher' && (
+                            <>
+                                <Title>Меню</Title>
+                                <Navigation place={'menu'} navigationLinks={navigationLinks.teacher}/>
+                            </>
+                        )}
+                        {!user && (
+                            <>
+                                <Title>Меню</Title>
+                                <Navigation place={'menu'} navigationLinks={navigationLinks.unauthorized}/>
+                            </>
+                        )}
+
+                    </div>
                     <div className={'menu__contacts'}>
                         <Title>Контакты</Title>
                         <ul className={'menu__contacts__list'}>

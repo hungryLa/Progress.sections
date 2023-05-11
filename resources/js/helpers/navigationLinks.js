@@ -1,24 +1,20 @@
+import React from "react";
+
 export const navigationLinks = {
     sectionAdmin: [
         {
-            title: 'Список секций',
-            path: '/sections'
-        },
-        {
-            title: 'Создать секцию',
-            path: '/sections/new'
-        },
-        {
-            title: 'Виды занятий',
-            path: '/lessons'
-        },
-        {
-            title: 'Преподаватели',
-            path: '/teachers'
-        },
-        {
-            title: 'Расписания',
-            path: '/schedules'
+            title: 'Школы',
+            path: '/schools',
+            links: [
+                {
+                    title: 'Секции',
+                    path: '/schools'
+                },
+                {
+                    title: 'Преподаватели',
+                    path: '/teachers'
+                },
+            ]
         },
         {
             title: 'Настройки',
@@ -61,16 +57,20 @@ export const navigationLinks = {
             path: 'schedule'
         },
         {
-            title: 'Список секций',
-            path: 'sections'
+            title: 'Абонементы',
+            path: 'subscriptions'
+        },
+        {
+            title: 'Школы',
+            path: 'schools'
+        },
+        {
+            title: 'Избранное',
+            path: 'favorites'
         },
         {
             title: 'Аккаунты',
             path: 'accounts'
-        },
-        {
-            title: 'Выписки',
-            path: 'extracts'
         },
         {
             title: 'Настройки',
@@ -78,11 +78,34 @@ export const navigationLinks = {
         }],
     teacher: [
         {
-            title: 'Мое расписание',
-            path: 'timetables'
+            title: 'Секции',
+            path: 'sections'
+        },
+        {
+            title: 'Школы',
+            path: 'schools'
+        },
+        {
+            title: 'Мои расписания',
+            path: 'my-timetables'
+        },
+        {
+            title: 'Заявки',
+            path: 'applications'
         },
         {
             title: 'Настройки',
             path: 'settings'
-        }]
+        }
+    ],
+    unauthorized: [
+        {
+            title: 'О нас',
+            path: 'about'
+        },
+        {
+            title: 'Соглашение',
+            path: 'agreement'
+        },
+    ]
 }
