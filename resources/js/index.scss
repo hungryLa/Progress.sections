@@ -41,6 +41,7 @@ html {
 
 body {
     position: relative;
+    background-color: #F1F1F1;
 }
 
 * {
@@ -175,8 +176,13 @@ img {
     grid-template-rows: auto 1fr auto;
 
     .content {
-        padding: 2rem 0;
+        padding: 0 0 2rem 0;
         position: relative;
+
+        &__image {
+            max-height: 450px;
+            border-radius: 0 0 2rem 2rem;
+        }
 
         &__title {
             margin: 5rem 0;

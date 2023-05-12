@@ -23,7 +23,6 @@ export const Users = () => {
 
     useEffect(() => {
         getUsers()
-        // fetchUsers()
     }, [])
 
     const chooseUserToDelete = (user) => {

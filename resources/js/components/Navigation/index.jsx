@@ -1,8 +1,10 @@
-import {NavLink, useNavigate} from "react-router-dom";
+import {NavLink, useLocation, useNavigate} from "react-router-dom";
 import useMenuStore from "../../store/useMenuStore";
 import useAuthStore from "../../store/useAuthStore";
 
 import './Navigation.scss'
+import useContentStore from "../../store/useContentStore";
+import {useEffect} from "react";
 
 export const Navigation = ({navigationLinks, place, isAuthenticated = true}) => {
     const navigate = useNavigate()
@@ -15,6 +17,16 @@ export const Navigation = ({navigationLinks, place, isAuthenticated = true}) => 
         closeMenu()
         navigate('/', {replace: true})
     }
+
+    const clearTitle = useContentStore(({clearTitle}) => clearTitle)
+    const clearImage = useContentStore(({clearImage}) => clearImage)
+    const location = useLocation()
+
+    useEffect(() => {
+        console.log(location)
+        clearTitle()
+        clearImage()
+    }, [location])
 
     return (
         <nav className={`navigation ${place ? 'navigation-' + place : ''} ${!user ? 'navigation-unauth' : ''}`}>

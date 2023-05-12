@@ -1,5 +1,5 @@
 import React, {useEffect} from "react";
-import {BrowserRouter, Navigate, Route, Routes} from "react-router-dom";
+import {BrowserRouter, Navigate, Route, Routes, useLocation} from "react-router-dom";
 import {UnauthorizedLayout} from "./pages/layouts/UnauthorizedLayout";
 import {MainPage} from "./pages/Main.page";
 import {AuthorizedLayout} from "./pages/layouts/AuthorizedLayout";
@@ -9,14 +9,12 @@ import {Users} from "./pages/Admin/Users";
 import {NewUser} from "./pages/Admin/NewUser";
 import {Sections} from "./pages/Admin/Sections";
 import {Schools} from "./pages/SchoolsOwner/Schools";
+import {School} from "./pages/SchoolsOwner/School";
+import useContentStore from "./store/useContentStore";
 
 
 export const App = () => {
     const user = useAuthStore(({user}) => user)
-
-    // useEffect(() => {
-    //     console.log(user.role)
-    // }, [])
 
     return (
         <BrowserRouter>
@@ -44,6 +42,7 @@ export const App = () => {
                 {user && user.role === 'schools_owner' && (
                     <Route path={'/'} element={<AuthorizedLayout/>}>
                         <Route path={'/schools'} element={<Schools />}/>
+                        <Route path={'/schools/:id'} element={<School/>}/>
                         <Route path={'/sections/new'} element={<h1>Создать секцию</h1>}/>
                         <Route path={'/lessons'} element={<h1>Виды занятий</h1>}/>
                         <Route path={'/teachers'} element={<h1>Преподаватели</h1>}/>
