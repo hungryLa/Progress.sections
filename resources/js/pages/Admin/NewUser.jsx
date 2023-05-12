@@ -2,14 +2,22 @@ import {Subtitle} from "../../components/UI/Subtitle";
 import {useState} from "react";
 import {Input} from "../../components/UI/Input";
 import {Button} from "../../components/UI/Button";
-import useAuthStore from "../../store/useAuthStore";
 import useUsersStore from "../../store/useUsersStore";
+import {Form} from "../../components/UI/Form";
+import {useNavigate} from "react-router-dom";
+import {Select} from "../../components/UI/Select";
 
 export const NewUser = () => {
+    const navigate = useNavigate()
+
     const addUser = useUsersStore(({addUser}) => addUser)
+    const fullNameErrors = useUsersStore(({fullNameError}) => fullNameError)
+    const emailErrors = useUsersStore(({emailError}) => emailError)
+    const roleErrors = useUsersStore(({roleError}) => roleError)
+    const loading = useUsersStore(({loading}) => loading)
 
     const [fullName, setFullName] = useState('')
-    const [role, setRole] = useState('')
+    const [role, setRole] = useState('user')
     const [email, setEmail] = useState('')
 
     const handleSetFullName = (e) => {
@@ -31,25 +39,45 @@ export const NewUser = () => {
             email,
             role
         }
-        await addUser(user).then((res) => {
-            console.log(res)
-        }).catch(err => {
-            console.log(err)
-        })
+        await addUser(user)
     }
 
     return (
         <>
-            <Subtitle>Новый пользователь</Subtitle>
-            <form onSubmit={handleSubmit}>
-                <Input placeholder={'ФИО'} value={fullName} onChange={handleSetFullName}/>
-                <Input placeholder={'Почта'} value={email} onChange={handleSetEmail}/>
-                <Input placeholder={'Роль'} value={role} onChange={handleSetRole}/>
-                {fullName && fullName}
-                {email && email}
-                {role && role}
-                <Button type={'submit'} variant={'blue'}>Создать</Button>
-            </form>
+            <Subtitle>Новая учетная запись</Subtitle>
+            <Form
+                onSubmit={handleSubmit}
+                inputs={
+                    <>
+                        <Input
+                            placeholder={'ФИО'}
+                            value={fullName}
+                            onChange={handleSetFullName}
+                            error={fullNameErrors}
+                            bordered
+                            id={'fullName'}
+                        />
+                        <Input
+                            placeholder={'Почта'}
+                            value={email}
+                            onChange={handleSetEmail}
+                            error={emailErrors}
+                            bordered
+                            id={'email'}
+                        />
+                        <Select onChange={handleSetRole} bordered id={'role'} error={roleErrors} value={role}
+                                style={role === '' ? {color: ' rgba(44, 61, 115, 0.25)'} : {color: 'inherit'}}>
+                            <option value="admin">Администратор</option>
+                            <option value="schools_owner">Администратор секции</option>
+                            <option value="teacher">Преподаватель</option>
+                            <option value="user">Пользователь</option>
+                        </Select>
+                    </>}
+                buttons={<Button type={'submit'} variant={'white'}
+                >
+                    {loading ? 'Идет создание ...' : 'Создать'}
+            </Button>}
+            />
         </>
     )
 }

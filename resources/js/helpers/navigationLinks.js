@@ -8,7 +8,7 @@ export const navigationLinks = {
             links: [
                 {
                     title: 'Секции',
-                    path: '/schools'
+                    path: '/sections'
                 },
                 {
                     title: 'Преподаватели',
@@ -29,10 +29,6 @@ export const navigationLinks = {
         {
             title: 'Список пользователей',
             path: 'users'
-        },
-        {
-            title: 'Создать пользователя',
-            path: 'users/new'
         },
         {
             title: 'Список секций',

@@ -7,10 +7,16 @@ import {Timetables} from "./pages/Teacher/Timetables";
 import useAuthStore from "./store/useAuthStore";
 import {Users} from "./pages/Admin/Users";
 import {NewUser} from "./pages/Admin/NewUser";
+import {Sections} from "./pages/Admin/Sections";
+import {Schools} from "./pages/SchoolsOwner/Schools";
 
 
 export const App = () => {
     const user = useAuthStore(({user}) => user)
+
+    // useEffect(() => {
+    //     console.log(user.role)
+    // }, [])
 
     return (
         <BrowserRouter>
@@ -27,7 +33,7 @@ export const App = () => {
                     <Route path={'/'} element={<AuthorizedLayout/>}>
                         <Route index path={'users'} element={<Users />}/>
                         <Route path={'users/new'} element={<NewUser />}/>
-                        <Route path={'sections'} element={<h1>Список секций</h1>}/>
+                        <Route path={'sections'} element={<Sections />}/>
                         <Route path={'commission'} element={<h1>Комиссия</h1>}/>
                         <Route path={'extracts'} element={<h1>Выписки</h1>}/>
                         <Route path={'settings'} element={<h1>Настройки</h1>}/>
@@ -37,7 +43,7 @@ export const App = () => {
 
                 {user && user.role === 'schools_owner' && (
                     <Route path={'/'} element={<AuthorizedLayout/>}>
-                        <Route path={'/sections'} element={<h1>Список секций</h1>}/>
+                        <Route path={'/schools'} element={<Schools />}/>
                         <Route path={'/sections/new'} element={<h1>Создать секцию</h1>}/>
                         <Route path={'/lessons'} element={<h1>Виды занятий</h1>}/>
                         <Route path={'/teachers'} element={<h1>Преподаватели</h1>}/>

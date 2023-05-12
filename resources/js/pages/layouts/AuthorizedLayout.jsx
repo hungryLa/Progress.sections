@@ -11,7 +11,7 @@ import {Title} from "../../components/UI/Title";
 export const AuthorizedLayout = () => {
     const isMenuActive = useMenuStore(store => store.isMenuActive)
     return (
-        <div className='page'>
+        <div className='page page-authenticated'>
             <Header />
             <section className='content'>
                 <Container>

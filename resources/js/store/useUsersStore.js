@@ -8,7 +8,9 @@ const useUsersStore = create(
             users: [],
             loading: false,
             error: null,
-            message: null,
+            fullNameError: '',
+            emailError: '',
+            roleError: '',
             getUsers: async () => {
                 try {
                     set({loading: true})
@@ -25,15 +27,36 @@ const useUsersStore = create(
                 }
             },
             addUser: async (user) => {
+                set({
+                        fullNameError: '',
+                        emailError: '',
+                        roleError: '',
+                        loading: true
+                    }
+                )
                 try {
-                    const response = await api.post('/cabinet/users/store', {
+                    await api.post('/cabinet/users/store', {
                         role: user.role,
                         full_name: user.full_name,
                         email: user.email,
                     })
-                    console.log(response)
+                    set({
+                            fullNameError: '',
+                            emailError: '',
+                            roleError: '',
+                            loading: false
+                        }
+                    )
+                    window.location.href = '/users'
                 } catch (error) {
-                    set({loading: false, error})
+                    if(error.response.data.errors) {
+                        set({
+                                fullNameError: error.response.data.errors.full_name,
+                                emailError: error.response.data.errors.email,
+                                roleError: error.response.data.errors.role,
+                                loading: false
+                        })
+                    }
                 }
             },
             deleteUser: async (id) => {

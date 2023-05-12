@@ -1,8 +1,8 @@
 import './Input.scss'
 
-export const Input = ({ value, label, id, className, type, placeholder, onChange }) => {
+export const Input = ({ value, label, id, className, type, placeholder, onChange, bordered = false, error = null}) => {
     return (
-        <div className={`input ${className ? className : ""}`}>
+        <div className={`input ${className ? className : ""} ${bordered ? 'input-bordered' : ''}`}>
             {label && <label className="input__label" htmlFor={id}>{label}</label>}
             <input
                 className="input__field"
@@ -12,6 +12,7 @@ export const Input = ({ value, label, id, className, type, placeholder, onChange
                 placeholder={placeholder}
                 onChange={onChange}
             />
+            {error && <small className={'input__error'}>{error}</small>}
         </div>
     );
 };

@@ -40,6 +40,13 @@ class School extends Model
             ->where('type','LIKE', File::TYPE['image'])->orderBy('position','asc');
     }
 
+    public function cover(): HasMany
+    {
+        return $this->hasMany(File::class,'model_id')
+            ->where('model_type','LIKE',self::TYPE)
+            ->where('type','LIKE', File::TYPE['image'])->orderBy('position','asc')->limit(1);
+    }
+
     public function sections(): HasMany
     {
         return $this->hasMany(Section::class,'school_id');

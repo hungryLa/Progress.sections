@@ -26,16 +26,6 @@ const useAuthStore = create(
                         localStorage.setItem('token', access_token)
                     }
                 } catch (error) {
-                    console.log(error);
-                    // if(error.response.status === 401) {
-                    //     set({
-                    //         user: null,
-                    //         token: '',
-                    //         error: "Неверный логин или пароль",
-                    //         expiresIn: null
-                    //     })
-                    //     localStorage.removeItem('token')
-                    // }
                 }
                 try {
                     const response = await api.post('/me')
@@ -56,6 +46,7 @@ const useAuthStore = create(
                     token: '',
                     error: ''
                 })
+                localStorage.clear()
             }
         }),
         {

@@ -9,13 +9,11 @@ const getToken = () => {
     const localStorage = window.localStorage.getItem('token')
     if(localStorage) {
         token = localStorage
-        console.log(token)
     }
     return token
 }
 
 api.interceptors.request.use((config) => {
-    // const token = localStorage.getItem('token')
     config.headers.Authorization = `Bearer ${getToken()}`;
     return config
 })
@@ -25,7 +23,8 @@ api.interceptors.response.use(
     (error) => {
         console.log(error)
         if(error.response.status === 401) {
-            // localStorage.removeItem('token')
+            localStorage.clear()
+            window.location.href = '/'
         }
         return Promise.reject(error)
     }

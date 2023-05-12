@@ -1,0 +1,35 @@
+.form {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-gap: 4rem;
+
+    &__inputs {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        grid-template-rows: auto;
+        grid-gap: 2rem;
+    }
+
+    &__buttons {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 2rem;
+
+        .button {
+            width: 50%;
+        }
+    }
+
+    @media screen and (max-width: 810px) {
+        &__inputs {
+            grid-template-columns: 1fr;
+        }
+
+        &__buttons {
+            .button {
+                width: 100%;
+            }
+        }
+    }
+}

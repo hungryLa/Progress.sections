@@ -11,8 +11,8 @@ import {shallow} from "zustand/shallow";
 
 export const Login = () => {
     const navigate = useNavigate();
-    const [email, setEmail] = useState("admin@mail.ru");
-    const [password, setPassword] = useState("password");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
     const login = useAuthStore(({ login }) => login, shallow);
     const user = useAuthStore(({ user }) => user, shallow);
     const error = useAuthStore(({ error }) => error, shallow);
@@ -28,7 +28,7 @@ export const Login = () => {
                     navigate("/sections");
                     break;
                 case "schools_owner":
-                    navigate("/sections");
+                    navigate("/schools");
                     break;
                 default:
                     navigate("/schedule");
