@@ -177,8 +177,7 @@ Route::group(['middleware' => 'jwt.auth'], function () {
         });
 
         Route::group(['prefix' => 'occupations'], function () {
-            Route::get('index', [OccupationController::class, 'index'])->name('cabinet.occupations.index');
-            Route::get('create', [OccupationController::class, 'create'])->name('cabinet.occupations.create');
+            Route::get('', [OccupationController::class, 'index'])->name('cabinet.occupations.index');
             Route::post('store', [OccupationController::class, 'store'])->name('cabinet.occupations.store');
             Route::get('{occupation}/edit', [OccupationController::class, 'edit'])->name('cabinet.occupations.edit');
             Route::delete('{occupation}/delete', [OccupationController::class, 'destroy'])
@@ -186,7 +185,7 @@ Route::group(['middleware' => 'jwt.auth'], function () {
         });
 
         Route::group(['prefix' => 'people'], function () {
-            Route::get('index', [PersonController::class, 'index'])->name('cabinet.people.index');
+            Route::get('', [PersonController::class, 'index'])->name('cabinet.people.index');
             Route::post('store', [PersonController::class, 'store'])->name('cabinet.people.store');
             Route::post('{person}/delete', [PersonController::class, 'destroy'])->name('cabinet.people.delete');
         });

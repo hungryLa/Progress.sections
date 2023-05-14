@@ -192,11 +192,7 @@ img {
             }
 
             @media screen and (max-width: 992px) {
-                margin-top: 0;
-            }
-
-            @media screen and (max-width: 768px) {
-                margin: 0 0 3.2rem 0;
+                margin: 3.2rem 0;
             }
         }
 
@@ -210,7 +206,7 @@ img {
         }
 
         @media screen and (max-width: 768px) {
-            padding: 1.2rem 0;
+            padding: 0 0 1.2rem 0;
         }
     }
 

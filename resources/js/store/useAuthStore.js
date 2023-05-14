@@ -26,6 +26,7 @@ const useAuthStore = create(
                         localStorage.setItem('token', access_token)
                     }
                 } catch (error) {
+                    console.log(error.response);
                 }
                 try {
                     const response = await api.post('/me')

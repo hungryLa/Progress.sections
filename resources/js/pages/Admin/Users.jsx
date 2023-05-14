@@ -30,8 +30,12 @@ export const Users = () => {
         setModalIsActive(true)
     }
 
+    const chooseUserToEdit = (userId) => {
+        navigate(`/admin/users/${userId}/update`)
+    }
+
     const openCreateUserPageHandler = () => {
-        navigate('/users/new')
+        navigate('/admin/users/new')
     }
 
     const getRussianRoleName = (role) => {
@@ -72,7 +76,7 @@ export const Users = () => {
                                     <span className={'red'}>Не подтверждена</span>)}</TableCell>
                                 <TableCell>{user.phone_number}</TableCell>
                                 <TableCell>
-                                    <button onClick={() => console.log(user.id + ' to edit')}>
+                                    <button onClick={() => chooseUserToEdit(user.id)}>
                                         <svg width={24} height={24} fill={'currentColor'}
                                              xmlns="http://www.w3.org/2000/svg"
                                              viewBox="0 0 512 512">

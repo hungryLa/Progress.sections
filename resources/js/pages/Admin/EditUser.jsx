@@ -1,24 +1,27 @@
+import { useParams } from "react-router-dom"
 import { Subtitle } from "../../components/UI/Subtitle";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Input } from "../../components/UI/Input";
 import { Button } from "../../components/UI/Button";
 import useUsersStore from "../../store/useUsersStore";
 import { Form } from "../../components/UI/Form";
-import { useNavigate } from "react-router-dom";
 import { Select } from "../../components/UI/Select";
 
-export const NewUser = () => {
-    const navigate = useNavigate();
-
-    const addUser = useUsersStore(({ addUser }) => addUser);
-    const fullNameErrors = useUsersStore(({ fullNameError }) => fullNameError);
-    const emailErrors = useUsersStore(({ emailError }) => emailError);
-    const roleErrors = useUsersStore(({ roleError }) => roleError);
-    const loading = useUsersStore(({ loading }) => loading);
-
-    const [fullName, setFullName] = useState("");
-    const [role, setRole] = useState("user");
+export const EditUser = () => {
+    const {userId} = useParams()
+    const {editUser, fullNameErrors, emailErrors, roleErrors, loading, users} = useUsersStore()
+    const [fullName, setFullName] = useState('')
+    const [role, setRole] = useState('user')
     const [email, setEmail] = useState("");
+
+    useEffect(() => {
+        const user = users.find(user => user.id == userId)
+        console.log(user);
+        setFullName(user.full_name)
+        setRole(user.role)
+        setEmail(user.email)
+    }, [])
+
 
     const handleSetFullName = (e) => {
         setFullName(e.target.value);
@@ -39,7 +42,7 @@ export const NewUser = () => {
             email,
             role,
         };
-        await addUser(user);
+        await editUser(userId, user);
     };
 
     return (
@@ -88,10 +91,10 @@ export const NewUser = () => {
                 }
                 buttons={
                     <Button type={"submit"} variant={"white"}>
-                        {loading ? "Идет создание ..." : "Создать"}
+                        {loading ? "Идет изменение ..." : "Изменить"}
                     </Button>
                 }
             />
         </>
     );
-};
+}

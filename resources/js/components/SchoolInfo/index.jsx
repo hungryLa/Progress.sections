@@ -16,11 +16,14 @@ export const SchoolInfo = ({school}) => {
     }, [school])
 
     return (
+        <>
+        <Subtitle>Немного о нас</Subtitle>
         <div className={'school-info'}>
             <p className={'school-info__type'}>{translateSchoolType(school.type)}</p>
             <p className={'school-info__description'}>{school.description}</p>
-            <a className={'school-info__phone'} href={`tel:${school.phone__number}`}>Телефон: {school.phone_number}</a>
+            <p className={'school-info__phone'}>Телефон:  <a href={`tel:${school.phone__number}`}>{school.phone_number}</a></p>
             <p className={'school-info__address'}>Адрес: {school.address}</p>
         </div>
+        </>
     )
 }

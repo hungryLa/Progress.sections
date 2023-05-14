@@ -18,17 +18,19 @@ export const Login = () => {
     const error = useAuthStore(({ error }) => error, shallow);
     const clearError = useAuthStore(({clearError}) => clearError, shallow)
 
+    const [formError, setFormError] = useState('')
+
     useEffect(() => {
         if (user) {
             switch (user.role) {
                 case "admin":
-                    navigate("/users");
+                    navigate("/admin/users");
                     break;
                 case "teacher":
                     navigate("/sections");
                     break;
                 case "schools_owner":
-                    navigate("/schools");
+                    navigate("/schools_owner/schools");
                     break;
                 default:
                     navigate("/schedule");
@@ -39,17 +41,37 @@ export const Login = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        await login(email, password);
+        if(!email && !password) {
+            setFormError('Заполните все поля')
+            return;
+        }
+        if(!email){
+            setFormError('Введите email')
+            return;
+        }
+        if(!password){
+            setFormError('Введите пароль')
+            return;
+        }
+        if(password.length < 8) {
+            setFormError('Пароль должен быть не короче 8 символов')
+            return;
+        }
+        if(!formError) {
+            await login(email, password);
+        }
     };
 
     const emailHandler = (e) => {
         setEmail(e.target.value)
         clearError()
+        setFormError('')
     }
 
     const passwordHandler = (e) => {
         setPassword(e.target.value)
         clearError()
+        setFormError('')
     }
 
     const handleRedirect = (e) => {
@@ -85,7 +107,7 @@ export const Login = () => {
                                 value={password}
                                 onChange={passwordHandler}
                             />
-                            {error && <small className="login__error">{error}</small>}
+                            {formError && <small className="login__error">{formError}</small>}
                             <Link className="login__link" to={'/password-reset'}>Восстановить пароль</Link>
                             <div className="login__buttons">
                                 <Button type="button" variant={"white"} onClick={handleRedirect}>
