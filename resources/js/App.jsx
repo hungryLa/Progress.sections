@@ -11,6 +11,8 @@ import {Sections} from "./pages/SchoolsOwner/Sections";
 import {Schools} from "./pages/SchoolsOwner/Schools";
 import {School} from "./pages/SchoolsOwner/School";
 import { EditUser } from "./pages/Admin/EditUser";
+import { Occupations } from "./pages/Admin/Occupations";
+import { NewOccupation } from "./pages/Admin/NewOccupation";
 
 
 export const App = () => {
@@ -29,9 +31,11 @@ export const App = () => {
 
                 {user && user.role === 'admin' && (
                     <Route path={'/admin/'} element={<AuthorizedLayout/>}>
-                        <Route index path={'/admin/users'} element={<Users />}/>
+                        <Route path={'/admin/users'} element={<Users />}/>
                         <Route path={'/admin/users/new'} element={<NewUser />}/>
                         <Route path={'/admin/users/:userId/update'} element={<EditUser />}/>
+                        <Route path={'/admin/occupations'} element={<Occupations />} />
+                        <Route path={'/admin/occupations/new'} element={<NewOccupation />} />
                         <Route path={'/admin/sections'} element={<Sections />}/>
                         <Route path={'/admin/commission'} element={<h1>Комиссия</h1>}/>
                         <Route path={'/admin/extracts'} element={<h1>Выписки</h1>}/>

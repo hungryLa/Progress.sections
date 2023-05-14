@@ -57,23 +57,27 @@ export const Navigation = ({place, isAuthenticated = true}) => {
         mainAdmin: [
             {
                 title: "Список пользователей",
-                path: "users",
+                path: "/admin/users",
             },
             {
                 title: "Список секций",
-                path: "sections",
+                path: "/admin/sections",
             },
             {
                 title: "Комиссия",
-                path: "commission",
+                path: "/admin/commission",
+            },
+            {
+                title: "Виды деятельности",
+                path: "/admin/occupations"
             },
             {
                 title: "Выписки",
-                path: "extracts",
+                path: "/admin/extracts",
             },
             {
                 title: "Настройки",
-                path: "settings",
+                path: "/admin/settings",
             },
         ],
         user: [

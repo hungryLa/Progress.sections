@@ -8,6 +8,7 @@ const useOccupationsStore = create(
             occupations: [],
             loading: false,
             error: null,
+            titleError: '',
 
             getOccupations: async () => {
                 try {
@@ -21,11 +22,14 @@ const useOccupationsStore = create(
             },
             addOccupation: async (title) => {
                 try {
-                    set({loading: true})
+                    set({loading: true, titleError: ''})
                     await api.post('cabinet/occupations/store', {title})
-                    set({loading: false})
+                    set({loading: false, titleError: ''})
+                    window.location.href = '/admin/occupations'
                 } catch (error) {
-                    set({loading: false})
+                    if(error.response.data.errors) {
+                        set({loading: false, titleError: error.response.data.errors.title})
+                    }
                 }
             },
             deleteOccupation: async (id) => {

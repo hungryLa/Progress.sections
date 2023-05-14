@@ -7,9 +7,7 @@ import { Form } from "../../components/UI/Form";
 import { useNavigate } from "react-router-dom";
 import { Select } from "../../components/UI/Select";
 
-export const NewUser = () => {
-    const navigate = useNavigate();
-
+    export const NewUser = () => {
     const addUser = useUsersStore(({ addUser }) => addUser);
     const fullNameErrors = useUsersStore(({ fullNameError }) => fullNameError);
     const emailErrors = useUsersStore(({ emailError }) => emailError);
