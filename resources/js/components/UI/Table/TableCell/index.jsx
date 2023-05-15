@@ -1,7 +1,7 @@
 import './TableCell.scss'
 
-export const TableCell = ({children}) => {
+export const TableCell = ({children, style}) => {
     return (
-        <div className={'table__cell'}>{children}</div>
+        <div style={style} className={'table__cell'}>{children}</div>
     )
 }

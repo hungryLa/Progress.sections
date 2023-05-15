@@ -15,6 +15,7 @@ class TimetableResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
+            'id' => $this->id,
             'type' => $this->type,
             'model_id' => $this->model_id,
             'weekday' => $this->weekday,

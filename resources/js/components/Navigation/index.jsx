@@ -19,7 +19,23 @@ export const Navigation = ({place, isAuthenticated = true}) => {
         section: [
             {
                 title: 'О секции',
-                path: `/schools_owner/schools/${schoolId}/sections/${sectionId}`
+                path: `/schools_owner/schools/${schoolId}/sections/${sectionId}`,
+            },
+            // {
+            //     title: 'Расписания',
+            //     path: `/schools_owner/schools/${schoolId}/sections/${sectionId}/timetables`
+            // },
+            // {
+            //     title: 'Расписания секции',
+            //     path: `/schools_owner/schools/${schoolId}/sections/${sectionId}/section-timetables`
+            // },
+            {
+                title: "Настройки",
+                path: `/schools_owner/schools/${schoolId}/sections/${sectionId}/settings`,
+            },
+            {
+                title: "Назад",
+                path: `/schools_owner/schools/${schoolId}/sections/`
             }
         ],
         school: [
@@ -30,6 +46,10 @@ export const Navigation = ({place, isAuthenticated = true}) => {
             {
                 title: "Секции",
                 path: `/schools_owner/schools/${schoolId}/sections`,
+            },
+            {
+               title: 'Расписания',
+               path: `/schools_owner/schools/${schoolId}/timetables`
             },
             {
                 title: "Преподаватели",
@@ -172,8 +192,10 @@ export const Navigation = ({place, isAuthenticated = true}) => {
         if(user?.role === 'schools_owner' && schoolId && location.pathname.split('/')[3] == schoolId) {
             setLinks(navigationLinks.school)
         }
-
-        console.log(location.pathname.split('/')[2]);
+        if(user?.role === 'schools_owner' && schoolId && sectionId && location.pathname.split('/')[5] == sectionId) {
+            setLinks(navigationLinks.section)
+        }
+        // console.log(location.pathname.split('/'));
     }, [location, user])
 
     return (

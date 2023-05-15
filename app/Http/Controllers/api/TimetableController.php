@@ -16,27 +16,29 @@ class TimetableController extends Controller
 {
     public function index(Request $request)
     {
-        if ($request->teacher) {
-            $teacher = Teacher::find($request->teacher);
+        if ($request['teacher']) {
+            $teacher = request(['teacher']);
+            $teacher = Teacher::find($request['teacher']);
+            $data['teacher'] = new UserResource($teacher);
             $timetables = $teacher->timetables;
-        } elseif ($request->school) {
-            $school = School::find($request->school);
+        } elseif ($request['school']) {
+            $school = request(['school']);
+            $school = School::find($request['school']);
             $timetables = $school->timetables;
+            $data['school'] = new SchoolRecource($school);
         }
-        $data['school'] = new SchoolRecource($school);
-        $data['teacher'] = new UserResource($teacher);
         $data['timetables'] = TimetableResource::collection($timetables);
         return $data;
     }
 
     public function store(Request $request)
     {
-        if ($request->teacher) {
-            $teacher = Teacher::find($request->teacher);
+        if ($request['teacher']) {
+            $teacher = Teacher::find($request['teacher']);
             $model_id = $teacher->id;
             $model_type = Timetable::TYPES['teacher'];
-        } elseif ($request->school) {
-            $school = School::find($request->school);
+        } elseif ($request['school']) {
+            $school = School::find($request['school']);
             $model_id = $school->id;
             $model_type = Timetable::TYPES['school'];
         }
@@ -64,11 +66,20 @@ class TimetableController extends Controller
 
     public function update(Request $request, Timetable $timetable)
     {
-        $teacher = Teacher::find($request->teacher);
+        if ($request['teacher']) {
+            $teacher = Teacher::find($request['teacher']);
+            $model_id = $teacher->id;
+            $model_type = Timetable::TYPES['teacher'];
+        } elseif ($request['school']) {
+            $school = School::find($request['school']);
+            $model_id = $school->id;
+            $model_type = Timetable::TYPES['school'];
+        }
         try {
             $without_rest = $request->without_rest ?: false;
             $success = $timetable->update([
-                'teacher_id' => $teacher->id,
+                'type' => $model_type,
+                'model_id' => $model_id,
                 'weekday' => TimetableDaysWeek::fromArray([
                     'which_days' => $request->weekday
                 ]),

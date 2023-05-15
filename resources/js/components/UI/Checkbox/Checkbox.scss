@@ -1,0 +1,15 @@
+.checkbox {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    gap: .8rem;
+
+    &:not(:last-child) {
+        margin-bottom: .8rem;
+    }
+
+    input {
+        width: 2.4rem;
+        height: 2.4rem;
+    }
+}
