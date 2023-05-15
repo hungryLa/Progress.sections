@@ -1,6 +1,6 @@
 import './Select.scss'
 
-export const Select = ({id, className, children, label, error, value, onChange, bordered = false}) => {
+export const Select = ({id, className, children, label, error, value, onChange, multiple = false, bordered = false}) => {
     return (
         <div className={`select ${className ? className : ''} ${bordered ? 'select-bordered' : ''}`}>
             {label && <label className="select__label" htmlFor={id}>{label}</label>}

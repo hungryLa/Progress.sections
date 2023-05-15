@@ -16,6 +16,7 @@ import {NewOccupation} from "./pages/Admin/NewOccupation";
 import {Section} from "./pages/SchoolsOwner/Section";
 import {NewSchoolsTimetable} from "./pages/SchoolsOwner/NewSchoolsTimetable";
 import {EditSchoolsTimetable} from "./pages/SchoolsOwner/EditSchoolsTimetable";
+import {NewSection} from "./pages/SchoolsOwner/NewSection";
 
 
 export const App = () => {
@@ -53,7 +54,9 @@ export const App = () => {
                         <Route path={'/schools_owner/schools/:schoolId'} element={<School/>}/>
                         {/* SECTIONS */}
                         <Route path={'/schools_owner/schools/:schoolId/sections'} element={<Sections/>}/>
+                        <Route path={'/schools_owner/schools/:schoolId/sections/new'} element={<NewSection />} />
                         <Route path={'/schools_owner/schools/:schoolId/sections/:sectionId'} element={<Section/>}/>
+                        <Route path={'/schools_owner/schools/:schoolId/sections/:sectionId/update'} element={<h1>Редактирование секции</h1>} />
                         <Route path={'/schools_owner/schools/:schoolId/sections/:sectionId/settings'}
                                element={<h1>Настройки</h1>}/>
                         {/* TIMETABLES */}
