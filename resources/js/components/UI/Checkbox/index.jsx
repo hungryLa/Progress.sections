@@ -1,8 +1,8 @@
 import './Checkbox.scss'
 
-export const Checkbox = ({id, value, onChange, label}) => {
+export const Checkbox = ({id, value, onChange, label, image = false}) => {
     return (
-        <div className={'checkbox'}>
+        <div className={`checkbox ${image ? 'checkbox-with-image' : ''}`}>
             <input
                 type={"checkbox"}
                 id={id}

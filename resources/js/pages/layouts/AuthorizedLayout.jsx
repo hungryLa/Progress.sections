@@ -8,29 +8,53 @@ import useMenuStore from "../../store/useMenuStore";
 import {Title} from "../../components/UI/Title";
 import useContentStore from "../../store/useContentStore";
 import {useEffect} from "react";
+import {Swiper, SwiperSlide} from "swiper/react";
+import {Autoplay, Pagination} from "swiper";
+
+import 'swiper/scss';
+import 'swiper/scss/pagination';
+import 'swiper/scss/autoplay';
 
 export const AuthorizedLayout = () => {
     const isMenuActive = useMenuStore(store => store.isMenuActive)
-    const pageImage = useContentStore(store => store.pageImage)
+    const pageImages = useContentStore(store => store.pageImages)
     const pageTitle = useContentStore(store => store.pageTitle)
 
     return (
         <div className='page page-authenticated'>
-            <Header />
+            <Header/>
             <section className='content'>
                 <Container>
-                    {pageImage ? <img className={'content__image'} src={pageImage} alt=""/> : ''}
+                    {/*{pageImages ? <img className={'content__image'} src={pageImages} alt=""/> : ''}*/}
+                    {pageImages ? (
+                        <Swiper
+                            className={'layout-swiper'}
+                            modules={[Pagination, Autoplay]}
+                            spaceBetween={0}
+                            slidesPerView={1}
+                            speed={500}
+                            loop={true}
+                            touchRatio={1.5}
+                            effect={'slide'}
+                            pagination={{clickable: true}}>
+                            {pageImages.map((image, index) => (
+                                <SwiperSlide key={image} className={'layout-swiper__slide'}>
+                                    <img src={image} alt={`Image ${index}`}/>
+                                </SwiperSlide>
+                            ))}
+                        </Swiper>
+                    ) : ''}
                     <Title className={'content__title'}>{pageTitle}</Title>
                     <div className="content__inner">
-                        <Sidebar />
+                        <Sidebar/>
                         <main>
-                            <Outlet />
+                            <Outlet/>
                         </main>
                     </div>
                 </Container>
-                <Menu isActive={isMenuActive} />
+                <Menu isActive={isMenuActive}/>
             </section>
-            <Footer />
+            <Footer/>
         </div>
     )
 }

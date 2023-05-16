@@ -4,9 +4,11 @@ export const Select = ({id, className, children, label, error, value, onChange, 
     return (
         <div className={`select ${className ? className : ''} ${bordered ? 'select-bordered' : ''}`}>
             {label && <label className="select__label" htmlFor={id}>{label}</label>}
-            <select className={'select__field'} id={id} value={value} onChange={onChange} multiple={multiple}>
-                {children}
-            </select>
+            <div className="select__wrapper">
+                <select className={'select__field'} id={id} value={value} onChange={onChange} multiple={multiple}>
+                    {children}
+                </select>
+            </div>
             {error && <small className={'select__error'}>{error}</small>}
         </div>
     )

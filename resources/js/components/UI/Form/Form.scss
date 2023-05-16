@@ -2,6 +2,7 @@
     display: grid;
     grid-template-columns: 1fr;
     grid-gap: 4rem;
+    margin-bottom: 2.4rem;
 
     &__inputs {
         display: grid;
@@ -11,13 +12,16 @@
     }
 
     &__buttons {
-        display: flex;
-        flex-direction: row;
-        flex-wrap: wrap;
-        gap: 2rem;
+        //display: flex;
+        //flex-direction: row;
+        //flex-wrap: wrap;
+        //gap: 2rem;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        grid-gap: 2.4rem;
 
         .button {
-            width: 50%;
+            width: 100%;
         }
     }
 
@@ -27,6 +31,7 @@
         }
 
         &__buttons {
+            grid-template-columns: repeat(1, 1fr);
             .button {
                 width: 100%;
             }

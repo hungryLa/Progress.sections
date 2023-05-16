@@ -14,7 +14,6 @@ const useOccupationsStore = create(
                 try {
                     set({loading: true})
                     const response = await api.get('cabinet/occupations/')
-                    console.log(response.data.data);
                     set({loading: false, occupations: response.data.data})
                 } catch (error) {
                     set({loading: false, error})

@@ -12,7 +12,7 @@ export const SchoolInfo = ({school}) => {
 
     useEffect(() => {
         setTitle(school.title)
-        setImage('https://placehold.co/600x400')
+        setImage(['https://images.unsplash.com/photo-1615859131861-052f0641a60e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1589&q=80', 'https://images.unsplash.com/photo-1512861506260-6520871bbdaa?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTR8fHdpZGV8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60'])
     }, [school])
 
     return (

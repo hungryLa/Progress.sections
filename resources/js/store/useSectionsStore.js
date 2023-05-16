@@ -6,6 +6,7 @@ const useSectionsStore = create(
     persist((set, get) => ({
         sections: [],
         section: {},
+        images: [],
         loading: false,
         error: null,
         occupationError: '',
@@ -16,24 +17,63 @@ const useSectionsStore = create(
                 set({loading: true})
                 const sectionsResponse = await api.get(`cabinet/schools/${schoolId}/sections`)
                 const {data} = sectionsResponse.data
-                const occupationsResponse = await api.get(`cabinet/occupations`)
-                const occupationsData = occupationsResponse.data.data
-                data.forEach(section => {
-                    occupationsData.forEach(occupation => {
-                        if (section.occupation_id === occupation.id) {
-                            section.occupation = occupation
-                        }
-                    })
-                })
+                console.log('data', data)
                 set({loading: false, sections: [...data]})
             } catch (error) {
                 set({loading: false, error})
             }
         },
-        addSection: async (schoolId, occupation, description, contents) => {
+        getOneSection: async ( schoolId ,sectionId) => {
+            try {
+                set({loading: true})
+                const response = await api.get(`cabinet/schools/${schoolId}/sections/${sectionId}`)
+                console.log('section', response)
+                const {data} = response.data
+                set({loading: false, section: data})
+            }  catch (error) {
+                set({error, loading: false})
+            }
+        },
+        deleteImages: async(checkbox) => {
+            try {
+                set({loading: true})
+                console.log(checkbox)
+                const response = await api.delete(`/cabinet/files/deleteImagesThroughCheckBox?checkbox=${checkbox}`)
+                console.log('res', response)
+                set({loading: false})
+            } catch (error) {
+                set({loading: false, error})
+            }
+        },
+        addImage: async(sectionId, images) => {
+            try {
+                set({loading: true})
+                console.log('images', images)
+                const formData = new FormData();
+                for (let i = 0; i < images.length; i++) {
+                    formData.append(`images[${i}]`, images[i]);
+                }
+                const response = await api.post(`/cabinet/files/storeImages/section/${sectionId}/image`, formData)
+                console.log('here', response)
+                set({loading: false})
+            } catch (error) {
+                set({loading: false, error})
+            }
+        },
+        addSection: async (schoolId, occupation, description, contents, images) => {
             try {
                 set({loading: true, occupationError: '', descriptionError: '', contentsError: ''})
-                await api.post(`cabinet/schools/${schoolId}/sections/new`)
+                console.log(images)
+                const formData = new FormData();
+                formData.append('school_id', schoolId);
+                formData.append('occupation_id', occupation);
+                formData.append('description', description);
+                formData.append('contents', contents);
+                for (let i = 0; i < images.length; i++) {
+                    formData.append(`images[${i}]`, images[i]);
+                }
+                const response = await api.post(`cabinet/schools/${schoolId}/sections/store`, formData)
+                console.log(response)
                 set({loading: false, occupationError: '', descriptionError: '', contentsError: ''})
             } catch (error) {
                 if (error.response.data.errors) {
@@ -43,6 +83,45 @@ const useSectionsStore = create(
                         descriptionError: error.response.data.errors.description,
                         contentsError: error.response.data.errors.contents})
                 }
+            }
+        },
+        editSection: async (schoolId, sectionId, occupation, description, contents) => {
+            try {
+                set({loading: true, occupationError: '', descriptionError: '', contentsError: ''})
+                await api.put(`cabinet/schools/${schoolId}/sections/${sectionId}/update`, {
+                    section_id: sectionId,
+                    occupation_id: occupation,
+                    description,
+                    contents
+                })
+                set({loading: false, occupationError: '', descriptionError: '', contentsError: ''})
+            } catch (error) {
+                if (error.response.data.errors) {
+                    set({
+                        loading: false,
+                        occupationError: error.response.data.errors.occupation,
+                        descriptionError: error.response.data.errors.description,
+                        contentsError: error.response.data.errors.contents})
+                }
+            }
+        },
+        deleteSection: async (schoolId, sectionId) => {
+            try {
+                set({
+                    loading: true
+                })
+                const response = await api.delete(`/cabinet/schools/${schoolId}/sections/${sectionId}/delete`, {
+                    section: Number(sectionId)
+                })
+                console.log(response)
+                set({
+                    loading: false
+                })
+            } catch (error) {
+                set({
+                    loading: false,
+                    error
+                })
             }
         }
     }), {

@@ -3,21 +3,32 @@ import useSectionsStore from "../../store/useSectionsStore";
 import {useEffect, useState} from "react";
 import {Loader} from "../../components/UI/Loader";
 import {SectionInfo} from "../../components/SectionInfo";
+import useContentStore from "../../store/useContentStore";
 
 export const Section = () => {
-    const { schoolId, sectionId } = useParams();
-    const {sections, loading, getSections } = useSectionsStore()
-    const [section, setSection] = useState(null)
+    const {schoolId, sectionId} = useParams();
+    const {loading, getOneSection, section} = useSectionsStore()
+    const {setTitle, setImage} = useContentStore()
 
     useEffect(() => {
-        getSections(schoolId, sectionId)
-        setSection(sections.find(section => section.id === Number(sectionId)))
+        getOneSection(schoolId, sectionId)
+        console.log(section)
+        if (section && section?.images.length > 0) {
+            setTitle(section?.occupation?.title)
+            setImage(section.images.map(image => `/storage/${image.path}`))
+        }
     }, [])
 
     return (
         <>
-            {loading || section === null ? (<Loader />) : (
-                <SectionInfo description={section.description} contents={section.contents} occupationTitle={section.occupation.title} />
+            {loading ? (<Loader/>) : (
+                <>
+                    <SectionInfo
+                        description={section.description}
+                        contents={section.contents}
+                        occupationTitle={section?.occupation?.title}
+                    />
+                </>
             )}
         </>
     )

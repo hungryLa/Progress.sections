@@ -56,6 +56,25 @@
         }
     }
 
+    &-orange {
+        background-color: var(--orange);
+        border: 1px solid var(--orange);
+        color: var(--white);
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+
+        &:hover {
+            border-color: var(--orange);
+            background-color: var(--white);
+            color: var(--orange);
+        }
+
+        &:active {
+            background-color: var(--orange-darken);
+            color: var(--white);
+            border-color: var(--orange-darken);
+        }
+    }
+
     &-blue {
         background-color: var(--blue);
         border: 1px solid var(--blue);

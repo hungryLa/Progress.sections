@@ -5,18 +5,18 @@ const useContentStore = create(
     persist(
         (set, get) => ({
             pageTitle: 'Личный кабинет',
-            pageImage: null,
+            pageImages: [],
             setTitle: (title) => {
                 set({pageTitle: title})
             },
             clearTitle: () => {
                 set({pageTitle: 'Личный кабинет'})
             },
-            setImage: (image) => {
-                set({pageImage: image})
+            setImage: (images) => {
+                set({pageImages: images})
             },
             clearImage: () => {
-                set({pageImage: null})
+                set({pageImages: []})
             }
         }),
         {name: 'content-storage'}

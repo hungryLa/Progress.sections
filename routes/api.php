@@ -123,8 +123,7 @@ Route::group(['middleware' => 'jwt.auth'], function () {
             Route::get('', [SectionController::class, 'index'])->name('section.index');
             Route::get('create', [SectionController::class, 'create'])->name('section.create');
             Route::post('store', [SectionController::class, 'store'])->name('section.store');
-            Route::get('{section}', [SectionController::class, 'show'])->name('section.show');
-            Route::get('{section}/edit', [SectionController::class, 'edit'])->name('section.edit');
+            Route::get('{section}', [SectionController::class, 'getOne'])->name('section.get-one');
             Route::put('{section}/update', [SectionController::class, 'update'])->name('section.update');
             Route::delete('{section}/delete', [SectionController::class, 'destroy'])->name('section.delete');
         });

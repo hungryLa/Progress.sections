@@ -14,7 +14,7 @@ class OccupationController extends Controller
      */
     public function index()
     {
-        return OccupationRecource::collection(Occupation::orderBy('title')->get());
+        return OccupationRecource::collection(Occupation::orderBy('id')->get());
     }
 
     /**

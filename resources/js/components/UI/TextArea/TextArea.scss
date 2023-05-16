@@ -1,31 +1,16 @@
-.select {
+.textarea {
     display: flex;
     flex-direction: column;
     gap: .8rem;
 
-    &__wrapper {
-        display: flex;
-        width: 100%;
-        position: relative;
-
-        &:after {
-            content: url("/public/images/arrow-down.svg");
-            font-size: 1rem;
-            top: 50%;
-            transform: translateY(-50%);
-            right: 3rem;
-            position: absolute;
-        }
-    }
-
     &-bordered {
-        .select__field {
+        .textarea__field {
             border: 1px solid rgba(44, 61, 115, 0.5);
         }
     }
 
     &__label {
-        margin-bottom: .8rem;
+        margin-bottom: 0.8rem;
     }
 
     &__error {
@@ -35,9 +20,6 @@
     }
 
     &__field {
-        width: 100%;
-        -webkit-appearance: none;
-        appearance: none;
         font-size: 1.4rem;
         border-radius: 1rem;
         -webkit-border-radius: 1rem;
