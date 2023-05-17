@@ -7,6 +7,7 @@ use App\Models\Day;
 use App\Models\ModelSchool;
 use App\Models\Occupation;
 use App\Models\School;
+use App\Models\SchoolType;
 use App\Models\Section;
 use App\Models\Teacher;
 use App\Models\TeacherInformation;
@@ -31,7 +32,7 @@ class DatabaseSeeder extends Seeder
             'email' => 'admin@mail.ru',
             'password' => Hash::make('password'),
             'email_verified_at' => Carbon::now(),
-         ]);
+        ]);
         User::create([
             'role' => User::ROLES['schools_owner'],
             'full_name' => 'schools_owner',
@@ -58,9 +59,10 @@ class DatabaseSeeder extends Seeder
         Occupation::factory(10)->create();
         TeacherInformation::factory(20)->create();
         Timetable::factory(30)->create();
+        SchoolType::factory(10)->create();
         School::factory(40)->create();
         Section::factory(80)->create();
         TimetableSection::factory(10)->create();
-//        ModelSchool::factory(80)->create();
+        ModelSchool::factory(15)->create();
     }
 }
