@@ -1,18 +1,18 @@
-import { Subtitle } from "../../components/UI/Subtitle";
-import { useState } from "react";
-import { Input } from "../../components/UI/Input";
-import { Button } from "../../components/UI/Button";
+import {Subtitle} from "../../components/UI/Subtitle";
+import {useState} from "react";
+import {Input} from "../../components/UI/Input";
+import {Button} from "../../components/UI/Button";
 import useUsersStore from "../../store/useUsersStore";
-import { Form } from "../../components/UI/Form";
-import { useNavigate } from "react-router-dom";
-import { Select } from "../../components/UI/Select";
+import {Form} from "../../components/UI/Form";
+import {useNavigate} from "react-router-dom";
+import {Select} from "../../components/UI/Select";
 
-    export const NewUser = () => {
-    const addUser = useUsersStore(({ addUser }) => addUser);
-    const fullNameErrors = useUsersStore(({ fullNameError }) => fullNameError);
-    const emailErrors = useUsersStore(({ emailError }) => emailError);
-    const roleErrors = useUsersStore(({ roleError }) => roleError);
-    const loading = useUsersStore(({ loading }) => loading);
+export const NewUser = () => {
+    const addUser = useUsersStore(({addUser}) => addUser);
+    const fullNameErrors = useUsersStore(({fullNameError}) => fullNameError);
+    const emailErrors = useUsersStore(({emailError}) => emailError);
+    const roleErrors = useUsersStore(({roleError}) => roleError);
+    const loading = useUsersStore(({loading}) => loading);
 
     const [fullName, setFullName] = useState("");
     const [role, setRole] = useState("user");
@@ -71,8 +71,8 @@ import { Select } from "../../components/UI/Select";
                             value={role}
                             style={
                                 role === ""
-                                    ? { color: " rgba(44, 61, 115, 0.25)" }
-                                    : { color: "inherit" }
+                                    ? {color: " rgba(44, 61, 115, 0.25)"}
+                                    : {color: "inherit"}
                             }
                         >
                             <option value="admin">Администратор</option>

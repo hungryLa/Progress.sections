@@ -33,13 +33,13 @@ export const Schools = () => {
                 <>
                     <Button type={'button'} variant={'blue'} onClick={handleNavigate}>Создать</Button>
                     <CardContainer>
-                        {schools.map((school) => (
+                        {schools && schools.map((school) => (
                             <SchoolCard
-                                key={school.id}
-                                id={school.id}
-                                title={school.title}
-                                description={school.description}
-                                type={school.type}
+                                key={school?.id}
+                                id={school?.id}
+                                title={school?.title}
+                                description={school?.description}
+                                types={school?.school_types}
                             />
                         ))}
                     </CardContainer>

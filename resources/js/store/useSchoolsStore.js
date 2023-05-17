@@ -10,7 +10,7 @@ const useSchoolsStore = create(
             loading: false,
             error: null,
             statusError: '',
-            reqruitmentError: '',
+            recruitmentError: '',
             typeError: '',
             titleError: '',
             descriptionError: '',
@@ -20,13 +20,12 @@ const useSchoolsStore = create(
                 try {
                     set({loading: true})
                     const response = await api.get('cabinet/schools/')
-                    console.log(response)
                     const {school} = response.data
-                    console.log(school)
                     set({
                         loading: false,
                         schools: [...school]
                     })
+                    console.log(get().schools)
                 } catch (error) {
                     set({loading: false, error})
                 }
@@ -41,12 +40,12 @@ const useSchoolsStore = create(
                     set({loading: false, error})
                 }
             },
-            addSchool: async (status, recruitmentOpen, type, title, description, phoneNumber, address, images) => {
+            addSchool: async (status, recruitmentOpen, type, title, description, phoneNumber, address, images, schoolTypes) => {
                 try {
                     set({
                         loading: true,
                         statusError: '',
-                        reqruitmentError: '',
+                        recruitmentError: '',
                         typeError: '',
                         titleError: '',
                         descriptionError: '',
@@ -64,10 +63,35 @@ const useSchoolsStore = create(
                     images && images.forEach((image, index) => {
                         formData.append(`images[${index}]`, image)
                     })
+                    schoolTypes && schoolTypes.forEach((type, index) =>
+                        formData.append(`school_types[${index}]`, type)
+                    )
 
-                    await api.post(`cabinet/schools/store`)
+                    await api.post(`cabinet/schools/store`, formData)
+                    await get().getSchools()
+                    set({
+                        loading: false,
+                        statusError: '',
+                        recruitmentError: '',
+                        typeError: '',
+                        titleError: '',
+                        descriptionError: '',
+                        phoneError: '',
+                        addressError: ''
+                    })
                 } catch (error) {
-                    set({loading: false, error})
+                    if(error.response.data.errors) {
+                        set({
+                            loading: false,
+                            statusError: '',
+                            recruitmentError: '',
+                            typeError: '',
+                            titleError: '',
+                            descriptionError: '',
+                            phoneError: '',
+                            addressError: ''
+                        })
+                    }
                 }
             }
         }),

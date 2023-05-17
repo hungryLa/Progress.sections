@@ -68,6 +68,15 @@ class SchoolController extends Controller
             if ($request->hasFile('images')) {
                 FileController::storeFile($request, School::TYPE, $school->id, File::TYPE['image'], 'images');
             }
+            if ($request->school_types) {
+                foreach ($request->school_types as $school_type) {
+                    ModelSchool::create([
+                        'model_type' => ModelSchool::TYPES['school_types'],
+                        'model_id' => $school_type,
+                        'school_id' => $school->id,
+                    ]);
+                }
+            }
             $success = ModelSchool::create([
                 'model_type' => ModelSchool::TYPES['user'],
                 'model_id' => Auth::user()->id,

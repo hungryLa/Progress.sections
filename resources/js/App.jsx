@@ -21,6 +21,7 @@ import {EditSection} from "./pages/SchoolsOwner/EditSection";
 import {NewSchool} from "./pages/SchoolsOwner/NewSchool";
 import {SchoolTypes} from "./pages/Admin/SchoolTypes";
 import {NewSchoolType} from "./pages/Admin/NewSchoolType";
+import {EditSchoolType} from "./pages/Admin/EditSchoolType";
 
 
 export const App = () => {
@@ -46,8 +47,7 @@ export const App = () => {
                         <Route path={'/admin/occupations/new'} element={<NewOccupation/>}/>
                         <Route path={'/admin/schoolTypes/'} element={<SchoolTypes />}/>
                         <Route path={'/admin/schoolTypes/new'} element={<NewSchoolType />}/>
-                        <Route path={'/admin/schoolTypes/:schoolTypeId'} element={<h1>Тип школы</h1>}/>
-                        <Route path={'/admin/schoolTypes/:schoolTypeId/edit'} element={<h1>Редактирование типа школы</h1>}/>
+                        <Route path={'/admin/schoolTypes/:schoolTypeId/edit'} element={<EditSchoolType />}/>
                         <Route path={'/admin/sections'} element={<Sections/>}/>
                         <Route path={'/admin/commission'} element={<h1>Комиссия</h1>}/>
                         <Route path={'/admin/extracts'} element={<h1>Выписки</h1>}/>

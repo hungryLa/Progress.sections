@@ -8,6 +8,12 @@
         width: 100%;
         position: relative;
 
+        &-no-arrow {
+            &:after {
+                opacity: 0;
+            }
+        }
+
         &:after {
             content: url("/public/images/arrow-down.svg");
             font-size: 1rem;
