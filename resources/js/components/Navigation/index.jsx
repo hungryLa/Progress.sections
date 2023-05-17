@@ -96,6 +96,10 @@ export const Navigation = ({place, isAuthenticated = true}) => {
                 path: "/admin/occupations"
             },
             {
+                title: "Типы школ",
+                path: "/admin/schoolTypes/"
+            },
+            {
                 title: "Выписки",
                 path: "/admin/extracts",
             },

@@ -19,6 +19,8 @@ import {EditSchoolsTimetable} from "./pages/SchoolsOwner/EditSchoolsTimetable";
 import {NewSection} from "./pages/SchoolsOwner/NewSection";
 import {EditSection} from "./pages/SchoolsOwner/EditSection";
 import {NewSchool} from "./pages/SchoolsOwner/NewSchool";
+import {SchoolTypes} from "./pages/Admin/SchoolTypes";
+import {NewSchoolType} from "./pages/Admin/NewSchoolType";
 
 
 export const App = () => {
@@ -42,6 +44,10 @@ export const App = () => {
                         <Route path={'/admin/users/:userId/update'} element={<EditUser/>}/>
                         <Route path={'/admin/occupations'} element={<Occupations/>}/>
                         <Route path={'/admin/occupations/new'} element={<NewOccupation/>}/>
+                        <Route path={'/admin/schoolTypes/'} element={<SchoolTypes />}/>
+                        <Route path={'/admin/schoolTypes/new'} element={<NewSchoolType />}/>
+                        <Route path={'/admin/schoolTypes/:schoolTypeId'} element={<h1>Тип школы</h1>}/>
+                        <Route path={'/admin/schoolTypes/:schoolTypeId/edit'} element={<h1>Редактирование типа школы</h1>}/>
                         <Route path={'/admin/sections'} element={<Sections/>}/>
                         <Route path={'/admin/commission'} element={<h1>Комиссия</h1>}/>
                         <Route path={'/admin/extracts'} element={<h1>Выписки</h1>}/>

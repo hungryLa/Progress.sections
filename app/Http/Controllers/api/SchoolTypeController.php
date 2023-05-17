@@ -5,10 +5,27 @@ namespace App\Http\Controllers\api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SchoolType\StoreRequest;
 use App\Http\Requests\SchoolType\UpdateRequest;
+use App\Http\Resources\SectionRecource;
 use App\Models\SchoolType;
+use Illuminate\Http\Request;
 
 class SchoolTypeController extends Controller
 {
+    public function index()
+    {
+        return SectionRecource::collection(SchoolType::orderBy('id')->get());
+    }
+
+    public function getOne(Request $request)
+    {
+        try {
+            $school_type = SchoolType::where('id', $request->school_type)->first();
+            return new SectionRecource($school_type);
+        } catch (\Exception $exception) {
+            return $exception->getMessage();
+        }
+    }
+
     public function store(StoreRequest $request)
     {
         try {

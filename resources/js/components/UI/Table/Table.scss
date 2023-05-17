@@ -1,7 +1,7 @@
 .table {
-    margin: 2.4rem 0;
     &-responsive {
-        overflow-x: scroll;
+        overflow-x: auto;
+        margin: 2.4rem 0;
     }
     max-width: inherit;
     min-width: max-content;
