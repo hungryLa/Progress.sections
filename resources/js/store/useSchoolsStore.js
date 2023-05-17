@@ -9,6 +9,13 @@ const useSchoolsStore = create(
             school: {},
             loading: false,
             error: null,
+            statusError: '',
+            reqruitmentError: '',
+            typeError: '',
+            titleError: '',
+            descriptionError: '',
+            phoneError: '',
+            addressError: '',
             getSchools: async () => {
                 try {
                     set({loading: true})
@@ -38,8 +45,23 @@ const useSchoolsStore = create(
                 try {
                     set({
                         loading: true,
-
+                        statusError: '',
+                        reqruitmentError: '',
+                        typeError: '',
+                        titleError: '',
+                        descriptionError: '',
+                        phoneError: '',
+                        addressError: ''
                     })
+                    const formData = new FormData()
+                    formData.append('status', status)
+                    formData.append('recruitment_open', recruitmentOpen)
+                    formData.append('type', type)
+                    formData.append('title', title)
+                    formData.append('description', description)
+                    formData.append()
+                } catch (error) {
+                    set({loading: false, error})
                 }
             }
         }),
