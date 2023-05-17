@@ -16,20 +16,20 @@ class Role
      */
     public function handle(Request $request, Closure $next, ...$roles): Response
     {
-
         $user = User::find(auth()->user()->id);
 
-        foreach ($roles as $role){
-            if ($user->hasRole($role)){
+        foreach ($roles as $role) {
+            if ($user->hasRole($role)) {
                 return $next($request);
             }
         }
 
         session()->flash('warning', __('flash.Access error'));
-        if($user)
+        if ($user) {
             return redirect()->back();
-        elseif (!$user)
+        } elseif (!$user) {
             return redirect()->route('login');
+        }
 
         return redirect()->route('login');
     }
