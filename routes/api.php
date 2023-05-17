@@ -109,7 +109,6 @@ Route::group(['middleware' => 'jwt.auth'], function () {
             Route::get('', [SchoolController::class, 'index'])->name('school.index');
             Route::get('{school}', [SchoolController::class, 'getOne'])->name('school.get-one');
             Route::group(['middleware' => 'role:schools_owner'], function () {
-                Route::get('create', [SchoolController::class, 'create'])->name('school.create');
                 Route::post('store', [SchoolController::class, 'store'])->name('school.store');
             });
             Route::get('{school}/show', [SchoolController::class, 'show'])->name('school.show');

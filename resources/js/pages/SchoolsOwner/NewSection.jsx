@@ -16,7 +16,7 @@ export const NewSection = () => {
     const {
         loading: occupationLoading,
         occupations,
-        getOccupations,
+        getOccupations
     } = useOccupationsStore()
     const {loading, occupationError, descriptionError, contentsError, addSection, addImages} = useSectionsStore()
 
@@ -24,6 +24,10 @@ export const NewSection = () => {
     const [description, setDescription] = useState('')
     const [contents, setContents] = useState('')
     const [images, setImages] = useState([])
+    const [errors, setErrors] = useState({
+        description: '',
+        contents: ''
+    })
 
     useEffect(() => {
         getOccupations()
@@ -31,16 +35,36 @@ export const NewSection = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault()
-        await addSection(
+        let errorMessages = {}
+
+        if(!description) {
+            errorMessages.description = 'Поле описание не должно быть пустым'
+        }
+        if(!contents) {
+            errorMessages.contents = 'Поле содержание не должно быть пустым'
+        }
+
+        setErrors(errorMessages)
+
+        if(contents !== '' && description !== '')
+            await addSection(
             schoolId,
             occupation,
             description,
             contents,
             images
-        ).then(res => console.log(res)).then(() => navigate(`/schools_owner/schools/${schoolId}/sections`))
+        ).then(() => navigate(`/schools_owner/schools/${schoolId}/sections`))
     }
 
+    const handleDescription = (e) => {
+        setErrors({...errors, description: ''})
+        setDescription(e.target.value)
+    }
 
+    const handleContents = (e) => {
+        setErrors({...errors, contents: ''})
+        setContents(e.target.value)
+    }
     return (
         <>
             <Subtitle>Создание секции</Subtitle>
@@ -65,8 +89,8 @@ export const NewSection = () => {
                                     label={'Описание'}
                                     type={'text'}
                                     value={description}
-                                    error={descriptionError}
-                                    onChange={(e) => setDescription(e.target.value)}
+                                    error={errors.description}
+                                    onChange={handleDescription}
                                 />
                                 <Input label={'Изображения'} type={'file'} onChange={(e) => {
                                     setImages(e.target.files)
@@ -76,8 +100,8 @@ export const NewSection = () => {
                                 <TextArea
                                     label={'Содержание'}
                                     value={contents}
-                                    error={contentsError}
-                                    onChange={(e) => setContents(e.target.value)}
+                                    error={errors.contents}
+                                    onChange={handleContents}
                                 ></TextArea>
                             </div>
                         </>

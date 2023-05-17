@@ -59,7 +59,13 @@ const useSchoolsStore = create(
                     formData.append('type', type)
                     formData.append('title', title)
                     formData.append('description', description)
-                    formData.append()
+                    formData.append('phone_number', phoneNumber)
+                    formData.append('address', address);
+                    images && images.forEach((image, index) => {
+                        formData.append(`images[${index}]`, image)
+                    })
+
+                    await api.post(`cabinet/schools/store`)
                 } catch (error) {
                     set({loading: false, error})
                 }

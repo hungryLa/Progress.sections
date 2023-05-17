@@ -65,9 +65,10 @@ const useSectionsStore = create(
                 for (let i = 0; i < images.length; i++) {
                     formData.append(`images[${i}]`, images[i]);
                 }
-                const response = await api.post(`cabinet/schools/${schoolId}/sections/store`, formData)
+                await api.post(`cabinet/schools/${schoolId}/sections/store`, formData)
                 set({loading: false, occupationError: '', descriptionError: '', contentsError: ''})
             } catch (error) {
+                console.log(error)
                 if (error.response.data.errors) {
                     set({
                         loading: false,
