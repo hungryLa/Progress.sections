@@ -21,7 +21,7 @@ class FileController extends Controller
         session()->flash('success', __('other.Files uploaded successfully'));
     }
 
-    static function storeFile(Request $request, $modelType, $modelId, $fileType, $key = "files")
+    static function storeFile(Request $request, $modelType, $modelId, $fileType, $key = "images")
     {
         foreach ($request->file($key) as $file) {
             $upload_folder = $modelType.'/'.$modelId.'/'.$fileType;
@@ -57,7 +57,8 @@ class FileController extends Controller
     {
         try {
             if ($request->checkbox) {
-                foreach ($request->checkbox as $file_id) {
+                $checkboxes = explode(',', $request->checkbox);
+                foreach ($checkboxes as $file_id) {
                     $this->deleteFile($file_id);
                 }
             } else {

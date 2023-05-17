@@ -43,6 +43,16 @@ class SchoolController extends Controller
         return $data;
     }
 
+    public function getOne(Request $request)
+    {
+        try {
+            $school = School::where('id', $request->school)->first();
+            return new SchoolRecource($school);
+        } catch (\Exception $exception) {
+            return $exception->getMessage();
+        }
+    }
+
     public function store(StoreRequest $request)
     {
         try {

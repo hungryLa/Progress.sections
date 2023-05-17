@@ -1,0 +1,23 @@
+.table__cell {
+    min-width: 160px;
+    max-width: 300px;
+    width: 100%;
+    word-break: break-word;
+    padding: 1rem;
+    display: flex;
+    align-items: flex-start;
+
+    p {
+        text-align: center;
+    }
+
+    &:last-child {
+        justify-content: flex-end;
+        gap: 1rem;
+
+        button:hover {
+            transition: var(--transition);
+            color: var(--orange);
+        }
+    }
+}

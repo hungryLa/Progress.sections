@@ -21,6 +21,16 @@ class SectionController extends Controller
         return SectionRecource::collection($school->sections);
     }
 
+    public function getOne(Request $request)
+    {
+        try {
+            $section = Section::where('id', $request->section)->first();
+            return new SectionRecource($section);
+        } catch (\Exception $exception) {
+            return $exception->getMessage();
+        }
+    }
+
     /**
      * Store a newly created resource in storage.
      */
@@ -49,22 +59,6 @@ class SectionController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     */
-    public function show(School $school, Section $section)
-    {
-        return FileRecource::collection($section->images);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(School $school, Section $section)
-    {
-        return FileRecource::collection($section->images()->orderBy('position', 'asc')->get());
-    }
-
-    /**
      * Update the specified resource in storage.
      */
     public function update(Request $request, School $school, Section $section)
@@ -73,7 +67,7 @@ class SectionController extends Controller
             $success = $section->update([
                 'occupation_id' => $request->occupation_id,
                 'description' => $request->description,
-                'contents' => $request->contents,
+                'contents' => $request->contents
             ]);
             if ($success) {
                 session()->flash('success', __('other.Information changed successfully'));
@@ -86,9 +80,10 @@ class SectionController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Section $section)
+    public function destroy(Request $request)
     {
         try {
+            $section = Section::where('id', $request->section)->first();
             if (count($section->images) != 0) {
                 foreach ($section->images as $file) {
                     FileController::deleteFile($file->id);

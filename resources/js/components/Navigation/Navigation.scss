@@ -10,12 +10,17 @@
             display: flex;
             align-items: center;
             gap: 10px;
+
+            &.active {
+                color: var(--orange);
+            }
         }
 
         &:hover {
             color: var(--orange);
         }
     }
+
     &-sidebar {
         @media screen and (max-width: 1280px) {
             display: none;
@@ -23,10 +28,19 @@
     }
 
     &-menu {
+        font-size: 2.4rem;
         display: none;
+
+        .navigation__item-link{
+                font-size: 2.4rem;
+        }
 
         @media screen and (max-width: 1280px) {
             display: flex;
         }
+    }
+
+    &-unauth {
+        display: flex;
     }
 }

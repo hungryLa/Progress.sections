@@ -62,6 +62,5 @@ class DatabaseSeeder extends Seeder
         Section::factory(80)->create();
         TimetableSection::factory(10)->create();
         ModelSchool::factory(80)->create();
-
     }
 }

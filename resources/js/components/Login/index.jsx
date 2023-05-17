@@ -1,61 +1,127 @@
-import {Container} from "../Container";
-import './Login.scss'
-import {LoginSwiper} from "./LoginSwiper";
-import React, {useEffect, useState} from "react";
-import {useNavigate} from "react-router-dom";
-import {Title} from "../UI/Title";
+import { Container } from "../Container";
+import "./Login.scss";
+import { LoginSwiper } from "./LoginSwiper";
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { Title } from "../UI/Title";
 import useAuthStore from "../../store/useAuthStore";
+import { Input } from "../UI/Input";
+import { Button } from "../UI/Button";
+import {shallow} from "zustand/shallow";
 
 export const Login = () => {
-    const navigate = useNavigate()
-    const [email, setEmail] = useState('admin@mail.ru')
-    const [password, setPassword] = useState('password')
-    const login = useAuthStore(({login}) => login)
-    const user = useAuthStore(({user}) => user)
-    const error = useAuthStore(({error}) => error)
+    const navigate = useNavigate();
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const login = useAuthStore(({ login }) => login, shallow);
+    const user = useAuthStore(({ user }) => user, shallow);
+    const error = useAuthStore(({ error }) => error, shallow);
+    const clearError = useAuthStore(({clearError}) => clearError, shallow)
+
+    const [formError, setFormError] = useState('')
 
     useEffect(() => {
-        // if(user && user.role === 'admin') navigate('/users')
-        if(user) {
+        if (user) {
             switch (user.role) {
-                case 'admin':
-                    navigate('/users')
-                    break
-                case 'teacher':
-                    navigate('/timetables')
-                    break
-                case 'schools_owner':
-                    navigate('/sections')
-                    break
+                case "admin":
+                    navigate("/admin/users");
+                    break;
+                case "teacher":
+                    navigate("/sections");
+                    break;
+                case "schools_owner":
+                    navigate("/schools_owner/schools");
+                    break;
                 default:
-                    navigate('/section')
-                    break
+                    navigate("/schedule");
+                    break;
             }
         }
-
-    }, [user])
+    }, [user]);
 
     const handleSubmit = async (e) => {
+        e.preventDefault();
+        if(!email && !password) {
+            setFormError('Заполните все поля')
+            return;
+        }
+        if(!email){
+            setFormError('Введите email')
+            return;
+        }
+        if(!password){
+            setFormError('Введите пароль')
+            return;
+        }
+        if(password.length < 8) {
+            setFormError('Пароль должен быть не короче 8 символов')
+            return;
+        }
+        if(!formError) {
+            await login(email, password);
+        }
+    };
+
+    const emailHandler = (e) => {
+        setEmail(e.target.value)
+        clearError()
+        setFormError('')
+    }
+
+    const passwordHandler = (e) => {
+        setPassword(e.target.value)
+        clearError()
+        setFormError('')
+    }
+
+    const handleRedirect = (e) => {
         e.preventDefault()
-        await login(email, password)
+        navigate('/register')
     }
 
     return (
-        <div className={'login'}>
+        <div className={"login"}>
             <Container>
                 <div className="login__inner">
-                    <div className='login__form'>
-                        <Title>Единая система оплаты дополнительного образования, секция и кружков</Title>
+                    <div className="login__form">
+                        <Title className={"login__title"}>
+                            Единая система оплаты дополнительного образования,
+                            секция и кружков
+                        </Title>
+                        <p className="login__text">
+                            Решение проблем с безналичной оплатой, контролем
+                            посещаемости, табелированием и отчетностью
+                        </p>
                         <form onSubmit={handleSubmit}>
-                            <input type="text" placeholder={'email@email.com'} value={email} onChange={(e) => setEmail(e.target.value)}/>
-                            <input type="text" placeholder={'Password'} value={password} onChange={(e) => setPassword(e.target.value)}/>
-                            {error && error}
-                            <button type='submit'>Login</button>
+                            <Input
+                                type={"text"}
+                                id={"email"}
+                                placeholder={"email@email.com"}
+                                value={email}
+                                onChange={emailHandler}
+                            />
+                            <Input
+                                type={"password"}
+                                id={"password"}
+                                placeholder={"Пароль"}
+                                value={password}
+                                onChange={passwordHandler}
+                            />
+                            {formError && <small className="login__error">{formError}</small>}
+                            <Link className="login__link" to={'/password-reset'}>Восстановить пароль</Link>
+                            <div className="login__buttons">
+                                <Button type="button" variant={"white"} onClick={handleRedirect}>
+                                    Зарегистрироваться
+                                </Button>
+                                <Button type="submit" variant={"blue"}>
+                                    Войти
+                                </Button>
+                            </div>
                         </form>
                     </div>
-                    <LoginSwiper/>
+                    <LoginSwiper />
                 </div>
             </Container>
         </div>
-    )
-}
+    );
+};

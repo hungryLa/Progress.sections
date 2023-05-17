@@ -1,6 +1,14 @@
 .login__swiper {
     width: 100%;
     height: auto;
+
+    .swiper-pagination-bullet-active {
+        background-color: var(--orange);
+    }
+
+    @media screen and (max-width: 1280px) {
+        display: none;
+    }
 }
 
 .login__slide {
@@ -9,15 +17,20 @@
     align-items: center;
     gap: 8px;
     padding-bottom: 4rem;
+    width: 100%;
 
 
     img {
-        max-height: 450px;
-        height: 100%;
+        max-width: 650px;
+        height: 450px;object-fit: contain;
     }
 
     h5 {
         font-size: 2rem;
         font-weight: 500;
+    }
+
+    p {
+        text-align: center;
     }
 }

@@ -6,4 +6,10 @@
     @media screen and (max-width: 768px) {
         text-align: center;
     }
+
+    &-mini {
+        font-weight: 400;
+        font-size: 1.6rem;
+        margin-bottom: .8rem;
+    }
 }

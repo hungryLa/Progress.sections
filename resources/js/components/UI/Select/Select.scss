@@ -1,0 +1,61 @@
+.select {
+    display: flex;
+    flex-direction: column;
+    gap: .8rem;
+
+    &__wrapper {
+        display: flex;
+        width: 100%;
+        position: relative;
+
+        &:after {
+            content: url("/public/images/arrow-down.svg");
+            font-size: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            right: 3rem;
+            position: absolute;
+        }
+    }
+
+    &-bordered {
+        .select__field {
+            border: 1px solid rgba(44, 61, 115, 0.5);
+        }
+    }
+
+    &__label {
+        margin-bottom: .8rem;
+    }
+
+    &__error {
+        color: var(--orange);
+        font-size: 1.4rem;
+        padding-left: 1rem;
+    }
+
+    &__field {
+        width: 100%;
+        -webkit-appearance: none;
+        appearance: none;
+        font-size: 1.4rem;
+        border-radius: 1rem;
+        -webkit-border-radius: 1rem;
+        -moz-border-radius: 1rem;
+        -ms-border-radius: 1rem;
+        -o-border-radius: 1rem;
+        transition: var(--transition);
+        -webkit-transition: var(--transition);
+        -moz-transition: var(--transition);
+        -ms-transition: var(--transition);
+        -o-transition: var(--transition);
+        background-color: var(--white);
+        padding: 1.5rem 3rem;
+        border: 1px solid var(--white);
+
+        &:focus {
+            border-color: var(--orange);
+            box-shadow: inset 0px 0px 10px rgba(255, 121, 121, 0.25)
+        }
+    }
+}
