@@ -3,6 +3,7 @@
     border: 0;
     padding: 1.5rem 1rem;
     transition: var(--transition);
+    min-width: 20rem;
 
     &-green {
         background-color: var(--green);

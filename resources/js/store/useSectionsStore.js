@@ -17,7 +17,6 @@ const useSectionsStore = create(
                 set({loading: true})
                 const sectionsResponse = await api.get(`cabinet/schools/${schoolId}/sections`)
                 const {data} = sectionsResponse.data
-                console.log('data', data)
                 set({loading: false, sections: [...data]})
             } catch (error) {
                 set({loading: false, error})
@@ -27,7 +26,6 @@ const useSectionsStore = create(
             try {
                 set({loading: true})
                 const response = await api.get(`cabinet/schools/${schoolId}/sections/${sectionId}`)
-                console.log('section', response)
                 const {data} = response.data
                 set({loading: false, section: data})
             }  catch (error) {
@@ -37,9 +35,7 @@ const useSectionsStore = create(
         deleteImages: async(checkbox) => {
             try {
                 set({loading: true})
-                console.log(checkbox)
                 const response = await api.delete(`/cabinet/files/deleteImagesThroughCheckBox?checkbox=${checkbox}`)
-                console.log('res', response)
                 set({loading: false})
             } catch (error) {
                 set({loading: false, error})
@@ -48,13 +44,11 @@ const useSectionsStore = create(
         addImage: async(sectionId, images) => {
             try {
                 set({loading: true})
-                console.log('images', images)
                 const formData = new FormData();
                 for (let i = 0; i < images.length; i++) {
                     formData.append(`images[${i}]`, images[i]);
                 }
                 const response = await api.post(`/cabinet/files/storeImages/section/${sectionId}/image`, formData)
-                console.log('here', response)
                 set({loading: false})
             } catch (error) {
                 set({loading: false, error})
@@ -63,7 +57,6 @@ const useSectionsStore = create(
         addSection: async (schoolId, occupation, description, contents, images) => {
             try {
                 set({loading: true, occupationError: '', descriptionError: '', contentsError: ''})
-                console.log(images)
                 const formData = new FormData();
                 formData.append('school_id', schoolId);
                 formData.append('occupation_id', occupation);
@@ -73,7 +66,6 @@ const useSectionsStore = create(
                     formData.append(`images[${i}]`, images[i]);
                 }
                 const response = await api.post(`cabinet/schools/${schoolId}/sections/store`, formData)
-                console.log(response)
                 set({loading: false, occupationError: '', descriptionError: '', contentsError: ''})
             } catch (error) {
                 if (error.response.data.errors) {
@@ -113,7 +105,6 @@ const useSectionsStore = create(
                 const response = await api.delete(`/cabinet/schools/${schoolId}/sections/${sectionId}/delete`, {
                     section: Number(sectionId)
                 })
-                console.log(response)
                 set({
                     loading: false
                 })

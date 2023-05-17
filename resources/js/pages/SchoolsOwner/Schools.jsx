@@ -7,20 +7,21 @@ import { Subtitle } from "../../components/UI/Subtitle";
 import { Loader } from "../../components/UI/Loader";
 import { CardContainer } from "../../components/CardContainer";
 import { SchoolCard } from "../../components/SchoolCard";
+import {Button} from "../../components/UI/Button";
 
 export const Schools = () => {
     const loading = useSchoolsStore(({ loading }) => loading);
     const schools = useSchoolsStore(({ schools }) => schools, shallow);
     const getSchools = useSchoolsStore(({ getSchools }) => getSchools, shallow);
-    // const deleteUser = useSchoolsStore(({deleteUser}) => deleteUser, shallow)
     const navigate = useNavigate();
-
-    const [modalIsActive, setModalIsActive] = useState(false);
-    const [schoolToDelete, setSchoolToDelete] = useState({});
 
     useEffect(() => {
         getSchools();
     }, []);
+
+    const handleNavigate = () => {
+        navigate(`/schools_owner/schools/new`)
+    }
 
     return (
         <>
@@ -30,6 +31,7 @@ export const Schools = () => {
                 <Loader />
             ) : (
                 <>
+                    <Button type={'button'} variant={'blue'} onClick={handleNavigate}>Создать</Button>
                     <CardContainer>
                         {schools.map((school) => (
                             <SchoolCard

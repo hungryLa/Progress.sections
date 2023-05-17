@@ -56,6 +56,10 @@ export const Navigation = ({place, isAuthenticated = true}) => {
                 path: `/schools_owner/schools/${schoolId}/teachers`,
             },
             {
+                title: "Настройки",
+                path: `/schools_owner/schools/${schoolId}/settings`,
+            },
+            {
                 title: "Назад",
                 path: '/schools_owner/schools'
             }

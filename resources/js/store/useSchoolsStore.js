@@ -6,6 +6,7 @@ const useSchoolsStore = create(
     persist(
         (set, get) => ({
             schools: [],
+            school: {},
             loading: false,
             error: null,
             getSchools: async () => {
@@ -21,6 +22,24 @@ const useSchoolsStore = create(
                     })
                 } catch (error) {
                     set({loading: false, error})
+                }
+            },
+            getOneSchool: async (schoolId) => {
+                try {
+                    set({loading: true})
+                    const response = await api.get(`cabinet/schools/${schoolId}`)
+                    const {data} = response.data
+                    set({loading: false, school: data})
+                } catch (error) {
+                    set({loading: false, error})
+                }
+            },
+            addSchool: async (status, recruitmentOpen, type, title, description, phoneNumber, address, images) => {
+                try {
+                    set({
+                        loading: true,
+
+                    })
                 }
             }
         }),

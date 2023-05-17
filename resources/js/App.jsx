@@ -18,6 +18,7 @@ import {NewSchoolsTimetable} from "./pages/SchoolsOwner/NewSchoolsTimetable";
 import {EditSchoolsTimetable} from "./pages/SchoolsOwner/EditSchoolsTimetable";
 import {NewSection} from "./pages/SchoolsOwner/NewSection";
 import {EditSection} from "./pages/SchoolsOwner/EditSection";
+import {NewSchool} from "./pages/SchoolsOwner/NewSchool";
 
 
 export const App = () => {
@@ -52,18 +53,23 @@ export const App = () => {
                 {user && user.role === 'schools_owner' && (
                     <Route path={'/schools_owner/'} element={<AuthorizedLayout/>}>
                         <Route path={'/schools_owner/schools'} element={<Schools/>}/>
+                        <Route path={'/schools_owner/schools/new'} element={<NewSchool/>}/>
                         <Route path={'/schools_owner/schools/:schoolId'} element={<School/>}/>
+                        <Route path={'/schools_owner/schools/:schoolId/settings'} element={<h1>Настройки</h1>}/>
                         {/* SECTIONS */}
                         <Route path={'/schools_owner/schools/:schoolId/sections'} element={<Sections/>}/>
-                        <Route path={'/schools_owner/schools/:schoolId/sections/new'} element={<NewSection />} />
+                        <Route path={'/schools_owner/schools/:schoolId/sections/new'} element={<NewSection/>}/>
                         <Route path={'/schools_owner/schools/:schoolId/sections/:sectionId'} element={<Section/>}/>
-                        <Route path={'/schools_owner/schools/:schoolId/sections/:sectionId/update'} element={<h1>Редактирование секции</h1>} />
+                        <Route path={'/schools_owner/schools/:schoolId/sections/:sectionId/update'}
+                               element={<h1>Редактирование секции</h1>}/>
                         <Route path={'/schools_owner/schools/:schoolId/sections/:sectionId/settings'}
-                               element={<EditSection />}/>
+                               element={<EditSection/>}/>
                         {/* TIMETABLES */}
                         <Route path={'/schools_owner/schools/:schoolId/timetables'} element={<SchoolsTimetables/>}/>
-                        <Route path={'/schools_owner/schools/:schoolId/timetables/new'} element={<NewSchoolsTimetable />}/>
-                        <Route path={`/schools_owner/schools/:schoolId/timetables/:timetableId/update`} element={<EditSchoolsTimetable />}/>
+                        <Route path={'/schools_owner/schools/:schoolId/timetables/new'}
+                               element={<NewSchoolsTimetable/>}/>
+                        <Route path={`/schools_owner/schools/:schoolId/timetables/:timetableId/update`}
+                               element={<EditSchoolsTimetable/>}/>
                         {/* TEACHERS */}
                         <Route path={'/schools_owner/schools/:schoolId/teachers'} element={<h1>Преподаватели</h1>}/>
                         <Route path={'/schools_owner/sections/new'} element={<h1>Создать секцию</h1>}/>

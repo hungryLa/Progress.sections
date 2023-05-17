@@ -4,13 +4,15 @@ import {useEffect, useState} from "react";
 import api from "../../middlewares/auth.middleware";
 import useSchoolsStore from "../../store/useSchoolsStore";
 import {SchoolInfo} from "../../components/SchoolInfo";
+import {Loader} from "../../components/UI/Loader";
 
 export const School = () => {
     const {schoolId} = useParams()
     const schools = useSchoolsStore(({schools}) => schools)
-    const [school, setSchool] = useState({})
+    const {loading, error, school, getOneSchool} = useSchoolsStore()
+    // const [school, setSchool] = useState({})
     const findSchoolById = () => {
-        setSchool(schools.find(item => item.id === Number(schoolId)))
+        getOneSchool(schoolId)
         console.log(school)
     }
 
@@ -20,7 +22,9 @@ export const School = () => {
 
     return (
         <>
-            <SchoolInfo school={school} />
+            {loading ? (<Loader/>) : (
+                <SchoolInfo school={school}/>
+            )}
         </>
     )
 }

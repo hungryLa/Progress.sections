@@ -15,7 +15,7 @@ export const Section = () => {
         console.log(section)
         if (section && section?.images.length > 0) {
             setTitle(section?.occupation?.title)
-            setImage(section.images.map(image => `/storage/${image.path}`))
+            setImage(section?.images.map(image => `/storage/${image.path}`))
         }
     }, [])
 
