@@ -20,7 +20,6 @@ class SchoolFactory extends Factory
         return [
             'status' => $this->faker->randomElement(School::STATUS),
             'recruitment_open' => $this->faker->boolean,
-            'type' => $this->faker->randomElement(School::SCHOOL_TYPES),
             'title' => $this->faker->text(40),
             'description' => $this->faker->text(80),
             'phone_number' => $this->faker->phoneNumber,
