@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class ModelSchool extends Model
 {
     use HasFactory;
+
     protected $guarded = [];
 
     const STATUS = [
@@ -18,5 +19,6 @@ class ModelSchool extends Model
     const TYPES = [
         'user' => User::TYPE,
         'teacher' => Teacher::TYPE,
+        'school_types' => SchoolType::TYPE,
     ];
 }

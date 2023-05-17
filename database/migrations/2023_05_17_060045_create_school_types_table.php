@@ -10,14 +10,10 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('schools', function (Blueprint $table) {
+        Schema::create('school_types', function (Blueprint $table) {
             $table->id();
-            $table->enum('status', \App\Models\School::STATUS);
-            $table->boolean('recruitment_open')->default(false);
-            $table->string('title');
-            $table->string('description');
-            $table->string('phone_number');
-            $table->string('address');
+            $table->string('title')->unique();
+            $table->string('color');
             $table->timestamps();
         });
     }
@@ -27,6 +23,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('schools');
+        Schema::dropIfExists('school_types');
     }
 };

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\api\SchoolTypeController;
 use App\Http\Controllers\CabinetController;
 use App\Http\Controllers\CommunicationController;
 use App\Http\Controllers\FileController;
@@ -111,6 +112,12 @@ Route::group(['prefix' => 'cabinet', 'middleware' => ['auth', 'verified']], func
         });
     });
 
+    Route::group(['prefix' => 'schoolTypes'], function () {
+        Route::post('store', [SchoolTypeController::class, 'store'])->name('school-type.store');
+        Route::put('update', [SchoolTypeController::class, 'update'])->name('school-type.update');
+        Route::delete('store', [SchoolTypeController::class, 'delete'])->name('school-type.delete');
+    });
+
     Route::group(['prefix' => 'schools/{school}/sections'], function () {
         Route::get('', [SectionController::class, 'index'])->name('section.index');
         Route::get('create', [SectionController::class, 'create'])->name('section.create');
@@ -191,7 +198,7 @@ Route::group(['prefix' => 'cabinet', 'middleware' => ['auth', 'verified']], func
     });
 
     Route::group(['prefix' => 'files'], function () {
-        Route::post('storeImages/{modelType}/{model}/{fileType}', [FileController::class, 'storeImages'])->name(
+        Route::post('storeFile/{modelType}/{model}/{fileType}', [FileController::class, 'storeFiles'])->name(
             'cabinet.files.storeImages'
         );
         Route::delete('deleteImagesThroughCheckBox', [FileController::class, 'deleteFilesThroughCheckBox'])
