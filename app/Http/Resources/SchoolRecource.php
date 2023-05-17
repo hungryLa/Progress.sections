@@ -15,6 +15,7 @@ class SchoolRecource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
+            'school_types' => $this->school_types,
             'images' => $this->images,
             'id' => $this->id,
             'status' => $this->status,
