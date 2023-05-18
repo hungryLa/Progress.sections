@@ -39,8 +39,6 @@ export const NewSchool = () => {
     useEffect(() => {
         getSchoolTypes()
         setOptions(schoolTypes.map(item => ({value: item.id, label: item.title})))
-        if(imagesError) console.log(imagesError)
-        if(error) console.log(error)
     }, [])
 
     const handleTitle = (e) => {

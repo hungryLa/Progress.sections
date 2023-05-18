@@ -103,9 +103,7 @@ const useSectionsStore = create(
                 set({
                     loading: true
                 })
-                const response = await api.delete(`/cabinet/schools/${schoolId}/sections/${sectionId}/delete`, {
-                    section: Number(sectionId)
-                })
+                const response = await api.delete(`/cabinet/schools/${schoolId}/sections/${sectionId}/delete`)
                 set({
                     loading: false
                 })

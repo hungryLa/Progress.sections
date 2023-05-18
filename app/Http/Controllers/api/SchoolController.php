@@ -114,12 +114,21 @@ class SchoolController extends Controller
         try {
             $success = $school->update([
                 'status' => $request->status,
-                'type' => $request->type,
                 'title' => $request->title,
                 'description' => $request->description,
+                'recruitment_open' => $request->recruitment_open,
                 'address' => $request->address,
                 'phone_number' => $request->phone_number,
             ]);
+            if ($request->school_types) {
+                foreach ($request->school_types as $school_type) {
+                    ModelSchool::create([
+                        'model_type' => ModelSchool::TYPES['school_types'],
+                        'model_id' => $school_type,
+                        'school_id' => $school->id,
+                    ]);
+                }
+            }
             if ($success) {
                 session()->flash('success', __('other.Information changed successfully'));
             }

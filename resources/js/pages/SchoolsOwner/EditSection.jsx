@@ -40,8 +40,8 @@ export const EditSection = () => {
     useEffect(() => {
         getOccupations()
         setOccupation(section?.occupation?.id)
-        setDescription(section.description)
-        setContents(section.contents)
+        setDescription(section?.description)
+        setContents(section?.contents)
     }, [])
 
     const handleSubmit = async (e) => {

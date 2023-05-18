@@ -75,7 +75,6 @@ const useSchoolsStore = create(
                         error: ''
                     })
                 } catch (error) {
-                    console.log(error.response.data.errors)
                     if (error.response.data.errors) {
                         set({
                             loading: false,
@@ -85,6 +84,113 @@ const useSchoolsStore = create(
                             phoneError: error.response.data.errors.phone_number,
                             addressError: error.response.data.errors.address,
                             imagesError: Object.keys(error.response.data.errors).some(key => /^image\w*/.test(key))
+                        })
+                    }
+                }
+            },
+            editSchool: async (schoolId, status, recruitmentOpen, title, description, address, phoneNumber, schoolTypes) => {
+                try {
+                    set({loading: true, error: false})
+                    console.log('exist',schoolTypes)
+                    console.log('accessible',get().school.school_types)
+                    const typesToSend = schoolTypes.filter((exist) => !get().school.school_types.some((accessible) => exist.value === accessible.id)).map(obj => obj.value);
+                    const typesToDelete = schoolTypes.filter((exist) => !get().school.school_types.some((accessible) => exist.value !== accessible.id)).map(obj => obj.value);
+                    console.log('to delete',typesToDelete)
+                    if(typesToSend.length > 0) {
+                        await api.put(`cabinet/schools/${schoolId}/update`, {
+                            'status': status,
+                            'recruitment_open': recruitmentOpen,
+                            'type': 'school',
+                            'title': title,
+                            'description': description,
+                            'phone_number': phoneNumber,
+                            'address': address,
+                            'school_types': typesToSend
+                        })
+                    } else {
+                        console.log('nothing')
+                        await api.put(`cabinet/schools/${schoolId}/update`, {
+                            'status': status,
+                            'recruitment_open': recruitmentOpen,
+                            'type': 'school',
+                            'title': title,
+                            'description': description,
+                            'phone_number': phoneNumber,
+                            'address': address
+                        })
+                    }
+
+                    set({loading: false, error: ''})
+                } catch (error) {
+                    console.log(error)
+                    if (error?.response?.data?.errors) {
+                        set({
+                            loading: false,
+                            error: Object.keys(error?.response?.data?.errors).map((key, value) => error.response.data.errors[key])
+                        })
+                    } else set({loading: false})
+                }
+            },
+            deleteSchool: async (schoolId) => {
+                try {
+                    set({
+                        loading: true,
+                        error: ''
+                    })
+                    await api.delete(`/cabinet/schools/${schoolId}/delete`)
+                    set({
+                        loading: false,
+                        error: ''
+                    })
+                } catch (error) {
+                    if (error.response.data.errors) {
+                        set({
+                            loading: false,
+                            error: Object.keys(error.response.data.errors).map((key, value) => error.response.data.errors[key])
+                        })
+                    }
+                }
+            },
+            deleteImages: async (schoolId, checkbox) => {
+                try {
+                    set({
+                        loading: true,
+                        error: ''
+                    })
+                    await api.delete(`/cabinet/files/deleteImagesThroughCheckBox?checkbox=${checkbox}`)
+                    set({
+                        loading: false,
+                        error: ''
+                    })
+                } catch (error) {
+                    if (error.response.data.errors) {
+                        set({
+                            loading: false,
+                            error: Object.keys(error.response.data.errors).map((key, value) => error.response.data.errors[key])
+                        })
+                    }
+                }
+            },
+            addImages: async (schoolId, images) => {
+                try {
+                    set({
+                        loading: true,
+                        error: ''
+                    })
+                    const formData = new FormData()
+                    for (let i = 0; i < images.length; i++) {
+                        formData.append(`images[${i}]`, images[i])
+                    }
+                    await api.post(`/cabinet/files/storeImages/school/${schoolId}/image`, formData)
+                    set({
+                        loading: false,
+                        error: ''
+                    })
+                } catch (error) {
+                    if (error.response.data.errors) {
+                        set({
+                            loading: false,
+                            error: Object.keys(error.response.data.errors).map((key, value) => error.response.data.errors[key])
                         })
                     }
                 }
