@@ -9,13 +9,11 @@ const useSchoolsStore = create(
             school: {},
             loading: false,
             error: null,
-            statusError: '',
-            recruitmentError: '',
-            typeError: '',
             titleError: '',
             descriptionError: '',
             phoneError: '',
             addressError: '',
+            imagesError: '',
             getSchools: async () => {
                 try {
                     set({loading: true})
@@ -25,7 +23,6 @@ const useSchoolsStore = create(
                         loading: false,
                         schools: [...school]
                     })
-                    console.log(get().schools)
                 } catch (error) {
                     set({loading: false, error})
                 }
@@ -40,29 +37,28 @@ const useSchoolsStore = create(
                     set({loading: false, error})
                 }
             },
-            addSchool: async (status, recruitmentOpen, type, title, description, phoneNumber, address, images, schoolTypes) => {
+            addSchool: async (status, recruitmentOpen, title, description, phoneNumber, address, images, schoolTypes) => {
                 try {
                     set({
                         loading: true,
-                        statusError: '',
-                        recruitmentError: '',
-                        typeError: '',
                         titleError: '',
                         descriptionError: '',
                         phoneError: '',
-                        addressError: ''
+                        addressError: '',
+                        imagesError: '',
+                        error: ''
                     })
                     const formData = new FormData()
                     formData.append('status', status)
                     formData.append('recruitment_open', recruitmentOpen)
-                    formData.append('type', type)
+                    formData.append('type', 'user')
                     formData.append('title', title)
                     formData.append('description', description)
                     formData.append('phone_number', phoneNumber)
                     formData.append('address', address);
-                    images && images.forEach((image, index) => {
-                        formData.append(`images[${index}]`, image)
-                    })
+                    for (let i = 0; i < images.length; i++) {
+                        formData.append(`images[${i}]`, images[i]);
+                    }
                     schoolTypes && schoolTypes.forEach((type, index) =>
                         formData.append(`school_types[${index}]`, type)
                     )
@@ -71,25 +67,24 @@ const useSchoolsStore = create(
                     await get().getSchools()
                     set({
                         loading: false,
-                        statusError: '',
-                        recruitmentError: '',
-                        typeError: '',
                         titleError: '',
                         descriptionError: '',
                         phoneError: '',
-                        addressError: ''
+                        addressError: '',
+                        imagesError: '',
+                        error: ''
                     })
                 } catch (error) {
-                    if(error.response.data.errors) {
+                    console.log(error.response.data.errors)
+                    if (error.response.data.errors) {
                         set({
                             loading: false,
-                            statusError: '',
-                            recruitmentError: '',
-                            typeError: '',
-                            titleError: '',
-                            descriptionError: '',
-                            phoneError: '',
-                            addressError: ''
+                            error: Object.keys(error.response.data.errors).map((key, value) => error.response.data.errors[key]),
+                            titleError: error.response.data.errors.title,
+                            descriptionError: error.response.data.errors.description,
+                            phoneError: error.response.data.errors.phone_number,
+                            addressError: error.response.data.errors.address,
+                            imagesError: Object.keys(error.response.data.errors).some(key => /^image\w*/.test(key))
                         })
                     }
                 }

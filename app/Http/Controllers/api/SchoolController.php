@@ -56,10 +56,10 @@ class SchoolController extends Controller
     public function store(StoreRequest $request)
     {
         try {
+//            dd($request);
             $school = School::create([
                 'status' => $request->status,
                 'recruitment_open' => $request->recruitment_open,
-                'type' => $request->type,
                 'title' => $request->title,
                 'description' => $request->description,
                 'phone_number' => $request->phone_number,

@@ -22,6 +22,7 @@ import {NewSchool} from "./pages/SchoolsOwner/NewSchool";
 import {SchoolTypes} from "./pages/Admin/SchoolTypes";
 import {NewSchoolType} from "./pages/Admin/NewSchoolType";
 import {EditSchoolType} from "./pages/Admin/EditSchoolType";
+import {EditSchool} from "./pages/SchoolsOwner/EditSchool";
 
 
 export const App = () => {
@@ -61,7 +62,7 @@ export const App = () => {
                         <Route path={'/schools_owner/schools'} element={<Schools/>}/>
                         <Route path={'/schools_owner/schools/new'} element={<NewSchool/>}/>
                         <Route path={'/schools_owner/schools/:schoolId'} element={<School/>}/>
-                        <Route path={'/schools_owner/schools/:schoolId/settings'} element={<h1>Настройки</h1>}/>
+                        <Route path={'/schools_owner/schools/:schoolId/settings'} element={<EditSchool />}/>
                         {/* SECTIONS */}
                         <Route path={'/schools_owner/schools/:schoolId/sections'} element={<Sections/>}/>
                         <Route path={'/schools_owner/schools/:schoolId/sections/new'} element={<NewSection/>}/>

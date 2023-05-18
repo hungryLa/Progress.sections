@@ -32,7 +32,7 @@ const useSectionsStore = create(
                 set({error, loading: false})
             }
         },
-        deleteImages: async(checkbox) => {
+        deleteImages: async(sectionId, checkbox) => {
             try {
                 set({loading: true})
                 const response = await api.delete(`/cabinet/files/deleteImagesThroughCheckBox?checkbox=${checkbox}`)

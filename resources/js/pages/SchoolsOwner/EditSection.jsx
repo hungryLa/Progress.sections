@@ -39,7 +39,7 @@ export const EditSection = () => {
 
     useEffect(() => {
         getOccupations()
-        setOccupation(section?.occupation.id)
+        setOccupation(section?.occupation?.id)
         setDescription(section.description)
         setContents(section.contents)
     }, [])
@@ -47,7 +47,7 @@ export const EditSection = () => {
     const handleSubmit = async (e) => {
         e.preventDefault()
         if(imagesToDelete.length > 0) {
-            await deleteImages(imagesToDelete)
+            await deleteImages(sectionId, imagesToDelete)
             await editSection(
                 schoolId,
                 sectionId,
@@ -57,7 +57,7 @@ export const EditSection = () => {
                 images
             ).then(() => navigate(`/schools_owner/schools/${schoolId}/sections/${sectionId}`))
         }
-        if(images.length > 0) {
+        if(images?.length > 0) {
             await addImage(section.id, images)
             await editSection(
                 schoolId,
@@ -82,7 +82,6 @@ export const EditSection = () => {
 
     const handleDelete = async () => {
         await deleteSection(schoolId, sectionId)
-        navigate(`/schools_owner/schools/${schoolId}/sections`)
     }
 
     const handleSelect = (e) => {
@@ -129,10 +128,10 @@ export const EditSection = () => {
                                         setImages(e.target.files)
                                     }} multiple/>
 
-                                    {section?.images.length > 0 ? (
+                                    {section?.images?.length > 0 ? (
                                         <div className="one-col">
                                             <span className="delete-images-title">Выберите изображения для удаления</span>
-                                            {section && section.images.map(image => (
+                                            {section && section?.images.map(image => (
                                                 <Checkbox key={image.id} image onChange={(e) => handleSelect(e)}
                                                           value={image.id} id={image.id}
                                                           label={<img src={`/storage/${image.path}`} alt={image.path}/>}/>
@@ -161,7 +160,6 @@ export const EditSection = () => {
                             </>
                         }
                     />
-                    {String(imagesToDelete)}
                 </>
             )}
             <Modal isActive={modalIsActive}>
