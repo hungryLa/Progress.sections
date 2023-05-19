@@ -1,4 +1,4 @@
-import {useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import {Subtitle} from "../../components/UI/Subtitle";
 import {Form} from "../../components/UI/Form";
 import {Button} from "../../components/UI/Button";
@@ -7,10 +7,12 @@ import {Select} from "../../components/UI/Select";
 import {useState} from "react";
 import useTimetablesStore from "../../store/useTimetablesStore";
 import {Checkbox} from "../../components/UI/Checkbox";
+import {Error} from "../../components/Error";
 
 export const NewSchoolsTimetable = () => {
+    const navigate = useNavigate()
     const {schoolId} = useParams()
-    const {loading, createSchoolTimeTable} = useTimetablesStore()
+    const {loading, createSchoolTimeTable, error} = useTimetablesStore()
     const [weekdays, setWeekdays] = useState([])
     const [lessonTime, setLessonTime] = useState('')
     const [workdayStart, setWorkdayStart] = useState('')
@@ -18,7 +20,7 @@ export const NewSchoolsTimetable = () => {
     const [withRest, setWithRest] = useState(false)
     const [restStart, setRestStart] = useState('')
     const [restEnd, setRestEnd] = useState('')
-
+    const [errors, setErrors] = useState([])
 
     const handleWeekday = (e) => {
         let weekList = [...weekdays]
@@ -38,7 +40,13 @@ export const NewSchoolsTimetable = () => {
         }
     }
 
+    const handleAddError = (value) => {
+        setErrors(prev => [...prev, value])
+        console.log('errors', errors)
+    }
+
     const handleSubmit = async (e) => {
+        setErrors(null)
         console.log(schoolId)
         e.preventDefault()
         await createSchoolTimeTable(
@@ -51,11 +59,19 @@ export const NewSchoolsTimetable = () => {
             restStart,
             restEnd
         )
+        console.log('weekdays', weekdays)
+        if(!weekdays) handleAddError('Дни недели обязательны для заполнения')
+        if(!lessonTime) handleAddError('Время занятия обязательно для заполнения')
+        if(!workdayStart) handleAddError('Время начала занятия обязательно для заполнения')
+        if(!workdayEnd) handleAddError('Время конца занятия обязательно для заполнения')
+        if(!withRest) handleAddError('Наличие перерыва обязательно для заполнения')
+        if (errors.length < 1 ) navigate(`/schools_owner/schools/${schoolId}/timetables`)
     }
 
     return (
         <>
             <Subtitle>Новое расписание</Subtitle>
+            {errors ? <Error errors={errors} /> : ''}
             <Form
                 onSubmit={handleSubmit}
                 inputs={
@@ -70,7 +86,6 @@ export const NewSchoolsTimetable = () => {
                             <Checkbox id={'Saturday'} value={'Saturday'} name={'weekday[]'} label={'Суббота'} onChange={handleWeekday} />
                             <Checkbox id={'Sunday'} value={'Sunday'} name={'weekday[]'} label={'Воскресенье'} onChange={handleWeekday} />
                         </div>
-                        {weekdays && weekdays}
                         <div className="two-col">
                             <Input type={'time'} label={'Длительность занятия'} value={lessonTime} onChange={(e) => setLessonTime(e.target.value)} />
                         </div>
@@ -81,10 +96,12 @@ export const NewSchoolsTimetable = () => {
                         <div className={'three-col'}>
                             <Checkbox id={'rest'} value={true} name={'rest'} label={'Без обеда'} onChange={handleRest} />
                         </div>
-                        <div className={'two-col'}>
-                            <Input type={'time'} label={'Начало обеда'} value={restStart} onChange={(e) => setRestStart(e.target.value)} />
-                            <Input type={'time'}  label={'Конец обеда'}  value={restEnd} onChange={(e) => setRestEnd(e.target.value)} />
-                        </div>
+                        {!withRest && (
+                            <div className={'two-col'}>
+                                <Input type={'time'} label={'Начало обеда'} value={restStart} onChange={(e) => setRestStart(e.target.value)} />
+                                <Input type={'time'}  label={'Конец обеда'}  value={restEnd} onChange={(e) => setRestEnd(e.target.value)} />
+                            </div>
+                        )}
                     </>
                 }
                 buttons={

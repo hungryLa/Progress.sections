@@ -1,6 +1,7 @@
 import {create} from "zustand";
 import {persist} from "zustand/middleware";
 import api from "../middlewares/auth.middleware";
+import useSchoolTypesStore from "./useSchoolTypesStore";
 
 const useSchoolsStore = create(
     persist(
@@ -88,39 +89,26 @@ const useSchoolsStore = create(
                     }
                 }
             },
-            editSchool: async (schoolId, status, recruitmentOpen, title, description, address, phoneNumber, schoolTypes) => {
+            editSchool: async (schoolId, status, recruitmentOpen, title, description, address, phoneNumber, schoolTypes, images) => {
                 try {
                     set({loading: true, error: false})
-                    console.log('exist',schoolTypes)
-                    console.log('accessible',get().school.school_types)
-                    const typesToSend = schoolTypes.filter((exist) => !get().school.school_types.some((accessible) => exist.value === accessible.id)).map(obj => obj.value);
-                    const typesToDelete = schoolTypes.filter((exist) => !get().school.school_types.some((accessible) => exist.value !== accessible.id)).map(obj => obj.value);
-                    console.log('to delete',typesToDelete)
-                    if(typesToSend.length > 0) {
-                        await api.put(`cabinet/schools/${schoolId}/update`, {
-                            'status': status,
-                            'recruitment_open': recruitmentOpen,
-                            'type': 'school',
-                            'title': title,
-                            'description': description,
-                            'phone_number': phoneNumber,
-                            'address': address,
-                            'school_types': typesToSend
-                        })
-                    } else {
-                        console.log('nothing')
-                        await api.put(`cabinet/schools/${schoolId}/update`, {
-                            'status': status,
-                            'recruitment_open': recruitmentOpen,
-                            'type': 'school',
-                            'title': title,
-                            'description': description,
-                            'phone_number': phoneNumber,
-                            'address': address
-                        })
-                    }
 
+                    const typesToAdd = schoolTypes.filter((exist) => !get().school.school_types.some((accessible) => exist.value === accessible.id)).map(obj => obj.value);
+                    const typesToDelete = get().school.school_types.filter((accessible) => !schoolTypes.some((exist) => accessible.id === exist.value))
+
+                    await api.put(`cabinet/schools/${schoolId}/update/`, {
+                        'status': status,
+                        'recruitment_open': recruitmentOpen,
+                        'type': 'user',
+                        'title': title,
+                        'description': description,
+                        'phone_number': phoneNumber,
+                        'address': address,
+                        'school_types_to_delete': typesToDelete,
+                        'school_types_to_add': typesToAdd,
+                    })
                     set({loading: false, error: ''})
+                    get().getOneSchool(schoolId)
                 } catch (error) {
                     console.log(error)
                     if (error?.response?.data?.errors) {
@@ -131,19 +119,19 @@ const useSchoolsStore = create(
                     } else set({loading: false})
                 }
             },
-            deleteSchool: async (schoolId) => {
+            deleteSchool: async (schoolId, schoolTitle) => {
                 try {
                     set({
                         loading: true,
                         error: ''
                     })
-                    await api.delete(`/cabinet/schools/${schoolId}/delete`)
+                    await api.delete(`/cabinet/schools/${schoolId}/delete?school_title=${schoolTitle}`)
                     set({
                         loading: false,
                         error: ''
                     })
                 } catch (error) {
-                    if (error.response.data.errors) {
+                    if (error?.response?.data?.errors) {
                         set({
                             loading: false,
                             error: Object.keys(error.response.data.errors).map((key, value) => error.response.data.errors[key])
@@ -151,7 +139,20 @@ const useSchoolsStore = create(
                     }
                 }
             },
-            deleteImages: async (schoolId, checkbox) => {
+            addImages: async (schoolId, images) => {
+                try {
+                    set({loading: true})
+                    const formData = new FormData();
+                    for (let i = 0; i < images.length; i++) {
+                        formData.append(`images[${i}]`, images[i]);
+                    }
+                    const response = await api.post(`/cabinet/files/storeImages/school/${schoolId}/image`, formData)
+                    set({loading: false})
+                } catch (error) {
+                    set({loading: false, error})
+                }
+            },
+            deleteImages: async (checkbox) => {
                 try {
                     set({
                         loading: true,
@@ -163,30 +164,7 @@ const useSchoolsStore = create(
                         error: ''
                     })
                 } catch (error) {
-                    if (error.response.data.errors) {
-                        set({
-                            loading: false,
-                            error: Object.keys(error.response.data.errors).map((key, value) => error.response.data.errors[key])
-                        })
-                    }
-                }
-            },
-            addImages: async (schoolId, images) => {
-                try {
-                    set({
-                        loading: true,
-                        error: ''
-                    })
-                    const formData = new FormData()
-                    for (let i = 0; i < images.length; i++) {
-                        formData.append(`images[${i}]`, images[i])
-                    }
-                    await api.post(`/cabinet/files/storeImages/school/${schoolId}/image`, formData)
-                    set({
-                        loading: false,
-                        error: ''
-                    })
-                } catch (error) {
+                    console.log(error)
                     if (error.response.data.errors) {
                         set({
                             loading: false,

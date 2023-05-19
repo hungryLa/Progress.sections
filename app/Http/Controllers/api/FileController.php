@@ -11,7 +11,7 @@ class FileController extends Controller
 {
     public function storeImages(Request $request, $modelType, $model, $fileType)
     {
-        self::storeFile($request, $modelType, $model, $fileType);
+        self::storeFile ($request, $modelType, $model, $fileType);
         session()->flash('success', __('other.Files uploaded successfully'));
     }
 

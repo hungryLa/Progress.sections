@@ -17,7 +17,6 @@ export const Schools = () => {
 
     useEffect(() => {
         getSchools();
-        console.log(schools)
     }, []);
 
     const handleNavigate = () => {

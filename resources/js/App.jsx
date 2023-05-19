@@ -23,6 +23,8 @@ import {SchoolTypes} from "./pages/Admin/SchoolTypes";
 import {NewSchoolType} from "./pages/Admin/NewSchoolType";
 import {EditSchoolType} from "./pages/Admin/EditSchoolType";
 import {EditSchool} from "./pages/SchoolsOwner/EditSchool";
+import {SchoolsTeachers} from "./pages/SchoolsOwner/SchoolsTeachers";
+import {NewTeacher} from "./pages/SchoolsOwner/NewTeacher";
 
 
 export const App = () => {
@@ -46,9 +48,9 @@ export const App = () => {
                         <Route path={'/admin/users/:userId/update'} element={<EditUser/>}/>
                         <Route path={'/admin/occupations'} element={<Occupations/>}/>
                         <Route path={'/admin/occupations/new'} element={<NewOccupation/>}/>
-                        <Route path={'/admin/schoolTypes/'} element={<SchoolTypes />}/>
-                        <Route path={'/admin/schoolTypes/new'} element={<NewSchoolType />}/>
-                        <Route path={'/admin/schoolTypes/:schoolTypeId/edit'} element={<EditSchoolType />}/>
+                        <Route path={'/admin/schoolTypes/'} element={<SchoolTypes/>}/>
+                        <Route path={'/admin/schoolTypes/new'} element={<NewSchoolType/>}/>
+                        <Route path={'/admin/schoolTypes/:schoolTypeId/edit'} element={<EditSchoolType/>}/>
                         <Route path={'/admin/sections'} element={<Sections/>}/>
                         <Route path={'/admin/commission'} element={<h1>Комиссия</h1>}/>
                         <Route path={'/admin/extracts'} element={<h1>Выписки</h1>}/>
@@ -62,7 +64,7 @@ export const App = () => {
                         <Route path={'/schools_owner/schools'} element={<Schools/>}/>
                         <Route path={'/schools_owner/schools/new'} element={<NewSchool/>}/>
                         <Route path={'/schools_owner/schools/:schoolId'} element={<School/>}/>
-                        <Route path={'/schools_owner/schools/:schoolId/settings'} element={<EditSchool />}/>
+                        <Route path={'/schools_owner/schools/:schoolId/settings'} element={<EditSchool/>}/>
                         {/* SECTIONS */}
                         <Route path={'/schools_owner/schools/:schoolId/sections'} element={<Sections/>}/>
                         <Route path={'/schools_owner/schools/:schoolId/sections/new'} element={<NewSection/>}/>
@@ -78,7 +80,20 @@ export const App = () => {
                         <Route path={`/schools_owner/schools/:schoolId/timetables/:timetableId/update`}
                                element={<EditSchoolsTimetable/>}/>
                         {/* TEACHERS */}
-                        <Route path={'/schools_owner/schools/:schoolId/teachers'} element={<h1>Преподаватели</h1>}/>
+                        <Route path={'/schools_owner/schools/:schoolId/teachers'} element={<SchoolsTeachers/>} />
+                        <Route path={'/schools_owner/schools/:schoolId/teachers/new'} element={<NewTeacher />} />
+                        <Route path={'/schools_owner/schools/:schoolId/all-teachers'}
+                               element={<h1>Все преподаватели</h1>} />
+                        <Route path={'/schools_owner/schools/:schoolId/all-teachers/:teacherId'}
+                               element={<h1>Свободный преподаватель</h1>} />
+                        <Route path={'/schools_owner/schools/:schoolId/invited-teachers'}
+                               element={<h1>Приглашенные преподаватели</h1>} />
+                        <Route path={'/schools_owner/schools/:schoolId/invited-teachers/:teacherId'}
+                               element={<h1>Приглашенный преподаватель</h1>} />
+                        <Route path={'/schools_owner/schools/:schoolId/school-teachers'}
+                               element={<h1>Преподаватели</h1>} />
+                        <Route path={'/schools_owner/schools/:schoolId/school-teachers/:teacherId'}
+                               element={<h1>Свой преподаватель</h1>} />
                         <Route path={'/schools_owner/sections/new'} element={<h1>Создать секцию</h1>}/>
                         <Route path={'/schools_owner/lessons'} element={<h1>Виды занятий</h1>}/>
                         <Route path={'/schools_owner/teachers'} element={<h1>Преподаватели</h1>}/>

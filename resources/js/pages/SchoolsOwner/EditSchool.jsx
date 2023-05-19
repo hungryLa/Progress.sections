@@ -11,6 +11,9 @@ import ReactSelect from "react-select";
 import {Select} from "../../components/UI/Select";
 import {TextArea} from "../../components/UI/TextArea";
 import {useNavigate, useParams} from "react-router-dom";
+import {Checkbox} from "../../components/UI/Checkbox";
+import {Title} from "../../components/UI/Title";
+import {Modal} from "../../components/UI/Modal";
 
 export const EditSchool = () => {
     const {schoolId} = useParams()
@@ -26,7 +29,6 @@ export const EditSchool = () => {
     const [phone, setPhone] = useState('')
     const [address, setAddress] = useState('')
     const [images, setImages] = useState([])
-    const [options, setOptions] = useState([])
     const [imagesToDelete, setImagesToDelete] = useState([])
 
 
@@ -75,21 +77,29 @@ export const EditSchool = () => {
         setPhone(e.target.value)
     }
 
+    const handleSelect = (e) => {
+        let imageList = [...imagesToDelete]
+        if(e.target.checked) {
+            imageList = [...imagesToDelete, e.target.value]
+        } else {
+            imageList.splice(imagesToDelete.indexOf(e.target.value), 1)
+        }
+        setImagesToDelete(imageList)
+    }
+
     const handleSubmit = async (e) => {
         e.preventDefault()
-        const typesToSend = types.map(type => type.value)
-        if (imagesToDelete.length > 0) {
-            await deleteImages(schoolId, imagesToDelete)
-            await editSchool()
-        }
-        if (images?.length > 0) {
-            await addImages(school.id, images)
-            await editSchool()
-        } else {
-            await editSchool(schoolId, status, recruitment, title, description, address, phone, types)
-        }
+        if (imagesToDelete.length > 0) await deleteImages(imagesToDelete)
+        if (images?.length > 0) await addImages(school.id, images)
+        await editSchool(schoolId, status, recruitment, title, description, address, phone, types)
+        console.log(error.length > 0)
+        if (error.length < 1 ) navigate(`/schools_owner/schools/${schoolId}`)
+    }
 
-        if (!error) navigate(`/schools_owner/schools/${schoolId}`)
+    const handleDelete = async (e) => {
+        await deleteSchool(schoolId, school.title)
+        setModalIsActive(false)
+        navigate('/schools_owner/schools')
     }
 
     return (
@@ -172,20 +182,53 @@ export const EditSchool = () => {
                                 </div>
                                 <div className="one-col">
                                     <Input label={'Изображения'} type={'file'} onChange={handleImages} multiple/>
+
+                                    {school?.images?.length > 0 ? (
+                                        <div className="one-col">
+                                            <span className="delete-images-title">
+                                                Выберите изображения для удаления
+                                            </span>
+
+                                            {school && school?.images.map(image => (
+                                                <Checkbox
+                                                    key={image.id}
+                                                    image
+                                                    onChange={(e) => handleSelect(e)}
+                                                    value={image.id} id={image.id}
+                                                    label={<img src={`/storage/${image.path}`} alt={image.path}/>}
+                                                />
+                                            ))}
+                                        </div>
+                                    ) : ''}
+
                                     <TextArea label={'Описание'} value={description || ''}
                                               onChange={handleDescription}/>
                                 </div>
                             </>
                         }
                         buttons={
-                            <Button type={"submit"} variant={"white"}>
-                                {loading ? "Идет редактирование ..." : "Редактировать"}
-                            </Button>
-
+                            <>
+                                <Button type={"submit"} variant={"white"}>
+                                    {loading ? "Идет редактирование ..." : "Редактировать"}
+                                </Button>
+                                <Button variant={'orange'} type={'button'} onClick={() => setModalIsActive(true)}>
+                                    Удалить школу
+                                </Button>
+                            </>
                         }
                     />
                 </>
             )}
+            <Modal isActive={modalIsActive}>
+                <Title>Удаление школы</Title>
+                <p>Вы действительно хотите удалить школу "{school.title}"?</p>
+                <div className={'modal__buttons'}>
+                    <Button variant={'green'} onClick={handleDelete}>Да</Button>
+                    <Button variant={'gray'} onClick={() => {
+                        setModalIsActive(false)
+                    }}>Отмена</Button>
+                </div>
+            </Modal>
         </>
     )
 }

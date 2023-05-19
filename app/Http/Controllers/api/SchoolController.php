@@ -56,7 +56,6 @@ class SchoolController extends Controller
     public function store(StoreRequest $request)
     {
         try {
-//            dd($request);
             $school = School::create([
                 'status' => $request->status,
                 'recruitment_open' => $request->recruitment_open,
@@ -120,13 +119,22 @@ class SchoolController extends Controller
                 'address' => $request->address,
                 'phone_number' => $request->phone_number,
             ]);
-            if ($request->school_types) {
-                foreach ($request->school_types as $school_type) {
+            if ($request->school_types_to_add) {
+                foreach ($request->school_types_to_add as $school_type) {
                     ModelSchool::create([
                         'model_type' => ModelSchool::TYPES['school_types'],
                         'model_id' => $school_type,
                         'school_id' => $school->id,
                     ]);
+                }
+            }
+            if($request->school_types_to_delete) {
+                foreach ($request->school_types_to_delete as $school_type) {
+                    ModelSchool::where([
+                        'model_type' => ModelSchool::TYPES['school_types'],
+                        'model_id' => $school_type,
+                        'school_id' => $school->id,
+                    ])->delete();
                 }
             }
             if ($success) {
