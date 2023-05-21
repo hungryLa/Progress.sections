@@ -98,6 +98,15 @@ class TimetableController extends Controller
         }
     }
 
+    public function getOne(Timetable $timetable)
+    {
+        try {
+            return new TimetableResource($timetable);
+        } catch (\Exception $exception) {
+            return $exception->getMessage();
+        }
+    }
+
     public function destroy(Timetable $timetable)
     {
         try {

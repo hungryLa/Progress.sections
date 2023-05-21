@@ -24,7 +24,6 @@ const useOccupationsStore = create(
                     set({loading: true, titleError: ''})
                     await api.post('cabinet/occupations/store', {title})
                     set({loading: false, titleError: ''})
-                    window.location.href = '/admin/occupations'
                 } catch (error) {
                     if(error.response.data.errors) {
                         set({loading: false, titleError: error.response.data.errors.title})

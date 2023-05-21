@@ -73,6 +73,7 @@ class SectionController extends Controller
                 session()->flash('success', __('other.Information changed successfully'));
             }
         } catch (\Exception $exception) {
+            dd($exception);
             return $exception->getMessage();
         }
     }

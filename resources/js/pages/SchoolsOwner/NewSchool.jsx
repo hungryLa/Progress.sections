@@ -38,6 +38,8 @@ export const NewSchool = () => {
 
     useEffect(() => {
         getSchoolTypes()
+        console.log(error);
+        console.log(imagesError);
         setOptions(schoolTypes.map(item => ({value: item.id, label: item.title})))
     }, [])
 
@@ -69,9 +71,8 @@ export const NewSchool = () => {
     const handleSubmit = async (e) => {
         e.preventDefault()
         const typesToSend = types.map(type => type.value)
-        console.log(typesToSend)
         await addSchool(status, recruitment, title, description, phone, address, images, typesToSend)
-        if (!titleError && !descriptionError && !phoneError && !addressError && !imagesError) navigate('/schools_owner/schools')
+        if (error.length < 1) navigate('/schools_owner/schools')
     }
 
     return (

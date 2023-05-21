@@ -26,7 +26,9 @@ export const EditSection = () => {
         section,
         deleteSection,
         deleteImages,
-        addImage
+        addImage,
+        error,
+        getOneSection
     } = useSectionsStore()
 
     const [occupation, setOccupation] = useState(1)
@@ -34,10 +36,13 @@ export const EditSection = () => {
     const [contents, setContents] = useState('')
     const [images, setImages] = useState([])
     const [imagesToDelete, setImagesToDelete] = useState([])
+    const [errors, setErrors] = useState({})
 
     const [modalIsActive, setModalIsActive] = useState(false)
 
     useEffect(() => {
+        getOneSection(schoolId, sectionId)
+        console.log(section);
         getOccupations()
         setOccupation(section?.occupation?.id)
         setDescription(section?.description)
@@ -46,27 +51,23 @@ export const EditSection = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault()
+
+        let errorMessages = {}
+
+        if(!description) {
+            errorMessages.description = 'Поле описание не должно быть пустым'
+        }
+        if(!contents) {
+            errorMessages.contents = 'Поле содержание не должно быть пустым'
+        }
+
+        setErrors(errorMessages)
+
         if(imagesToDelete.length > 0) {
             await deleteImages(sectionId, imagesToDelete)
-            await editSection(
-                schoolId,
-                sectionId,
-                occupation,
-                description,
-                contents,
-                images
-            ).then(() => navigate(`/schools_owner/schools/${schoolId}/sections/${sectionId}`))
         }
         if(images?.length > 0) {
-            await addImage(section.id, images)
-            await editSection(
-                schoolId,
-                sectionId,
-                occupation,
-                description,
-                contents,
-                images
-            ).then(() => navigate(`/schools_owner/schools/${schoolId}/sections/${sectionId}`))
+            await addImage(sectionId, images)
         }
         else {
             await editSection(
@@ -76,12 +77,17 @@ export const EditSection = () => {
                 description,
                 contents,
                 images
-            ).then(() => navigate(`/schools_owner/schools/${schoolId}/sections/${sectionId}`))
+            )
         }
+        // if(error) console.warn(error)
+        if(error?.length < 1 && !errorMessages.description && !errorMessages.contents) navigate(`/schools_owner/schools/${schoolId}/sections/${sectionId}`)
     }
 
     const handleDelete = async () => {
-        await deleteSection(schoolId, sectionId)
+        await deleteSection(schoolId, sectionId).then(() => {
+            navigate(`/schools_owner/schools/${schoolId}/sections`)
+        })
+        setModalIsActive(false)
     }
 
     const handleSelect = (e) => {
@@ -99,6 +105,7 @@ export const EditSection = () => {
             <Subtitle>Редактирование секции</Subtitle>
             {loading || occupationLoading ? <Loader/> : (
                 <>
+                    {/* {error ? <Error errors={error} /> : ''} */}
                     <Form
                         onSubmit={handleSubmit}
                         inputs={
@@ -119,8 +126,11 @@ export const EditSection = () => {
                                         label={'Описание'}
                                         type={'text'}
                                         value={description}
-                                        error={descriptionError}
-                                        onChange={(e) => setDescription(e.target.value)}
+                                        error={errors.description}
+                                        onChange={(e) => {
+                                            setErrors('')
+                                            setDescription(e.target.value)
+                                        }}
                                     />
                                 </div>
                                 <div className="one-col">
@@ -133,7 +143,7 @@ export const EditSection = () => {
                                             <span className="delete-images-title">Выберите изображения для удаления</span>
                                             {section && section?.images.map(image => (
                                                 <Checkbox key={image.id} image onChange={(e) => handleSelect(e)}
-                                                          value={image.id} id={image.id}
+                                                          value={image.id} id={image.id} isChecked={imagesToDelete.some(item => item == image.id)}
                                                           label={<img src={`/storage/${image.path}`} alt={image.path}/>}/>
                                             ))}
                                         </div>
@@ -143,7 +153,7 @@ export const EditSection = () => {
                                     <TextArea
                                         label={'Содержание'}
                                         value={contents}
-                                        error={contentsError}
+                                        error={errors.contents}
                                         onChange={(e) => setContents(e.target.value)}
                                     ></TextArea>
                                 </div>
