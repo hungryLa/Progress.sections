@@ -11,6 +11,7 @@ import ReactSelect from "react-select";
 import {TextArea} from "../../components/UI/TextArea";
 import {useNavigate} from "react-router-dom";
 import {Error} from "../../components/Error";
+import {toast} from "react-toastify";
 
 export const NewSchool = () => {
     const {getSchoolTypes, schoolTypes, loading: typesLoading} = useSchoolTypesStore()
@@ -40,6 +41,7 @@ export const NewSchool = () => {
         getSchoolTypes()
         setOptions(schoolTypes.map(item => ({value: item.id, label: item.title})))
     }, [])
+
 
     const handleTitle = (e) => {
         setTitle(e.target.value)
@@ -71,7 +73,8 @@ export const NewSchool = () => {
         const typesToSend = types.map(type => type.value)
         console.log(typesToSend)
         await addSchool(status, recruitment, title, description, phone, address, images, typesToSend)
-        if (!titleError && !descriptionError && !phoneError && !addressError && !imagesError) navigate('/schools_owner/schools')
+        console.log(error)
+        // navigate('/schools_owner/schools')
     }
 
     return (
@@ -79,7 +82,7 @@ export const NewSchool = () => {
             <Subtitle>Создание школы</Subtitle>
             {loading || typesLoading ? <Loader/> : (
                 <>
-                    {error && <Error errors={error} />}
+                    {error.length < 1 ? <Error errors={error} /> : ''}
                     <Form
                         onSubmit={handleSubmit}
                         inputs={

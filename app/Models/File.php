@@ -10,7 +10,8 @@ class File extends Model
     use HasFactory;
 
     const TYPE = [
-      'image' => 'image',
+        'images' => 'images',
+        'documents' => 'documents',
     ];
 
     protected $guarded = [];

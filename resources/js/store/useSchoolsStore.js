@@ -77,15 +77,12 @@ const useSchoolsStore = create(
                     })
                 } catch (error) {
                     if (error.response.data.errors) {
+
                         set({
                             loading: false,
                             error: Object.keys(error.response.data.errors).map((key, value) => error.response.data.errors[key]),
-                            titleError: error.response.data.errors.title,
-                            descriptionError: error.response.data.errors.description,
-                            phoneError: error.response.data.errors.phone_number,
-                            addressError: error.response.data.errors.address,
-                            imagesError: Object.keys(error.response.data.errors).some(key => /^image\w*/.test(key))
                         })
+                        console.log(get().error)
                     }
                 }
             },

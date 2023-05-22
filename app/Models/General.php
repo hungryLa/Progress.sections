@@ -22,5 +22,9 @@ class General extends Model
         'subscription' => Subscription::TYPE,
     ];
 
-
+    static function model($name_table){
+        $model = '\App\Models\\'.\ucfirst(\Illuminate\Support\Str::singular($name_table));
+        $model = new $model();
+        return $model;
+    }
 }

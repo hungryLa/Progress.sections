@@ -75,7 +75,7 @@ Route::group(['middleware' => 'jwt.auth'], function () {
             Route::get('', [TeacherController::class, 'index'])->name('teacher.index');
             Route::get('create', [TeacherController::class, 'create'])->name('teacher.create');
             Route::post('store', [TeacherController::class, 'store'])->name('teacher.store');
-            Route::get('{teacher}/edit', [TeacherController::class, 'edit'])->name('teacher.edit');
+            Route::get('{teacher}', [TeacherController::class, 'getOne'])->name('teacher.get-one');
             Route::put('{teacher}/update', [TeacherController::class, 'update'])->name('teacher.update');
             Route::post('{teacher}/invite', [TeacherController::class, 'invite'])->name('teacher.invite');
             Route::delete('{teacher}/unlink', [TeacherController::class, 'unlink'])->name('teacher.unlink');

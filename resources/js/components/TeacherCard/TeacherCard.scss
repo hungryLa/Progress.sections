@@ -1,3 +1,35 @@
 .teacher-card {
+    border: 1px solid rgba(44, 61, 115, .25);
+    border-radius: 1rem;
+    text-decoration: none;
+    transition: var(--transition);
 
+    &__inner {
+        display: flex;
+        flex-direction: column;
+        padding: 2.4rem;
+        gap: 1.6rem;
+    }
+
+    &__title {
+        font-size: 1.8rem;
+        font-weight: 600;
+    }
+
+    &__sections {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 1.2rem;
+    }
+
+    &__section {
+
+    }
+
+    &:hover {
+        border-color: var(--white);
+        background-color: var(--white);
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    }
 }

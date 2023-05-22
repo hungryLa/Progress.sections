@@ -39,7 +39,7 @@ export const SchoolsTeachers = () => {
                         buttonFunction={handleRedirectToCreateTeacher}>
                         {schoolTeachers.length > 0 ? (
                             schoolTeachers.map(teacher => (
-                                <TeacherCard schoolId={schoolId} type={'schools'} teacher={teacher} />
+                                <TeacherCard key={teacher?.id} schoolId={schoolId} teacher={teacher} />
                             ))
                         ) : (
                             <span className={'empty__message'}>Похоже у вас нет преподавателей</span>
@@ -52,7 +52,7 @@ export const SchoolsTeachers = () => {
                         }}>
                         {invitedTeachers.length > 0 ? (
                             invitedTeachers.map(teacher => (
-                                <TeacherCard schoolId={schoolId} type={'invited'} teacher={teacher} />
+                                <TeacherCard key={teacher?.id} schoolId={schoolId} teacher={teacher} />
                             ))
                         ) : (
                             <span className={'empty__message'}>Похоже вы не приглашали преподавателей</span>
@@ -62,7 +62,7 @@ export const SchoolsTeachers = () => {
                     <CardContainer title={'Все преподаватели'}>
                         {allTeachers.length > 0 ? (
                             allTeachers.map(teacher => (
-                                <TeacherCard schoolId={schoolId} type={'all'} teacher={teacher} />
+                                <TeacherCard key={teacher?.id} schoolId={schoolId} teacher={teacher} />
                             ))
                         ) : (
                             <span className={'empty__message'}>Похоже вы не приглашали преподавателей</span>

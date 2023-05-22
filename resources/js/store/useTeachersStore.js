@@ -29,6 +29,20 @@ const useTeachersStore = create(
                 })
             }
         },
+        getTeacher: async (schoolId, teacherId) => {
+          try {
+              set({loading: true, error: null})
+              const response = await api.get(`/cabinet/schools/${schoolId}/teachers/${teacherId}`)
+              const {data} = response.data
+              set({loading: false, error: null, teacher: data})
+          } catch (error) {
+              console.log(error?.response?.data?.errors)
+              set({
+                  loading: false,
+                  error: Object.keys(error?.response?.data?.errors).map((key, value) => error.response.data.errors[key])
+              })
+          }
+        },
         createTeacher: async (schoolId, fullName, email) => {
             try {
                 set({loading: true, error: null})
@@ -37,11 +51,13 @@ const useTeachersStore = create(
                     email
                 })
                 console.log(response)
+                await get().getSchoolTeachers(schoolId)
                 set({loading: false, error: null})
             } catch (error) {
+                console.log(error?.response?.data?.errors)
                 set({
                     loading: false,
-                    error: Object.keys(error.response.data.errors).map((key, value) => error.response.data.errors[key])
+                    error: Object.keys(error?.response?.data?.errors).map((key, value) => error.response.data.errors[key])
                 })
             }
         },
