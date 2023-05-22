@@ -58,12 +58,11 @@ const useSchoolsStore = create(
                     formData.append('phone_number', phoneNumber)
                     formData.append('address', address);
                     for (let i = 0; i < images.length; i++) {
-                        formData.append(`images[${i}]`, images[i]);
+                        formData.append(`files[${i}]`, images[i]);
                     }
                     schoolTypes && schoolTypes.forEach((type, index) =>
                         formData.append(`school_types[${index}]`, type)
                     )
-
                     await api.post(`cabinet/schools/store`, formData)
                     await get().getSchools()
                     set({
@@ -77,12 +76,10 @@ const useSchoolsStore = create(
                     })
                 } catch (error) {
                     if (error.response.data.errors) {
-
                         set({
                             loading: false,
                             error: Object.keys(error.response.data.errors).map((key, value) => error.response.data.errors[key]),
                         })
-                        console.log(get().error)
                     }
                 }
             },
@@ -105,9 +102,8 @@ const useSchoolsStore = create(
                         'school_types_to_add': typesToAdd,
                     })
                     set({loading: false, error: ''})
-                    get().getOneSchool(schoolId)
+                    await get().getOneSchool(schoolId)
                 } catch (error) {
-                    console.log(error)
                     if (error?.response?.data?.errors) {
                         set({
                             loading: false,
@@ -141,9 +137,9 @@ const useSchoolsStore = create(
                     set({loading: true})
                     const formData = new FormData();
                     for (let i = 0; i < images.length; i++) {
-                        formData.append(`images[${i}]`, images[i]);
+                        formData.append(`files[${i}]`, images[i]);
                     }
-                    const response = await api.post(`/cabinet/files/storeImages/school/${schoolId}/image`, formData)
+                    const response = await api.post(`/cabinet/files/storeImages/school/${schoolId}/images`, formData)
                     set({loading: false})
                 } catch (error) {
                     set({loading: false, error})
@@ -161,7 +157,6 @@ const useSchoolsStore = create(
                         error: ''
                     })
                 } catch (error) {
-                    console.log(error)
                     if (error.response.data.errors) {
                         set({
                             loading: false,

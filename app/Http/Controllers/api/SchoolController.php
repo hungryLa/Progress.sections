@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\FileController;
+use App\Http\Controllers\api\FileController;
 use App\Http\Requests\School\StoreRequest;
 use App\Http\Requests\School\UpdateRequest;
 use App\Http\Resources\FileRecource;
@@ -64,8 +64,8 @@ class SchoolController extends Controller
                 'phone_number' => $request->phone_number,
                 'address' => $request->address,
             ]);
-            if ($request->hasFile('images')) {
-                FileController::storeFile($request, School::TYPE, $school->id, File::TYPE['image'], 'images');
+            if ($request->hasFile('files')) {
+                FileController::storeFile($request, School::TYPE, $school->id, File::TYPE['images']);
             }
             if ($request->school_types) {
                 foreach ($request->school_types as $school_type) {

@@ -42,7 +42,6 @@ export const EditSection = () => {
 
     useEffect(() => {
         getOneSection(schoolId, sectionId)
-        console.log(section);
         getOccupations()
         setOccupation(section?.occupation?.id)
         setDescription(section?.description)
@@ -67,7 +66,7 @@ export const EditSection = () => {
             await deleteImages(sectionId, imagesToDelete)
         }
         if(images?.length > 0) {
-            await addImage(sectionId, images)
+            await addImage(schoolId, sectionId, images)
         }
         else {
             await editSection(
@@ -79,7 +78,6 @@ export const EditSection = () => {
                 images
             )
         }
-        // if(error) console.warn(error)
         if(error?.length < 1 && !errorMessages.description && !errorMessages.contents) navigate(`/schools_owner/schools/${schoolId}/sections/${sectionId}`)
     }
 

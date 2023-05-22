@@ -200,8 +200,8 @@ Route::group(['middleware' => 'jwt.auth'], function () {
         });
 
         Route::group(['prefix' => 'files'], function () {
-            Route::post('storeImages/{modelType}/{model}/{fileType}', [FileController::class, 'storeImages'])->name(
-                'cabinet.files.storeImages'
+            Route::post('storeImages/{modelType}/{model}/{fileType}', [FileController::class, 'storeFile'])->name(
+                'cabinet.files.storeFile'
             );
             Route::delete('deleteImagesThroughCheckBox', [FileController::class, 'deleteFilesThroughCheckBox'])
                 ->name('cabinet.files.deleteFilesThroughCheckBox');

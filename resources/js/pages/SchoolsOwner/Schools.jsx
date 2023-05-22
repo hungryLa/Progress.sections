@@ -17,6 +17,7 @@ export const Schools = () => {
 
     useEffect(() => {
         getSchools();
+        console.log(schools)
     }, []);
 
     const handleNavigate = () => {
@@ -37,7 +38,7 @@ export const Schools = () => {
                             <SchoolCard
                                 key={school?.id}
                                 id={school?.id}
-                                image={school?.images}
+                                images={school?.images}
                                 title={school?.title}
                                 description={school?.description}
                                 types={school?.school_types}

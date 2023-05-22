@@ -69,8 +69,6 @@ export const EditSchool = () => {
         };
 
         fetchData();
-        console.log(school?.images);
-        console.log(imagesToDelete);
     }, []);
 
     const handleTitle = (e) => {
@@ -109,7 +107,6 @@ export const EditSchool = () => {
                 );
             }
         });
-        console.log(imagesToDelete);
     };
 
     const handleSubmit = async (e) => {

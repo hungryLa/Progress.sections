@@ -14,56 +14,71 @@ const useSectionsStore = create(
         contentsError: '',
         getSections: async (schoolId) => {
             try {
-                set({loading: true})
+                set({loading: true, error: [], occupationError: '', descriptionError: '', contentsError: ''})
                 const sectionsResponse = await api.get(`cabinet/schools/${schoolId}/sections`)
                 const {data} = sectionsResponse.data
-                set({loading: false, sections: [...data]})
+                set({
+                    loading: false,
+                    sections: [...data],
+                    error: [],
+                    occupationError: '',
+                    descriptionError: '',
+                    contentsError: ''
+                })
             } catch (error) {
                 set({loading: false, error})
             }
         },
-        getOneSection: async ( schoolId ,sectionId) => {
+        getOneSection: async (schoolId, sectionId) => {
             try {
-                set({loading: true})
+                set({loading: true, error: [], occupationError: '', descriptionError: '', contentsError: ''})
                 const response = await api.get(`cabinet/schools/${schoolId}/sections/${sectionId}`)
                 const {data} = response.data
-                set({loading: false, section: data})
-            }  catch (error) {
+                set({
+                    loading: false,
+                    section: data,
+                    error: [],
+                    occupationError: '',
+                    descriptionError: '',
+                    contentsError: ''
+                })
+            } catch (error) {
                 set({error, loading: false})
             }
         },
-        deleteImages: async(sectionId, checkbox) => {
+        deleteImages: async (sectionId, checkbox) => {
             try {
-                set({loading: true})
-                const response = await api.delete(`/cabinet/files/deleteImagesThroughCheckBox?checkbox=${checkbox}`)
-                set({loading: false})
+                set({loading: true, error: [], occupationError: '', descriptionError: '', contentsError: ''})
+                await api.delete(`/cabinet/files/deleteImagesThroughCheckBox?checkbox=${checkbox}`)
+                set({loading: false, error: [], occupationError: '', descriptionError: '', contentsError: ''})
             } catch (error) {
                 set({loading: false, error})
             }
         },
-        addImage: async(sectionId, images) => {
+        addImage: async (schoolId, sectionId, images) => {
             try {
-                set({loading: true})
+                set({loading: true, error: [], occupationError: '', descriptionError: '', contentsError: ''})
                 const formData = new FormData();
                 for (let i = 0; i < images.length; i++) {
-                    formData.append(`images[${i}]`, images[i]);
+                    formData.append(`files[${i}]`, images[i]);
                 }
-                const response = await api.post(`/cabinet/files/storeImages/section/${sectionId}/image`, formData)
-                set({loading: false})
+                const response = await api.post(`/cabinet/files/storeImages/section/${sectionId}/images`, formData)
+                await get().getOneSection(schoolId, sectionId)
+                set({loading: false, error: [], occupationError: '', descriptionError: '', contentsError: ''})
             } catch (error) {
                 set({loading: false, error})
             }
         },
         addSection: async (schoolId, occupation, description, contents, images) => {
             try {
-                set({loading: true, occupationError: '', descriptionError: '', contentsError: ''})
+                set({loading: true, error: [], occupationError: '', descriptionError: '', contentsError: ''})
                 const formData = new FormData();
                 formData.append('school_id', schoolId);
                 formData.append('occupation_id', occupation);
                 formData.append('description', description);
                 formData.append('contents', contents);
                 for (let i = 0; i < images.length; i++) {
-                    formData.append(`images[${i}]`, images[i]);
+                    formData.append(`files[${i}]`, images[i]);
                 }
                 await api.post(`cabinet/schools/${schoolId}/sections/store`, formData)
                 set({loading: false, occupationError: '', descriptionError: '', contentsError: ''})
@@ -91,14 +106,14 @@ const useSectionsStore = create(
                 await get().getOneSection(schoolId, sectionId)
                 set({loading: false, occupationError: '', descriptionError: '', contentsError: ''})
             } catch (error) {
-                console.log('error', error);
                 if (error?.response?.data?.errors) {
                     set({
                         loading: false,
                         error: Object.keys(error.response.data.errors).map((key, value) => error.response.data.errors[key]),
                         occupationError: error.response.data.errors.occupation,
                         descriptionError: error.response.data.errors.description,
-                        contentsError: error.response.data.errors.contents})
+                        contentsError: error.response.data.errors.contents
+                    })
                 }
             }
         },

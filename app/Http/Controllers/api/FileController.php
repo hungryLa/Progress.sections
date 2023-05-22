@@ -91,7 +91,7 @@ class FileController extends Controller
     {
         try {
             if ($request->checkbox) {
-                foreach ($request->checkbox as $file_id) {
+                foreach (explode(',', $request->checkbox) as $file_id) {
                     $file = File::find($file_id);
                     $this->deleteFile($file);
                 }
