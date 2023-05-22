@@ -34,9 +34,12 @@ export const SchoolsTimetables = () => {
     }
 
     const removeSeconds = (time) => {
-        const timeArray = time.split(':')
-        return `${timeArray[0]}:${timeArray[1]}`
-    }
+        if (time) {
+            const timeArray = time.split(':');
+            return `${timeArray[0]}:${timeArray[1]}`;
+        }
+        return '';
+    };
 
     const chooseTimetableToEdit = (timetableId) => {
         navigate(`/schools_owner/schools/${schoolId}/timetables/${timetableId}/update`)
@@ -77,8 +80,8 @@ export const SchoolsTimetables = () => {
                                     }}>{timetable.weekday.which_days.map(day => (
                                         <p key={day}>{translateWeekDay(day)}</p>
                                     ))}</TableCell>
-                                    <TableCell>{timetable.without_rest ? '' : removeSeconds(timetable.rest_start)}</TableCell>
-                                    <TableCell>{timetable.without_rest ? '' : removeSeconds(timetable.rest_end)}</TableCell>
+                                    <TableCell>{timetable?.without_rest ? '' : removeSeconds(timetable?.rest_start)}</TableCell>
+                                    <TableCell>{timetable?.without_rest ? '' : removeSeconds(timetable?.rest_end)}</TableCell>
                                     <TableCell>
                                         <button onClick={() => chooseTimetableToEdit(timetable.id)}>
                                             <svg width={24} height={24} fill={'currentColor'}

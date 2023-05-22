@@ -8,7 +8,7 @@ const useSectionsStore = create(
         section: {},
         images: [],
         loading: false,
-        error: null,
+        error: [],
         occupationError: '',
         descriptionError: '',
         contentsError: '',
@@ -68,13 +68,14 @@ const useSectionsStore = create(
                 await api.post(`cabinet/schools/${schoolId}/sections/store`, formData)
                 set({loading: false, occupationError: '', descriptionError: '', contentsError: ''})
             } catch (error) {
-                console.log(error)
-                if (error.response.data.errors) {
+                if (error?.response?.data?.errors) {
                     set({
                         loading: false,
+                        error: Object.keys(error.response.data.errors).map((key, value) => error.response.data.errors[key]),
                         occupationError: error.response.data.errors.occupation,
                         descriptionError: error.response.data.errors.description,
-                        contentsError: error.response.data.errors.contents})
+                        contentsError: error.response.data.errors.contents
+                    })
                 }
             }
         },
@@ -87,11 +88,14 @@ const useSectionsStore = create(
                     description,
                     contents
                 })
+                await get().getOneSection(schoolId, sectionId)
                 set({loading: false, occupationError: '', descriptionError: '', contentsError: ''})
             } catch (error) {
-                if (error.response.data.errors) {
+                console.log('error', error);
+                if (error?.response?.data?.errors) {
                     set({
                         loading: false,
+                        error: Object.keys(error.response.data.errors).map((key, value) => error.response.data.errors[key]),
                         occupationError: error.response.data.errors.occupation,
                         descriptionError: error.response.data.errors.description,
                         contentsError: error.response.data.errors.contents})

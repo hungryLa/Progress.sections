@@ -10,6 +10,9 @@ const useUsersStore = create(
     persist(
         (set, get) => ({
             users: [],
+            user: {},
+            teacherInformation: {},
+            error: [],
             loading: false,
             error: null,
             fullNameError: '',
@@ -114,6 +117,24 @@ const useUsersStore = create(
                         loading: false,
                         error
                     })
+                }
+            },
+            getTeacherInformation: async (userId) => {
+                try {
+                    set({loading: true, error: []})
+                    const response = await api.get(`/cabinet/users/${userId}/settings`)
+                    console.log(response)
+                    set({loading: false})
+                } catch (error) {
+                    set({loading: false})
+                }
+            },
+            changeInformation: async (userId, fullName, phone, email, oldPassword, newPassword, teacherId, occupations, teachingExperience, aboutMe) => {
+                try {
+                    set({loading: true, error: []})
+
+                } catch(error) {
+
                 }
             }
         }), {

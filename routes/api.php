@@ -85,6 +85,7 @@ Route::group(['middleware' => 'jwt.auth'], function () {
             Route::get('', [TimetableController::class, 'index'])->name('timetables.index');
             Route::get('create', [TimetableController::class, 'create'])->name('timetables.create');
             Route::post('store', [TimetableController::class, 'store'])->name('timetables.store');
+            Route::get('{timetable}', [TimetableController::class, 'getOne'])->name('timetable.get-one');
             Route::get('{timetable}/edit', [TimetableController::class, 'edit'])->name('timetables.edit');
             Route::put('{timetable}/update', [TimetableController::class, 'update'])->name('timetables.update');
             Route::delete('{timetable}/delete', [TimetableController::class, 'destroy'])->name('timetables.delete');

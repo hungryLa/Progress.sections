@@ -6,6 +6,7 @@ import {AuthorizedLayout} from "./pages/layouts/AuthorizedLayout";
 import useAuthStore from "./store/useAuthStore";
 import {Users} from "./pages/Admin/Users";
 import {SchoolsTimetables} from "./pages/SchoolsOwner/SchoolsTimetables";
+import { Timetables } from "./pages/Teacher/Timetables";
 import {NewUser} from "./pages/Admin/NewUser";
 import {Sections} from "./pages/SchoolsOwner/Sections";
 import {Schools} from "./pages/SchoolsOwner/Schools";
@@ -25,7 +26,7 @@ import {EditSchoolType} from "./pages/Admin/EditSchoolType";
 import {EditSchool} from "./pages/SchoolsOwner/EditSchool";
 import {SchoolsTeachers} from "./pages/SchoolsOwner/SchoolsTeachers";
 import {NewTeacher} from "./pages/SchoolsOwner/NewTeacher";
-import {Teacher} from "./pages/SchoolsOwner/Teacher";
+import { Settings } from "./pages/Settings";
 
 
 export const App = () => {
@@ -55,7 +56,7 @@ export const App = () => {
                         <Route path={'/admin/sections'} element={<Sections/>}/>
                         <Route path={'/admin/commission'} element={<h1>Комиссия</h1>}/>
                         <Route path={'/admin/extracts'} element={<h1>Выписки</h1>}/>
-                        <Route path={'/admin/settings'} element={<h1>Настройки</h1>}/>
+                        <Route path={'/admin/settings'} element={<Settings />}/>
                     </Route>
                 )}
 
@@ -85,13 +86,21 @@ export const App = () => {
                         <Route path={'/schools_owner/schools/:schoolId/teachers/new'} element={<NewTeacher />} />
                         <Route path={'/schools_owner/schools/:schoolId/all-teachers'}
                                element={<h1>Все преподаватели</h1>} />
-                        <Route path={'/schools_owner/schools/:schoolId/teachers/:teacherId'}
-                               element={<Teacher />} />
+                        <Route path={'/schools_owner/schools/:schoolId/all-teachers/:teacherId'}
+                               element={<h1>Свободный преподаватель</h1>} />
+                        <Route path={'/schools_owner/schools/:schoolId/invited-teachers'}
+                               element={<h1>Приглашенные преподаватели</h1>} />
+                        <Route path={'/schools_owner/schools/:schoolId/invited-teachers/:teacherId'}
+                               element={<h1>Приглашенный преподаватель</h1>} />
+                        <Route path={'/schools_owner/schools/:schoolId/school-teachers'}
+                               element={<h1>Преподаватели</h1>} />
+                        <Route path={'/schools_owner/schools/:schoolId/school-teachers/:teacherId'}
+                               element={<h1>Свой преподаватель</h1>} />
                         <Route path={'/schools_owner/sections/new'} element={<h1>Создать секцию</h1>}/>
                         <Route path={'/schools_owner/lessons'} element={<h1>Виды занятий</h1>}/>
                         <Route path={'/schools_owner/teachers'} element={<h1>Преподаватели</h1>}/>
                         <Route path={'/schools_owner/schedules'} element={<h1>Расписания</h1>}/>
-                        <Route path={'/schools_owner/settings'} element={<h1>Настройки</h1>}/>
+                        <Route path={'/schools_owner/settings'} element={<Settings />}/>
                         <Route path={'/schools_owner/extracts'} element={<h1>Выписки</h1>}/>
                     </Route>
                 )}
@@ -103,7 +112,7 @@ export const App = () => {
                         <Route path={'/favorites'} element={<h1>Избранное</h1>}/>
                         <Route path={'/subscriptions'} element={<h1>Абонементы</h1>}/>
                         <Route path={'/accounts'} element={<h1>Аккаунты</h1>}/>
-                        <Route path={'/settings'} element={<h1>Настройки</h1>}/>
+                        <Route path={'/settings'} element={<Settings />}/>
                     </Route>
                 )}
 
@@ -114,7 +123,7 @@ export const App = () => {
                         <Route path={'/schools'} element={<h1>Школы</h1>}/>
                         <Route path={'/my-timetables'} element={<h1>Мои расписания</h1>}/>
                         <Route path={'/applications'} element={<h1>Заявки</h1>}/>
-                        <Route path={'/settings'} element={<h1>Настройки</h1>}/>
+                        <Route path={'/settings'} element={<Settings />}/>
                     </Route>
                 )}
 

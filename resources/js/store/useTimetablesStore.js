@@ -6,6 +6,7 @@ const useTimetablesStore = create(
     persist((set, get) => ({
         schoolOwnerTimetables: [],
         teacherTimetables: [],
+        timetable: {},
         loading: false,
         error: null,
         getSchoolOwnerTimetables: async (schoolId) => {
@@ -15,6 +16,20 @@ const useTimetablesStore = create(
                 const {timetables} = request.data
                 set({loading: false, error: '', schoolOwnerTimetables: [...timetables]})
                 console.log(get().schoolOwnerTimetables)
+            } catch (error) {
+                if (error.response.data.errors) set({
+                    loading: false,
+                    error: Object.keys(error.response.data.errors).map((key, value) => error.response.data.errors[key])
+                })
+            }
+        },
+        getOneTimetable: async (timetableId) => {
+            try {
+                set({loading: false, error: ''})
+                const request = await api.get(`/cabinet/timetables/${timetableId}`)
+                const {data} = request.data
+                set({loading: false, error: '', timetable: data})
+                console.log(get().timetable);
             } catch (error) {
                 if (error.response.data.errors) set({
                     loading: false,
