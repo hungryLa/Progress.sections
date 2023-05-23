@@ -25,10 +25,10 @@ export const Navigation = ({place, isAuthenticated = true}) => {
             //     title: 'Расписания',
             //     path: `/schools_owner/schools/${schoolId}/sections/${sectionId}/timetables`
             // },
-            // {
-            //     title: 'Расписания секции',
-            //     path: `/schools_owner/schools/${schoolId}/sections/${sectionId}/section-timetables`
-            // },
+            {
+                title: 'Расписания секции',
+                path: `/schools_owner/schools/${schoolId}/sections/${sectionId}/sectionTimetables`
+            },
             {
                 title: "Настройки",
                 path: `/schools_owner/schools/${schoolId}/sections/${sectionId}/settings`,

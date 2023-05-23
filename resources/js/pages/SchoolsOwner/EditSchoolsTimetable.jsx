@@ -43,7 +43,6 @@ export const EditSchoolsTimetable = () => {
             setRestStart(timetable?.rest_start);
             setRestEnd(timetable?.rest_end);
         }
-        console.log(withRest);
     }, [timetable]);
 
     const handleWeekday = (e) => {

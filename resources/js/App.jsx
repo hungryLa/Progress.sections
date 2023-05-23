@@ -26,7 +26,10 @@ import {EditSchoolType} from "./pages/Admin/EditSchoolType";
 import {EditSchool} from "./pages/SchoolsOwner/EditSchool";
 import {SchoolsTeachers} from "./pages/SchoolsOwner/SchoolsTeachers";
 import {NewTeacher} from "./pages/SchoolsOwner/NewTeacher";
-import { Settings } from "./pages/Settings";
+import {Settings} from "./pages/Settings";
+import {Teacher} from "./pages/SchoolsOwner/Teacher";
+import {SectionTimetables} from "./pages/SchoolsOwner/SectionTimetables";
+import {NewSectionTimetable} from "./pages/SchoolsOwner/NewSectionTimetable";
 
 
 export const App = () => {
@@ -75,6 +78,23 @@ export const App = () => {
                                element={<h1>Редактирование секции</h1>}/>
                         <Route path={'/schools_owner/schools/:schoolId/sections/:sectionId/settings'}
                                element={<EditSection/>}/>
+                        {/*  SECTION TIMETABLES  */}
+                        <Route
+                            path={'/schools_owner/schools/:schoolId/sections/:sectionId/sectionTimetables'}
+                            element={<SectionTimetables/>}
+                        />
+                        <Route
+                            path={'/schools_owner/schools/:schoolId/sections/:sectionId/sectionTimetables/:sectionTimetableId'}
+                            element={<h1>Расписание секции</h1>}
+                        />
+                        <Route
+                            path={'/schools_owner/schools/:schoolId/sections/:sectionId/sectionTimetables/new'}
+                            element={<NewSectionTimetable/>}
+                        />
+                        <Route
+                            path={'/schools_owner/schools/:schoolId/sections/:sectionId/sectionTimetables/:sectionTimetableId/edit'}
+                            element={<h1>Редактирование расписания секции</h1>}
+                        />
                         {/* TIMETABLES */}
                         <Route path={'/schools_owner/schools/:schoolId/timetables'} element={<SchoolsTimetables/>}/>
                         <Route path={'/schools_owner/schools/:schoolId/timetables/new'}
@@ -82,8 +102,8 @@ export const App = () => {
                         <Route path={`/schools_owner/schools/:schoolId/timetables/:timetableId/update`}
                                element={<EditSchoolsTimetable/>}/>
                         {/* TEACHERS */}
-                        <Route path={'/schools_owner/schools/:schoolId/teachers'} element={<SchoolsTeachers/>} />
-                        <Route path={'/schools_owner/schools/:schoolId/teachers/new'} element={<NewTeacher />} />
+                        <Route path={'/schools_owner/schools/:schoolId/teachers'} element={<SchoolsTeachers/>}/>
+                        <Route path={'/schools_owner/schools/:schoolId/teachers/new'} element={<NewTeacher/>}/>
                         <Route path={'/schools_owner/schools/:schoolId/all-teachers'}
                                element={<h1>Все преподаватели</h1>} />
                         <Route path={'/schools_owner/schools/:schoolId/all-teachers/:teacherId'}
@@ -93,9 +113,9 @@ export const App = () => {
                         <Route path={'/schools_owner/schools/:schoolId/invited-teachers/:teacherId'}
                                element={<h1>Приглашенный преподаватель</h1>} />
                         <Route path={'/schools_owner/schools/:schoolId/school-teachers'}
-                               element={<h1>Преподаватели</h1>} />
+                               element={<h1>Преподаватели</h1>}/>
                         <Route path={'/schools_owner/schools/:schoolId/school-teachers/:teacherId'}
-                               element={<h1>Свой преподаватель</h1>} />
+                               element={<Teacher/>}/>
                         <Route path={'/schools_owner/sections/new'} element={<h1>Создать секцию</h1>}/>
                         <Route path={'/schools_owner/lessons'} element={<h1>Виды занятий</h1>}/>
                         <Route path={'/schools_owner/teachers'} element={<h1>Преподаватели</h1>}/>

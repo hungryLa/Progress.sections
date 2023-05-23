@@ -14,8 +14,7 @@ const useTimetablesStore = create(
                 set({loading: false, error: ''})
                 const request = await api.get(`/cabinet/timetables?school=${schoolId}`)
                 const {timetables} = request.data
-                set({loading: false, error: '', schoolOwnerTimetables: [...timetables]})
-                console.log(get().schoolOwnerTimetables)
+                set({loading: false, error: '', schoolOwnerTimetables: timetables})
             } catch (error) {
                 if (error.response.data.errors) set({
                     loading: false,
@@ -29,7 +28,6 @@ const useTimetablesStore = create(
                 const request = await api.get(`/cabinet/timetables/${timetableId}`)
                 const {data} = request.data
                 set({loading: false, error: '', timetable: data})
-                console.log(get().timetable);
             } catch (error) {
                 if (error.response.data.errors) set({
                     loading: false,
@@ -77,7 +75,6 @@ const useTimetablesStore = create(
         createSchoolTimeTable: async (schoolId, weekdays, lessonTime, workdayStart, workdayEnd, withoutRest, restStart, restEnd) => {
             set({loading: false, error: ''})
             try {
-                console.log(weekdays)
                 const formData = new FormData()
                 formData.append('school', schoolId)
                 formData.append('lesson_time', lessonTime)
@@ -94,7 +91,6 @@ const useTimetablesStore = create(
                 )
                 set({loading: false, error: ''})
             } catch (error) {
-                console.log(error)
                 if (error.response.data.errors) set({
                     loading: false,
                     error: (typeof error === "object") ? Object.keys(error.response.data.errors).map((key, value) => error.response.data.errors[key]) : error

@@ -154,7 +154,7 @@ class SchoolController extends Controller
             if ($request->school_title == $school->title) {
                 if (count($school->files) != 0) {
                     foreach ($school->files as $file) {
-                        FileController::deleteFile($file->id);
+                        FileController::deleteFile($file);
                     }
                 }
                 ModelSchool::where('school_id', $school->id)->delete();

@@ -8,6 +8,7 @@ use App\Http\Requests\Teacher\UpdateRequest;
 use App\Http\Resources\CommunicationRecource;
 use App\Http\Resources\TeacherRecource;
 use App\Http\Resources\User\UserResource;
+use App\Mail\WelcomeMail;
 use App\Models\Communication;
 use App\Models\ModelSchool;
 use App\Models\School;
@@ -15,6 +16,7 @@ use App\Models\Teacher;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 
 class TeacherController extends Controller
@@ -48,11 +50,12 @@ class TeacherController extends Controller
     public function store(StoreRequest $request, School $school)
     {
         try {
+            $password = Str::random(10);
             $teacher = User::create([
                 'role' => User::ROLES['teacher'],
                 'full_name' => $request->full_name,
                 'email' => $request->email,
-                'password' => Hash::make(Str::random(15)),
+                'password' => Hash::make($password),
                 'remember_token' => Str::random(15),
             ]);
             $success = ModelSchool::create([
@@ -61,7 +64,10 @@ class TeacherController extends Controller
                 'model_id' => $teacher->id,
                 'school_id' => $school->id,
             ]);
-            if ($success) {
+            $data['password'] = $password;
+            $data['user'] = $teacher;
+            $secondSuccess = Mail::to($teacher->email)->send(new WelcomeMail($data));
+            if ($success && $secondSuccess) {
                 session()->flash('success', __('other.Record successfully added'));
             }
         } catch (\Exception $exception) {

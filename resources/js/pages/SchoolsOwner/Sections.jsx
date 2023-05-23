@@ -14,7 +14,6 @@ export const Sections = () => {
 
     useEffect(() => {
         getSections(schoolId);
-        console.log(sections)
     }, []);
 
     const handleNewSection = () => {

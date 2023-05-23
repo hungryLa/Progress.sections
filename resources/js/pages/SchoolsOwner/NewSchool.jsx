@@ -38,8 +38,6 @@ export const NewSchool = () => {
 
     useEffect(() => {
         getSchoolTypes()
-        console.log(error);
-        console.log(imagesError);
         setOptions(schoolTypes.map(item => ({value: item.id, label: item.title})))
     }, [])
 
@@ -56,6 +54,7 @@ export const NewSchool = () => {
         setStatus(e.target.value)
     }
     const handleImages = (e) => {
+        console.log('images', images)
         setImages(e.target.files)
     }
     const handleRecruitment = (e) => {
@@ -71,9 +70,8 @@ export const NewSchool = () => {
     const handleSubmit = async (e) => {
         e.preventDefault()
         const typesToSend = types.map(type => type.value)
-        await addSchool(status, recruitment, title, description, phone, address, images, typesToSend).then(() => {
-            if (error?.length < 1) navigate('/schools_owner/schools')
-        })
+        await addSchool(status, recruitment, title, description, phone, address, images, typesToSend)
+        if (!error) navigate('/schools_owner/schools')
     }
 
     return (
@@ -152,8 +150,11 @@ export const NewSchool = () => {
                                 </div>
                                 <div className="one-col">
                                     <Input label={'Изображения'} type={'file'} onChange={handleImages} multiple/>
-                                    <TextArea label={'Описание'} value={description}
-                                              onChange={handleDescription}/>
+                                    <TextArea
+                                        label={'Описание'}
+                                        value={description}
+                                        onChange={handleDescription}
+                                    />
                                 </div>
                             </>
                         }

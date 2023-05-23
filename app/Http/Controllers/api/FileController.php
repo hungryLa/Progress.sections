@@ -107,6 +107,7 @@ class FileController extends Controller
     static function deleteFile(File $file)
     {
         try {
+//            dd($file);
             Storage::disk('public')->delete($file->path);
             $files = File::where([
                 'model_type' => $file->model_type,

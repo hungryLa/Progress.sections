@@ -85,6 +85,7 @@ export const EditSchool = () => {
     };
     const handleImages = (e) => {
         setImages(e.target.files);
+        console.log(images)
     };
     const handleRecruitment = (e) => {
         setRecruitment(e.target.value);
@@ -267,7 +268,10 @@ export const EditSchool = () => {
                                         type={"file"}
                                         onChange={handleImages}
                                         multiple
+                                        id={'images'}
                                     />
+
+                                    {images && JSON.stringify(images)}
 
                                     {school?.images?.length > 0 ? (
                                         <div className="one-col">

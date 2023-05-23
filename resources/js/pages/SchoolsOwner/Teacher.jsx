@@ -12,7 +12,6 @@ export const Teacher = () => {
     useEffect(() => {
         getTeacher(schoolId, teacherId)
         console.log(teacher)
-        toast("Успешно")
     }, [])
 
     return (

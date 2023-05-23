@@ -24,8 +24,8 @@ class StoreRequest extends FormRequest
         return [
             'lesson_price' => 'required|integer',
             'trial_price' => 'required|integer',
-            'group' => 'integer',
-            'group_price' => 'integer'
+            'group' => 'integer|nullable',
+            'group_price' => 'integer|nullable'
         ];
     }
 }

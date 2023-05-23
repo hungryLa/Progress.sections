@@ -49,6 +49,7 @@ const useSchoolsStore = create(
                         imagesError: '',
                         error: ''
                     })
+                    console.log('images', images)
                     const formData = new FormData()
                     formData.append('status', status)
                     formData.append('recruitment_open', recruitmentOpen)
