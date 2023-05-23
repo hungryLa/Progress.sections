@@ -6,6 +6,10 @@ import {Subtitle} from "../../components/UI/Subtitle";
 import {Form} from "../../components/UI/Form";
 import {Input} from "../../components/UI/Input";
 import {Button} from "../../components/UI/Button";
+import {Title} from "../../components/UI/Title";
+import {Modal} from "../../components/UI/Modal";
+import {Error} from "../../components/Error";
+import {validateHEXColor} from "../../helpers/validateHEXColor";
 
 export const EditSchoolType = () => {
     const {schoolTypeId} = useParams()
@@ -14,35 +18,50 @@ export const EditSchoolType = () => {
     const {
         getOneSchoolType,
         editSchoolType,
+        deleteSchoolType,
         schoolType,
         loading,
-        titleError,
-        colorError,
         clearErrors
     } = useSchoolTypesStore()
 
     const [title, setTitle] = useState('')
     const [color, setColor] = useState('#000000')
+    const [errors, setErrors] = useState([])
+    const [modalIsActive, setModalIsActive] = useState(false)
 
     useEffect(() => {
         getOneSchoolType(schoolTypeId)
         setTitle(schoolType.title)
         setColor(schoolType.color)
-    }, [])
+    }, [schoolType.title, schoolType.color])
 
     const handleSetTitle = (e) => {
+        setErrors([])
         setTitle(e.target.value)
         clearErrors()
     }
     const handleSetColor = (e) => {
+        setErrors([])
         setColor(e.target.value)
         clearErrors()
     }
 
     const handleSubmit = async (e) => {
+        setErrors([])
         e.preventDefault()
-        await editSchoolType(schoolType.id, title, color)
-        if (!titleError && !colorError) navigate('/admin/schoolTypes')
+
+        if (!title) setErrors((prev) => [...prev, 'Поле "Название" не должно быть пустым'])
+        if (!validateHEXColor(color)) setErrors((prev) => [...prev, 'Введен некорректный цвет'])
+
+        if (!errors) {
+            await editSchoolType(schoolType.id, title, color).then(() => navigate('/admin/schoolTypes'))
+        }
+    }
+
+    const handleDelete = async () => {
+        await deleteSchoolType(schoolTypeId)
+        setModalIsActive(false)
+        navigate('/admin/schoolTypes')
     }
 
     return (
@@ -50,6 +69,7 @@ export const EditSchoolType = () => {
             {loading ? <Loader/> : (
                 <>
                     <Subtitle>Редактирование типа школы</Subtitle>
+                    {errors.length > 0 ? <Error errors={errors}/> : ''}
                     <Form
                         onSubmit={handleSubmit}
                         inputs={
@@ -59,7 +79,6 @@ export const EditSchoolType = () => {
                                         label='Название'
                                         value={title}
                                         onChange={handleSetTitle}
-                                        error={titleError}
                                         bordered
                                         id='title'
                                     />
@@ -68,7 +87,6 @@ export const EditSchoolType = () => {
                                         label='Цвет'
                                         value={color}
                                         onChange={handleSetColor}
-                                        error={colorError}
                                         bordered
                                         id='color'
                                     />
@@ -76,11 +94,39 @@ export const EditSchoolType = () => {
                             </>
                         }
                         buttons={
-                            <Button type='submit' variant='white'>{loading ? "Идет редактирование..." : "Редактировать"}</Button>
+                            <>
+                                <Button type='submit'
+                                        variant='white'>{loading ? "Идет редактирование..." : "Редактировать"}</Button>
+                                <Button
+                                    variant={"orange"}
+                                    type={"button"}
+                                    onClick={() => setModalIsActive(true)}
+                                >
+                                    Удалить тип школы
+                                </Button>
+                            </>
                         }
                     />
                 </>
             )}
+
+            <Modal isActive={modalIsActive}>
+                <Title>Удаление типа школы</Title>
+                <p>Вы действительно хотите удалить тип "{schoolType.title}"?</p>
+                <div className={"modal__buttons"}>
+                    <Button variant={"green"} onClick={handleDelete}>
+                        Да
+                    </Button>
+                    <Button
+                        variant={"gray"}
+                        onClick={() => {
+                            setModalIsActive(false);
+                        }}
+                    >
+                        Отмена
+                    </Button>
+                </div>
+            </Modal>
         </>
     )
 }

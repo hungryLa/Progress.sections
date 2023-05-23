@@ -5,6 +5,8 @@ import {Form} from "../../components/UI/Form";
 import {Input} from "../../components/UI/Input";
 import {Button} from "../../components/UI/Button";
 import {useNavigate} from "react-router-dom";
+import {validateHEXColor} from "../../helpers/validateHEXColor";
+import {Error} from "../../components/Error";
 
 export const NewSchoolType = () => {
     const {addSchoolType, loading, titleError, colorError, clearErrors} = useSchoolTypesStore()
@@ -12,25 +14,35 @@ export const NewSchoolType = () => {
 
     const [title, setTitle] = useState('')
     const [color, setColor] = useState('#000000')
+    const [errors, setErrors] = useState([])
+    const [allowRedirect, setAllowRedirect] = useState(false)
 
     const handleSetTitle = (e) => {
-        clearErrors()
+        setErrors([])
         setTitle(e.target.value)
     }
     const handleSetColor = (e) => {
-        clearErrors()
+        setErrors([])
         setColor(e.target.value)
     }
 
     const handleSubmit = async (e) => {
         e.preventDefault()
-        await addSchoolType(title, color)
-        if (!titleError && !colorError) navigate('/admin/schoolTypes')
+        setErrors([])
+        if (!title) setErrors((prev) => [...prev, 'Поле "Название" не должно быть пустым'])
+        if (!validateHEXColor(color)) setErrors((prev) => [...prev, 'Введен некорректный цвет'])
+        if (errors.length === 0) {
+            setAllowRedirect(true)
+        }
+        if (allowRedirect && errors?.length === 0) {
+            await addSchoolType(title, color).then(() => navigate('/admin/schoolTypes'))
+        }
     }
 
     return (
         <>
             <Subtitle>Новый тип школы</Subtitle>
+            {errors.length > 0 ? <Error errors={errors}/> : ''}
             <Form
                 onSubmit={handleSubmit}
                 inputs={
@@ -40,7 +52,6 @@ export const NewSchoolType = () => {
                                 label='Название'
                                 value={title}
                                 onChange={handleSetTitle}
-                                error={titleError}
                                 bordered
                                 id='title'
                             />
@@ -49,7 +60,6 @@ export const NewSchoolType = () => {
                                 label='Цвет'
                                 value={color}
                                 onChange={handleSetColor}
-                                error={colorError}
                                 bordered
                                 id='color'
                             />

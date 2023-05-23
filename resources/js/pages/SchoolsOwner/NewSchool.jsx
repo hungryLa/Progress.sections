@@ -72,7 +72,7 @@ export const NewSchool = () => {
         e.preventDefault()
         const typesToSend = types.map(type => type.value)
         await addSchool(status, recruitment, title, description, phone, address, images, typesToSend).then(() => {
-            if (error.length < 1) navigate('/schools_owner/schools')
+            if (error?.length < 1) navigate('/schools_owner/schools')
         })
     }
 
@@ -81,7 +81,7 @@ export const NewSchool = () => {
             <Subtitle>Создание школы</Subtitle>
             {loading || typesLoading ? <Loader/> : (
                 <>
-                    {error.length > 0 && <Error errors={error}/>}
+                    {error?.length > 0 && <Error errors={error}/>}
                     <Form
                         onSubmit={handleSubmit}
                         inputs={

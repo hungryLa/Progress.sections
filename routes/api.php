@@ -59,6 +59,7 @@ Route::group(['middleware' => 'jwt.auth'], function () {
                 Route::delete('{user}/delete', [UserController::class, 'destroy'])->name('cabinet.user.delete');
             });
             Route::get('{user}/settings', [UserController::class, 'settings'])->name('cabinet.user.settings');
+            Route::get('{user}', [UserController::class, 'getOne'])->name('cabinet.user.get-one');
             Route::put('{user}/change_information', [UserController::class, 'change_information'])->name(
                 'cabinet.user.change_information'
             );

@@ -28,6 +28,24 @@ class  UserController extends Controller
         return UserResource::collection(User::orderBy('id', 'desc')->get());
     }
 
+    public function getOne(Request $request)
+    {
+        try {
+            $user = User::where('id', $request->user)->first();
+            if ($user->role === 'teacher') {
+                $teacher = $user->getTeacher();
+                $teacher_information = $teacher->information;
+                $data['user'] = new UserResource($teacher);
+                $data['teacher_information'] = new TeacherInformationRecource($teacher_information);
+            } else {
+                $data['user'] = new UserResource($user);
+            }
+            return $data;
+        } catch (\Exception $exception) {
+            return $exception->getMessage();
+        }
+    }
+
     /**
      * Store a newly created resource in storage.
      */

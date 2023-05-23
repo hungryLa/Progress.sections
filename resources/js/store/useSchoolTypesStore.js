@@ -42,8 +42,8 @@ const useSchoolTypesStore = create(
                     if(error.response.data.errors) {
                         set({
                             loading: false,
-                            titleError: error.response.data.errors.title,
-                            colorError: error.response.data.errors.color
+                            titleError: error.response.data.errors.title || '',
+                            colorError: error.response.data.errors.color || '',
                         })
                     }
                 }
@@ -51,13 +51,22 @@ const useSchoolTypesStore = create(
             editSchoolType: async (schoolTypeId, title, color) => {
                 try {
                     set({loading: false})
-                    await api.put(`/cabinet/school_types/${schoolTypeId}/edit/`, {
+                    const response = await api.put(`/cabinet/school_types/${schoolTypeId}/edit/`, {
                         title,
                         color
                     })
+                    console.log(response)
                     await get().getSchoolTypes()
                     set({loading: false})
                 } catch (error) {
+                    console.log(error)
+                    if (error.response.data.errors) {
+                        set({
+                            loading: false,
+                            titleError: error.response.data.errors.title || '',
+                            colorError: error.response.data.errors.color || '',
+                        })
+                    }
                 }
             },
             deleteSchoolType: async (schoolTypeId) => {
