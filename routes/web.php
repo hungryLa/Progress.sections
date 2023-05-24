@@ -207,9 +207,6 @@ Route::group(['prefix' => 'cabinet', 'middleware' => ['auth', 'verified']], func
     });
 });
 
-
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-
 Route::post('/email/verification', function (Request $request) {
     $request->user()->sendEmailVerificationNotification();
     session(['email' => __('send')]);

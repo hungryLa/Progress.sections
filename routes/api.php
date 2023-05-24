@@ -7,12 +7,12 @@ use App\Http\Controllers\api\OccupationController;
 use App\Http\Controllers\api\PaymentController;
 use App\Http\Controllers\api\PersonController;
 use App\Http\Controllers\api\SchoolController;
+use App\Http\Controllers\api\SchoolTypeController;
 use App\Http\Controllers\api\SectionController;
 use App\Http\Controllers\api\SubscriptionController;
 use App\Http\Controllers\api\TeacherController;
 use App\Http\Controllers\api\TimetableController;
 use App\Http\Controllers\api\TimetableSectionController;
-use App\Http\Controllers\api\SchoolTypeController;
 use App\Http\Controllers\api\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -192,7 +192,9 @@ Route::group(['middleware' => 'jwt.auth'], function () {
             Route::get('{school_type}', [SchoolTypeController::class, 'getOne'])->name('cabinet.school_types.getOne');
             Route::post('store', [SchoolTypeController::class, 'store'])->name('cabinet.school_types.store');
             Route::put('{school_type}/edit', [SchoolTypeController::class, 'edit'])->name('cabinet.school_types.edit');
-            Route::delete('{school_type}/delete', [SchoolTypeController::class, 'delete'])->name('cabinet.school_types.delete');
+            Route::delete('{school_type}/delete', [SchoolTypeController::class, 'delete'])->name(
+                'cabinet.school_types.delete'
+            );
         });
 
         Route::group(['prefix' => 'people'], function () {
@@ -210,4 +212,17 @@ Route::group(['middleware' => 'jwt.auth'], function () {
             Route::post('changeImage', [FileController::class, 'changeImage'])->name('cabinet.files.changeImage');
         });
     });
+
+    Route::post('/email/verification', function (Request $request) {
+        $request->user()->sendEmailVerificationNotification();
+        session(['email' => __('send')]);
+
+        return back()->with(
+            'message',
+            'На указанную почту отправлено письмо со ссылкой для подтверждения электронной почты.'
+        );
+    })->middleware(['auth', 'throttle:6,1'])->name('verification.send');
+    Auth::routes([
+        'verify' => true
+    ]);
 });
