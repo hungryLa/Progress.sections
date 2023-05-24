@@ -43,6 +43,9 @@ Route::group([
     Route::post('register', [RegisterController::class, 'register']);
     Route::post('refresh', [AuthController::class, 'refresh']);
     Route::post('me', [AuthController::class, 'me']);
+    Route::get('email/verify/{id}/{hash}', [\App\Http\Controllers\Auth\VerificationController::class, 'verify'])->name(
+        'api.verification.verify'
+    );
 });
 Route::group(['middleware' => 'jwt.auth'], function () {
     Route::group(['prefix' => 'cabinet', 'middleware' => ['auth', 'verified']], function () {

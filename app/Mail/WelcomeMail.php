@@ -2,12 +2,8 @@
 
 namespace App\Mail;
 
-use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
-use Illuminate\Mail\Mailables\Content;
-use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\URL;
 
@@ -19,6 +15,7 @@ class WelcomeMail extends Mailable
      * Create a new message instance.
      */
     public $data;
+
     public function __construct($data)
     {
         $this->data = $data;
@@ -27,7 +24,7 @@ class WelcomeMail extends Mailable
     public function build()
     {
         $url = URL::temporarySignedRoute(
-            'verification.verify', now()->addHour(), [
+            'api.verification.verify', now()->addHour(), [
                 'id' => $this->data['user']->id,
                 'hash' => sha1($this->data['user']->email),
             ]
