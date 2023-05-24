@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 
-class UserController extends Controller
+class  UserController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -26,6 +26,24 @@ class UserController extends Controller
     public function index()
     {
         return UserResource::collection(User::orderBy('id', 'desc')->get());
+    }
+
+    public function getOne(Request $request)
+    {
+        try {
+            $user = User::where('id', $request->user)->first();
+            if ($user->role === 'teacher') {
+                $teacher = $user->getTeacher();
+                $teacher_information = $teacher->information;
+                $data['user'] = new UserResource($teacher);
+                $data['teacher_information'] = new TeacherInformationRecource($teacher_information);
+            } else {
+                $data['user'] = new UserResource($user);
+            }
+            return $data;
+        } catch (\Exception $exception) {
+            return $exception->getMessage();
+        }
     }
 
     /**

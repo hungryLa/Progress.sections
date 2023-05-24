@@ -19,6 +19,23 @@ class Teacher extends Model
 
     const TYPE = 'teacher';
 
+    const MAX_FILES = [
+        'images' => 1
+    ];
+
+    public function files(): HasMany
+    {
+        return $this->hasMany(File::class, 'model_id')
+            ->where('model_type', 'LIKE', self::TYPE);
+    }
+
+    public function images(): HasMany
+    {
+        return $this->hasMany(File::class, 'model_id')
+            ->where('model_type', 'LIKE', self::TYPE)
+            ->where('type', 'LIKE', File::TYPE['image'])->orderBy('position', 'asc');
+    }
+
     public function school(School $school){
         return ModelSchool::where([
             'model_type' => ModelSchool::TYPES['teacher'],
@@ -59,6 +76,6 @@ class Teacher extends Model
 
     public function information(): HasOne
     {
-        return $this->hasOne(TeacherInformation::class);
+        return $this->hasOne(TeacherInformation::class,'teacher_id');
     }
 }

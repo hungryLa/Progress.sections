@@ -10,8 +10,10 @@ const useUsersStore = create(
     persist(
         (set, get) => ({
             users: [],
+            user: {},
+            teacherInformation: {},
+            error: [],
             loading: false,
-            error: null,
             fullNameError: '',
             emailError: '',
             roleError: '',
@@ -21,7 +23,6 @@ const useUsersStore = create(
                         loading: true
                     })
                     const response = await api.get('/cabinet/users/')
-                    console.log(response)
                     const {
                         data
                     } = await response.data
@@ -30,11 +31,65 @@ const useUsersStore = create(
                         users: [...data]
                     })
                 } catch (error) {
-                    console.log(error)
                     set({
                         loading: false,
                         error
                     })
+                }
+            },
+            getOneUser: async (userId) => {
+                try {
+                    set({loading: true})
+                    const response = await api.get(`/cabinet/users/${userId}`)
+                    set({
+                        loading: false,
+                        user: response?.data?.user,
+                        teacherInformation: response?.data?.teacher_information
+                    })
+                    // console.log(get().teacherInformation)
+                } catch (error) {
+                    set({loading: false})
+                }
+            },
+            changeInformation: async (userId, fullName, phone, email) => {
+                try {
+                    set({loading: true})
+                    const response = await api.put(`/cabinet/users/${userId}/change_information`, {
+                        'full_name': fullName,
+                        'phone_number': phone,
+                        'email': email
+                    })
+                    await get().getOneUser(userId)
+                    set({loading: false})
+                } catch (error) {
+                    set({loading: false})
+                }
+            },
+            changePassword: async (userId, oldPassword, newPassword) => {
+                try {
+                    set({loading: true})
+                    const response = await api.put(`/cabinet/users/${userId}/change_password`, {
+                        'password_old': oldPassword,
+                        'password_new': newPassword
+                    })
+                    set({loading: false})
+                } catch (error) {
+                    console.log(error)
+                    set({loading: false})
+                }
+            },
+            createOrUpdateTeacherInformation: async (userId, occupations, teachingExperience, aboutMe) => {
+                try {
+                    set({loading: true})
+
+                    const response = await api.post(`/cabinet/users/${userId}/createOrUpdateTeacherInformation`, {
+                        'occupations': occupations,
+                        'teaching_experience': teachingExperience,
+                        'about_me': aboutMe
+                    })
+                    set({loading: false})
+                } catch (error) {
+                    set({loading: false})
                 }
             },
             addUser: async (user) => {
@@ -115,7 +170,7 @@ const useUsersStore = create(
                         error
                     })
                 }
-            }
+            },
         }), {
             name: 'users-storage'
         }

@@ -11,5 +11,6 @@ export default defineConfig({
         }),
         react(),
     ],
+    // optimizeDeps: { exclude: ["fsevents"] },
 });
 

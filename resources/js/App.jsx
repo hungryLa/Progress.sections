@@ -6,6 +6,7 @@ import {AuthorizedLayout} from "./pages/layouts/AuthorizedLayout";
 import useAuthStore from "./store/useAuthStore";
 import {Users} from "./pages/Admin/Users";
 import {SchoolsTimetables} from "./pages/SchoolsOwner/SchoolsTimetables";
+import { Timetables } from "./pages/Teacher/Timetables";
 import {NewUser} from "./pages/Admin/NewUser";
 import {Sections} from "./pages/SchoolsOwner/Sections";
 import {Schools} from "./pages/SchoolsOwner/Schools";
@@ -19,6 +20,16 @@ import {EditSchoolsTimetable} from "./pages/SchoolsOwner/EditSchoolsTimetable";
 import {NewSection} from "./pages/SchoolsOwner/NewSection";
 import {EditSection} from "./pages/SchoolsOwner/EditSection";
 import {NewSchool} from "./pages/SchoolsOwner/NewSchool";
+import {SchoolTypes} from "./pages/Admin/SchoolTypes";
+import {NewSchoolType} from "./pages/Admin/NewSchoolType";
+import {EditSchoolType} from "./pages/Admin/EditSchoolType";
+import {EditSchool} from "./pages/SchoolsOwner/EditSchool";
+import {SchoolsTeachers} from "./pages/SchoolsOwner/SchoolsTeachers";
+import {NewTeacher} from "./pages/SchoolsOwner/NewTeacher";
+import {Settings} from "./pages/Settings";
+import {Teacher} from "./pages/SchoolsOwner/Teacher";
+import {SectionTimetables} from "./pages/SchoolsOwner/SectionTimetables";
+import {NewSectionTimetable} from "./pages/SchoolsOwner/NewSectionTimetable";
 
 
 export const App = () => {
@@ -42,10 +53,13 @@ export const App = () => {
                         <Route path={'/admin/users/:userId/update'} element={<EditUser/>}/>
                         <Route path={'/admin/occupations'} element={<Occupations/>}/>
                         <Route path={'/admin/occupations/new'} element={<NewOccupation/>}/>
+                        <Route path={'/admin/schoolTypes/'} element={<SchoolTypes/>}/>
+                        <Route path={'/admin/schoolTypes/new'} element={<NewSchoolType/>}/>
+                        <Route path={'/admin/schoolTypes/:schoolTypeId/edit'} element={<EditSchoolType/>}/>
                         <Route path={'/admin/sections'} element={<Sections/>}/>
                         <Route path={'/admin/commission'} element={<h1>Комиссия</h1>}/>
                         <Route path={'/admin/extracts'} element={<h1>Выписки</h1>}/>
-                        <Route path={'/admin/settings'} element={<h1>Настройки</h1>}/>
+                        <Route path={'/admin/settings'} element={<Settings />}/>
                     </Route>
                 )}
 
@@ -55,7 +69,7 @@ export const App = () => {
                         <Route path={'/schools_owner/schools'} element={<Schools/>}/>
                         <Route path={'/schools_owner/schools/new'} element={<NewSchool/>}/>
                         <Route path={'/schools_owner/schools/:schoolId'} element={<School/>}/>
-                        <Route path={'/schools_owner/schools/:schoolId/settings'} element={<h1>Настройки</h1>}/>
+                        <Route path={'/schools_owner/schools/:schoolId/settings'} element={<EditSchool/>}/>
                         {/* SECTIONS */}
                         <Route path={'/schools_owner/schools/:schoolId/sections'} element={<Sections/>}/>
                         <Route path={'/schools_owner/schools/:schoolId/sections/new'} element={<NewSection/>}/>
@@ -64,6 +78,23 @@ export const App = () => {
                                element={<h1>Редактирование секции</h1>}/>
                         <Route path={'/schools_owner/schools/:schoolId/sections/:sectionId/settings'}
                                element={<EditSection/>}/>
+                        {/*  SECTION TIMETABLES  */}
+                        <Route
+                            path={'/schools_owner/schools/:schoolId/sections/:sectionId/sectionTimetables'}
+                            element={<SectionTimetables/>}
+                        />
+                        <Route
+                            path={'/schools_owner/schools/:schoolId/sections/:sectionId/sectionTimetables/:sectionTimetableId'}
+                            element={<h1>Расписание секции</h1>}
+                        />
+                        <Route
+                            path={'/schools_owner/schools/:schoolId/sections/:sectionId/sectionTimetables/new'}
+                            element={<NewSectionTimetable/>}
+                        />
+                        <Route
+                            path={'/schools_owner/schools/:schoolId/sections/:sectionId/sectionTimetables/:sectionTimetableId/edit'}
+                            element={<h1>Редактирование расписания секции</h1>}
+                        />
                         {/* TIMETABLES */}
                         <Route path={'/schools_owner/schools/:schoolId/timetables'} element={<SchoolsTimetables/>}/>
                         <Route path={'/schools_owner/schools/:schoolId/timetables/new'}
@@ -71,12 +102,25 @@ export const App = () => {
                         <Route path={`/schools_owner/schools/:schoolId/timetables/:timetableId/update`}
                                element={<EditSchoolsTimetable/>}/>
                         {/* TEACHERS */}
-                        <Route path={'/schools_owner/schools/:schoolId/teachers'} element={<h1>Преподаватели</h1>}/>
+                        <Route path={'/schools_owner/schools/:schoolId/teachers'} element={<SchoolsTeachers/>}/>
+                        <Route path={'/schools_owner/schools/:schoolId/teachers/new'} element={<NewTeacher/>}/>
+                        <Route path={'/schools_owner/schools/:schoolId/all-teachers'}
+                               element={<h1>Все преподаватели</h1>} />
+                        <Route path={'/schools_owner/schools/:schoolId/all-teachers/:teacherId'}
+                               element={<h1>Свободный преподаватель</h1>} />
+                        <Route path={'/schools_owner/schools/:schoolId/invited-teachers'}
+                               element={<h1>Приглашенные преподаватели</h1>} />
+                        <Route path={'/schools_owner/schools/:schoolId/invited-teachers/:teacherId'}
+                               element={<h1>Приглашенный преподаватель</h1>} />
+                        <Route path={'/schools_owner/schools/:schoolId/school-teachers'}
+                               element={<h1>Преподаватели</h1>}/>
+                        <Route path={'/schools_owner/schools/:schoolId/school-teachers/:teacherId'}
+                               element={<Teacher/>}/>
                         <Route path={'/schools_owner/sections/new'} element={<h1>Создать секцию</h1>}/>
                         <Route path={'/schools_owner/lessons'} element={<h1>Виды занятий</h1>}/>
                         <Route path={'/schools_owner/teachers'} element={<h1>Преподаватели</h1>}/>
                         <Route path={'/schools_owner/schedules'} element={<h1>Расписания</h1>}/>
-                        <Route path={'/schools_owner/settings'} element={<h1>Настройки</h1>}/>
+                        <Route path={'/schools_owner/settings'} element={<Settings />}/>
                         <Route path={'/schools_owner/extracts'} element={<h1>Выписки</h1>}/>
                     </Route>
                 )}
@@ -88,7 +132,7 @@ export const App = () => {
                         <Route path={'/favorites'} element={<h1>Избранное</h1>}/>
                         <Route path={'/subscriptions'} element={<h1>Абонементы</h1>}/>
                         <Route path={'/accounts'} element={<h1>Аккаунты</h1>}/>
-                        <Route path={'/settings'} element={<h1>Настройки</h1>}/>
+                        <Route path={'/settings'} element={<Settings />}/>
                     </Route>
                 )}
 
@@ -99,7 +143,7 @@ export const App = () => {
                         <Route path={'/schools'} element={<h1>Школы</h1>}/>
                         <Route path={'/my-timetables'} element={<h1>Мои расписания</h1>}/>
                         <Route path={'/applications'} element={<h1>Заявки</h1>}/>
-                        <Route path={'/settings'} element={<h1>Настройки</h1>}/>
+                        <Route path={'/settings'} element={<Settings />}/>
                     </Route>
                 )}
 

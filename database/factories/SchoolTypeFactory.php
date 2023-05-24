@@ -18,7 +18,7 @@ class SchoolTypeFactory extends Factory
     {
         return [
             'title' => $this->faker->text(20),
-            'color' => $this->faker->hslColor,
+            'color' => $this->faker->hexColor,
         ];
     }
 }

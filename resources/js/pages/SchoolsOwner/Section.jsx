@@ -12,11 +12,6 @@ export const Section = () => {
 
     useEffect(() => {
         getOneSection(schoolId, sectionId)
-        console.log(section)
-        if (section && section?.images.length > 0) {
-            setTitle(section?.occupation?.title)
-            setImage(section?.images.map(image => `/storage/${image.path}`))
-        }
     }, [])
 
     return (
@@ -24,9 +19,10 @@ export const Section = () => {
             {loading ? (<Loader/>) : (
                 <>
                     <SectionInfo
-                        description={section.description}
-                        contents={section.contents}
+                        description={section?.description}
+                        contents={section?.contents}
                         occupationTitle={section?.occupation?.title}
+                        images={section?.images}
                     />
                 </>
             )}

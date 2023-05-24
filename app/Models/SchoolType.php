@@ -12,8 +12,10 @@ class SchoolType extends Model
 
     const TYPE = 'school_types';
 
+    protected $guarded = [];
+
     public function schools(): BelongsToMany
     {
-        return $this->belongsToMany(School::class, 'model_schools', 'school_id', 'model_id');
+        return $this->belongsToMany(School::class, 'model_schools', 'model_id', 'school_id');
     }
 }

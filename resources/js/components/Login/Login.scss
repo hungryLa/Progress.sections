@@ -44,7 +44,7 @@
     }
 
     &__inner {
-        padding: 8rem 0;
+        padding: 6rem 0;
 
         display: grid;
         grid-template-columns: repeat(2, minmax(30rem, 50%));
@@ -58,7 +58,7 @@
 
     @media screen and (max-width: 1280px) {
         &__inner {
-            padding: 6.4rem 0;
+            padding: 4.8rem 0;
             grid-template-columns: 1fr;
         }
 
@@ -69,7 +69,7 @@
 
     @media screen and (max-width: 768px) {
         &__inner {
-            padding: 4.8rem 0;
+            padding: 3.6rem 0;
             grid-template-columns: 1fr;
         }
 
@@ -86,7 +86,7 @@
             button {
                 width: 100%;
             }
-        }       
+        }
     }
 
     @media screen and (max-width: 360px) {

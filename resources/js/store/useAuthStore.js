@@ -9,24 +9,30 @@ const useAuthStore = create(
             token: '',
             error: null,
             expiresIn: null,
+            loading: false,
             clearError: () => {
                 set({error: ''})
             },
             login: async (email, password) => {
                 try {
+                    set({loading: true})
                     const response = await api.post(`/login?email=${email}&password=${password}`)
-                    console.log(response)
                     const {access_token, expires_in} = await response.data
                     set({
                         token: access_token,
                         expiresIn: expires_in,
-                        error: ''
+                        error: '',
+                        loading: false
                     })
                     if(!localStorage.getItem('token')) {
                         localStorage.setItem('token', access_token)
                     }
                 } catch (error) {
-                    console.log(error.response);
+                    set({
+                        user: null,
+                        token: '',
+                        error: "Неверный логин или пароль"
+                    })
                 }
                 try {
                     const response = await api.post('/me')
@@ -37,7 +43,8 @@ const useAuthStore = create(
                     set({
                         user: null,
                         token: '',
-                        error: "Неверный логин или пароль"
+                        error: "Неверный логин или пароль",
+                        loading: false
                     })
                 }
             },

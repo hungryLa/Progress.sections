@@ -4,11 +4,14 @@ import { Subtitle } from "../../components/UI/Subtitle"
 import { Form } from "../../components/UI/Form"
 import { Input } from "../../components/UI/Input"
 import { Button } from "../../components/UI/Button"
+import { useNavigate } from "react-router-dom"
 
 export const NewOccupation = () => {
     const addOccupation = useOccupationsStore(({addOccupation}) => addOccupation)
     const loading = useOccupationsStore(({loading}) => loading)
     const titleError = useOccupationsStore(({titleError}) => titleError)
+
+    const navigate = useNavigate()
 
     const [title, setTitle] = useState('')
 
@@ -19,6 +22,7 @@ export const NewOccupation = () => {
     const handleSubmit = async (e) => {
         e.preventDefault()
         await addOccupation(title)
+        if(titleError === '') navigate('/admin/occupations')
     }
 
     return (

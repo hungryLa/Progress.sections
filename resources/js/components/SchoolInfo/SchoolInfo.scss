@@ -3,11 +3,10 @@
     flex-direction: column;
     gap: 2.4rem;
     &__type {
-        padding: .5rem 1rem;
-        border-radius: .5rem;
-        background-color: var(--orange);
-        color: white;
-        width: fit-content;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: .8rem;
     }
 
     &__phone {

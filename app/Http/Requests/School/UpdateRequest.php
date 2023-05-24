@@ -22,12 +22,22 @@ class UpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'images' => 'array',
+            'images.*' => 'image',
             'status' => 'required|string',
             'type' => 'required|string',
             'title' => 'required|string|min:5',
             'description' => 'required|string|min:5',
             'phone_number' => 'required|string',
             'address' => 'required|string|min:5',
+        ];
+    }
+
+    public function messages(){
+        return [
+            'images.*' => [
+                'image' => 'Не все выбранные файлы являются картинками',
+            ]
         ];
     }
 }

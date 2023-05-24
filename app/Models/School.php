@@ -20,6 +20,11 @@ class School extends Model
         'not active' => 'not active',
     ];
 
+    const MAX_FILES = [
+        'images' => 4
+    ];
+
+
     public function files(): HasMany
     {
         return $this->hasMany(File::class, 'model_id')
@@ -30,14 +35,14 @@ class School extends Model
     {
         return $this->hasMany(File::class, 'model_id')
             ->where('model_type', 'LIKE', self::TYPE)
-            ->where('type', 'LIKE', File::TYPE['image'])->orderBy('position', 'asc');
+            ->where('type', 'LIKE', File::TYPE['images'])->orderBy('position', 'asc');
     }
 
     public function cover(): HasMany
     {
         return $this->hasMany(File::class, 'model_id')
             ->where('model_type', 'LIKE', self::TYPE)
-            ->where('type', 'LIKE', File::TYPE['image'])->orderBy('position', 'asc')->limit(1);
+            ->where('type', 'LIKE', File::TYPE['images'])->orderBy('position', 'asc')->limit(1);
     }
 
     public function sections(): HasMany

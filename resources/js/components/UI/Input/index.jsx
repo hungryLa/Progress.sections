@@ -1,6 +1,17 @@
 import './Input.scss'
 
-export const Input = ({ value, label, id, className, type, placeholder, onChange, bordered = false, error = null, multiple = false}) => {
+export const Input = ({
+                          value,
+                          label,
+                          id,
+                          className,
+                          type,
+                          placeholder,
+                          onChange,
+                          bordered = false,
+                          error = null,
+                          multiple = false
+                      }) => {
     return (
         <div className={`input ${className ? className : ""} ${bordered ? 'input-bordered' : ''}`}>
             {label && <label className="input__label" htmlFor={id}>{label}</label>}
@@ -8,7 +19,7 @@ export const Input = ({ value, label, id, className, type, placeholder, onChange
                 className="input__field"
                 type={type}
                 id={id}
-                value={value}
+                value={value || ''}
                 placeholder={placeholder}
                 onChange={onChange}
                 multiple={multiple}

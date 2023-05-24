@@ -16,6 +16,7 @@
         max-width: 100%;
         width: 100%;
         height: auto;
+        aspect-ratio: 16/9;
     }
 
     &__title {
@@ -26,14 +27,25 @@
 
     &__type {
         font-size: 1.4rem;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: .8rem;
     }
 
     &__badge {
-        width: min-content;
-        padding: .4rem .8rem;
+        padding: .6rem 1.6rem;
         border-radius: .6rem;
-        color: var(--white);
+        color: var(--blue);
         background-color: var(--orange);
+
+        span {
+            color: #fff;
+            text-transform: uppercase;
+            font-weight: 500;
+            text-shadow: 1px 1px 1px rgba(0, 0, 0, .33);
+            font-family: SF, -apple-system, BlinkMacSystemFont, sans-serif;
+        }
     }
 
     &__description {

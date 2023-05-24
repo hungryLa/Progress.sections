@@ -5,10 +5,28 @@ namespace App\Http\Controllers\api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SchoolType\StoreRequest;
 use App\Http\Requests\SchoolType\UpdateRequest;
+use App\Http\Resources\SchoolTypeRecource;
+use App\Http\Resources\SectionRecource;
 use App\Models\SchoolType;
+use Illuminate\Http\Request;
 
 class SchoolTypeController extends Controller
 {
+    public function index()
+    {
+        return SchoolTypeRecource::collection(SchoolType::orderBy('id')->get());
+    }
+
+    public function getOne(Request $request)
+    {
+        try {
+            $school_type = SchoolType::where('id', $request->school_type)->first();
+            return new SchoolTypeRecource($school_type);
+        } catch (\Exception $exception) {
+            return $exception->getMessage();
+        }
+    }
+
     public function store(StoreRequest $request)
     {
         try {
@@ -24,10 +42,10 @@ class SchoolTypeController extends Controller
         }
     }
 
-    public function edit(UpdateRequest $request, SchoolType $schoolType)
+    public function edit(Request $request, SchoolType $school_type)
     {
         try {
-            $success = $schoolType->update([
+            $success = $school_type->update([
                 'title' => $request->title,
                 'color' => $request->color,
             ]);

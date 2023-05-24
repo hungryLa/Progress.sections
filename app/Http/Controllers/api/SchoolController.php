@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\FileController;
+use App\Http\Controllers\api\FileController;
 use App\Http\Requests\School\StoreRequest;
 use App\Http\Requests\School\UpdateRequest;
 use App\Http\Resources\FileRecource;
@@ -59,14 +59,22 @@ class SchoolController extends Controller
             $school = School::create([
                 'status' => $request->status,
                 'recruitment_open' => $request->recruitment_open,
-                'type' => $request->type,
                 'title' => $request->title,
                 'description' => $request->description,
                 'phone_number' => $request->phone_number,
                 'address' => $request->address,
             ]);
-            if ($request->hasFile('images')) {
-                FileController::storeFile($request, School::TYPE, $school->id, File::TYPE['image'], 'images');
+            if ($request->hasFile('files')) {
+                FileController::storeFile($request, School::TYPE, $school->id, File::TYPE['images']);
+            }
+            if ($request->school_types) {
+                foreach ($request->school_types as $school_type) {
+                    ModelSchool::create([
+                        'model_type' => ModelSchool::TYPES['school_types'],
+                        'model_id' => $school_type,
+                        'school_id' => $school->id,
+                    ]);
+                }
             }
             $success = ModelSchool::create([
                 'model_type' => ModelSchool::TYPES['user'],
@@ -105,12 +113,30 @@ class SchoolController extends Controller
         try {
             $success = $school->update([
                 'status' => $request->status,
-                'type' => $request->type,
                 'title' => $request->title,
                 'description' => $request->description,
+                'recruitment_open' => $request->recruitment_open,
                 'address' => $request->address,
                 'phone_number' => $request->phone_number,
             ]);
+            if ($request->school_types_to_add) {
+                foreach ($request->school_types_to_add as $school_type) {
+                    ModelSchool::create([
+                        'model_type' => ModelSchool::TYPES['school_types'],
+                        'model_id' => $school_type,
+                        'school_id' => $school->id,
+                    ]);
+                }
+            }
+            if($request->school_types_to_delete) {
+                foreach ($request->school_types_to_delete as $school_type) {
+                    ModelSchool::where([
+                        'model_type' => ModelSchool::TYPES['school_types'],
+                        'model_id' => $school_type,
+                        'school_id' => $school->id,
+                    ])->delete();
+                }
+            }
             if ($success) {
                 session()->flash('success', __('other.Information changed successfully'));
             }
@@ -128,7 +154,7 @@ class SchoolController extends Controller
             if ($request->school_title == $school->title) {
                 if (count($school->files) != 0) {
                     foreach ($school->files as $file) {
-                        FileController::deleteFile($file->id);
+                        FileController::deleteFile($file);
                     }
                 }
                 ModelSchool::where('school_id', $school->id)->delete();

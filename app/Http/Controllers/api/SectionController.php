@@ -43,8 +43,8 @@ class SectionController extends Controller
                 'description' => $request->description,
                 'contents' => $request->contents,
             ]);
-            if ($request->hasFile('images')) {
-                FileController::storeFile($request, Section::TYPE, $section->id, File::TYPE['image'], 'images');
+            if ($request->hasFile('files')) {
+                FileController::storeFile($request, Section::TYPE, $section->id, File::TYPE['images']);
             }
             if ($section) {
                 session()->flash('success', __('other.Record successfully added'));

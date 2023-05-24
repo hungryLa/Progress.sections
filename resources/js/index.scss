@@ -40,7 +40,7 @@ html {
 }
 
 body {
-    position: relative;
+    width: 100%;
     background-color: #F1F1F1;
 }
 
@@ -81,7 +81,7 @@ aside, nav, footer, header, section, main {
 }
 
 main {
-    overflow: hidden;
+    overflow: auto;
     padding: 2.5rem 0 2.5rem 2.5rem;
     border-left: 1px solid rgba(44, 61, 115, 0.25);
 
@@ -209,7 +209,7 @@ img {
 .one-col {
     display: grid;
     grid-template-columns: repeat(1, 1fr);
-    gap: 1.2rem;
+    gap: 2.4rem;
 }
 
 .two-col {

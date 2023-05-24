@@ -15,23 +15,33 @@ class Section extends Model
     const TYPE = 'section';
     protected $guarded = [];
 
+    const MAX_FILES = [
+        'images' => 4
+    ];
+
     public function users(): BelongsToMany
     {
-        return $this->belongsToMany(User::class,'model_sections','section_id','model_id');
+        return $this->belongsToMany(User::class, 'model_sections', 'section_id', 'model_id');
+    }
+
+    public function files(): HasMany
+    {
+        return $this->hasMany(File::class, 'model_id')
+            ->where('model_type', 'LIKE', self::TYPE);
     }
 
     public function images(): HasMany
     {
-        return $this->hasMany(File::class,'model_id')
-            ->where('model_type','LIKE',self::TYPE)
-            ->where('type','LIKE', File::TYPE['image'])->orderBy('position','asc');
+        return $this->hasMany(File::class, 'model_id')
+            ->where('model_type', 'LIKE', self::TYPE)
+            ->where('type', 'LIKE', File::TYPE['images'])->orderBy('position', 'asc');
     }
 
     public function cover(): HasMany
     {
-        return $this->hasMany(File::class,'model_id')
-            ->where('model_type','LIKE',self::TYPE)
-            ->where('type','LIKE', File::TYPE['image'])->orderBy('position','asc')->limit(1);
+        return $this->hasMany(File::class, 'model_id')
+            ->where('model_type', 'LIKE', self::TYPE)
+            ->where('type', 'LIKE', File::TYPE['images'])->orderBy('position', 'asc')->limit(1);
     }
 
     public function school(): BelongsTo

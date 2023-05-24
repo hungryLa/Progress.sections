@@ -35,6 +35,13 @@
         padding: 1.5rem 3rem;
         border: 1px solid var(--white);
 
+        &[type="color"]{
+            width: 100%;
+            min-height: 50px;
+            max-height: 50px;
+            height: 100%;
+        }
+
         &:focus {
             border-color: var(--orange);
             box-shadow: inset 0px 0px 10px rgba(255, 121, 121, 0.25)
