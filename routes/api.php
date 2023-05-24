@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\api\Auth\RegisterController;
+use App\Http\Controllers\api\Auth\VerificationController;
 use App\Http\Controllers\api\AuthController;
 use App\Http\Controllers\api\CommunicationController;
 use App\Http\Controllers\api\FileController;
@@ -43,7 +44,7 @@ Route::group([
     Route::post('register', [RegisterController::class, 'register']);
     Route::post('refresh', [AuthController::class, 'refresh']);
     Route::post('me', [AuthController::class, 'me']);
-    Route::get('email/verify/{id}/{hash}', [\App\Http\Controllers\Auth\VerificationController::class, 'verify'])->name(
+    Route::get('email/verify/{id}/{hash}', [VerificationController::class, 'verify'])->name(
         'api.verification.verify'
     );
 });

@@ -5,6 +5,7 @@ namespace App\Mail;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\URL;
 
 class WelcomeMail extends Mailable
@@ -26,7 +27,7 @@ class WelcomeMail extends Mailable
         $url = URL::temporarySignedRoute(
             'api.verification.verify', now()->addHour(), [
                 'id' => $this->data['user']->id,
-                'hash' => sha1($this->data['user']->email),
+                'hash' => Hash::make($this->data['user']->email),
             ]
         );
         $this->data['url'] = $url;
