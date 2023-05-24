@@ -38,11 +38,19 @@ export const SectionTimetables = () => {
                     {sectionTimetables && JSON.stringify(sectionTimetables)}
                     <Table>
                         <TableRow head>
-                            <TableCell></TableCell>
-                            <TableCell></TableCell>
-                            <TableCell></TableCell>
-                            <TableCell></TableCell>
+                            <TableCell>Цена занятия</TableCell>
+                            <TableCell>Цена пробного занятия</TableCell>
+                            <TableCell>Кол-во мест</TableCell>
+                            <TableCell>Цена группового занятия</TableCell>
                         </TableRow>
+                        {sectionTimetables && sectionTimetables.map(timetable => (
+                            <TableRow key={timetable.id}>
+                                <TableCell>{timetable.lesson_price}</TableCell>
+                                <TableCell>{timetable.trial_price}</TableCell>
+                                <TableCell>{timetable.group ? timetable.group : '-'}</TableCell>
+                                <TableCell>{timetable.group_price ? timetable.group_price : '-'}</TableCell>
+                            </TableRow>
+                        ))}
                     </Table>
                 </>
             )}

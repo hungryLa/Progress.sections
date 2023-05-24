@@ -13,14 +13,16 @@ export const Login = () => {
     const navigate = useNavigate();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const login = useAuthStore(({ login }) => login, shallow);
-    const user = useAuthStore(({ user }) => user, shallow);
-    const error = useAuthStore(({ error }) => error, shallow);
-    const clearError = useAuthStore(({clearError}) => clearError, shallow)
+    // const login = useAuthStore(({ login }) => login);
+    // const user = useAuthStore(({ user }) => user);
+    // const error = useAuthStore(({ error }) => error);
+    // const clearError = useAuthStore(({clearError}) => clearError)
+    const {login, user, error, clearError} = useAuthStore()
 
     const [formError, setFormError] = useState('')
 
     useEffect(() => {
+        clearError()
         if (user) {
             switch (user.role) {
                 case "admin":
@@ -57,8 +59,13 @@ export const Login = () => {
             setFormError('Пароль должен быть не короче 8 символов')
             return;
         }
+
         if(!formError) {
             await login(email, password);
+        }
+
+        if(error) {
+            setFormError(error)
         }
     };
 
@@ -108,6 +115,7 @@ export const Login = () => {
                                 onChange={passwordHandler}
                             />
                             {formError && <small className="login__error">{formError}</small>}
+                            {error && <small className="login__error">{error}</small>}
                             <Link className="login__link" to={'/password-reset'}>Восстановить пароль</Link>
                             <div className="login__buttons">
                                 <Button type="button" variant={"white"} onClick={handleRedirect}>

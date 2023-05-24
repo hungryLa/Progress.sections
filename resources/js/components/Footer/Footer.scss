@@ -1,5 +1,6 @@
 .footer {
     width: 100%;
+    background-color: var(--white);
 
     &__inner {
         padding: 2rem 0;
@@ -7,9 +8,23 @@
         flex-direction: row;
         align-items: center;
         justify-content: space-between;
+    }
 
-        a {
-            font-weight: 400;
+    &__logo {
+        font-weight: 500;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: .6rem;
+        text-decoration: none;
+        img {
+            display: block;
+            max-width: 100%;
+            width: min-content;
+            height: auto;
+        }
+        span {
+            font-size: var(--m);
         }
     }
 }

@@ -134,6 +134,7 @@ Route::group(['middleware' => 'jwt.auth'], function () {
         Route::group(['prefix' => 'users/{user}/subscriptions'], function () {
             Route::get('', [SubscriptionController::class, 'user_index'])->name('user.subscription.index');
         });
+
         Route::group(['prefix' => 'schools/{school}/subscriptions'], function () {
             Route::get('', [SubscriptionController::class, 'index'])->name('school.subscription.index');
             Route::group(['middleware' => 'role:schools_owner'], function () {

@@ -30,6 +30,4 @@ class ResetPasswordController extends Controller
     public function redirectTo(){
         return route('cabinet.main');
     }
-
-
 }

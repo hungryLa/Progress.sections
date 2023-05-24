@@ -9,14 +9,14 @@ export const Menu = ({ isActive }) => {
     const user = useAuthStore(({ user }) => user);
 
     useEffect(() => {
-        const documentWidth = document.documentElement.clientWidth;
-        const windowWidth = window.innerWidth;
-        const scrollbarWidth = windowWidth - documentWidth;
-        document.body.style.paddingRight = scrollbarWidth + "px";
+        // const documentWidth = document.documentElement.clientWidth;
+        // const windowWidth = window.innerWidth;
+        // const scrollbarWidth = windowWidth - documentWidth;
+        // document.body.style.paddingRight = scrollbarWidth + "px";
         if (isActive) {
-            document.body.style.overflow = "hidden";
+            document.body.style.position = "fixed";
         } else {
-            document.body.style.overflow = "auto";
+            document.body.style.position = "relative";
         }
     }, [isActive]);
 

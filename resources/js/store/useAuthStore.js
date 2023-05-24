@@ -17,7 +17,6 @@ const useAuthStore = create(
                 try {
                     set({loading: true})
                     const response = await api.post(`/login?email=${email}&password=${password}`)
-                    console.log(response)
                     const {access_token, expires_in} = await response.data
                     set({
                         token: access_token,
@@ -29,7 +28,11 @@ const useAuthStore = create(
                         localStorage.setItem('token', access_token)
                     }
                 } catch (error) {
-                    console.log(error.response);
+                    set({
+                        user: null,
+                        token: '',
+                        error: "Неверный логин или пароль"
+                    })
                 }
                 try {
                     const response = await api.post('/me')
