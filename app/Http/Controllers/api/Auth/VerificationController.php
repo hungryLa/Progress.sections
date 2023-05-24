@@ -12,7 +12,7 @@ class VerificationController
     {
         try {
             $user = User::find($id);
-            if (Hash::check($hash, $user->email)) {
+            if (Hash::check($user->email, $hash)) {
                 $success = $user->update([
                     'email_verified_at' => Carbon::now()
                 ]);
