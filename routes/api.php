@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\api\Auth\RegisterController;
 use App\Http\Controllers\api\AuthController;
 use App\Http\Controllers\api\CommunicationController;
 use App\Http\Controllers\api\FileController;
@@ -39,6 +40,7 @@ Route::group([
 ], function ($router) {
     Route::post('login', [AuthController::class, 'login']);
     Route::post('logout', [AuthController::class, 'logout']);
+    Route::post('register', [RegisterController::class, 'register']);
     Route::post('refresh', [AuthController::class, 'refresh']);
     Route::post('me', [AuthController::class, 'me']);
 });
@@ -212,17 +214,4 @@ Route::group(['middleware' => 'jwt.auth'], function () {
             Route::post('changeImage', [FileController::class, 'changeImage'])->name('cabinet.files.changeImage');
         });
     });
-
-    Route::post('/email/verification', function (Request $request) {
-        $request->user()->sendEmailVerificationNotification();
-        session(['email' => __('send')]);
-
-        return back()->with(
-            'message',
-            'На указанную почту отправлено письмо со ссылкой для подтверждения электронной почты.'
-        );
-    })->middleware(['auth', 'throttle:6,1'])->name('verification.send');
-    Auth::routes([
-        'verify' => true
-    ]);
 });
