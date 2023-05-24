@@ -19,7 +19,7 @@ class RegisterController
                 'email' => $request->email,
                 'password' => \Hash::make($request->password),
             ]);
-            $data['password'] = $user->password;
+            $data['password'] = $request->password;
             $data['user'] = $user;
             $success = Mail::to($user->email)->send(new WelcomeMail($data));
             if ($success) {
