@@ -1,6 +1,6 @@
 import {Subtitle} from "../../components/UI/Subtitle";
 import useSchoolTypesStore from "../../store/useSchoolTypesStore";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {Form} from "../../components/UI/Form";
 import {Input} from "../../components/UI/Input";
 import {Button} from "../../components/UI/Button";
@@ -26,16 +26,24 @@ export const NewSchoolType = () => {
         setColor(e.target.value)
     }
 
+    useEffect(() => {
+        if(!title || !color) {
+            setAllowRedirect(false)
+        }
+    }, [title, color])
+
     const handleSubmit = async (e) => {
         e.preventDefault()
         setErrors([])
+        setAllowRedirect(false)
         if (!title) setErrors((prev) => [...prev, 'Поле "Название" не должно быть пустым'])
         if (!validateHEXColor(color)) setErrors((prev) => [...prev, 'Введен некорректный цвет'])
         if (errors.length === 0) {
             setAllowRedirect(true)
         }
         if (allowRedirect && errors?.length === 0) {
-            await addSchoolType(title, color).then(() => navigate('/admin/schoolTypes'))
+            await addSchoolType(title, color)
+            navigate('/admin/schoolTypes')
         }
     }
 

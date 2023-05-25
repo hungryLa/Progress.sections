@@ -6,6 +6,7 @@ import useSchoolTypesStore from "./useSchoolTypesStore";
 const useSchoolsStore = create(
     persist(
         (set, get) => ({
+            allSchools: [],
             schools: [],
             school: {},
             loading: false,
@@ -19,10 +20,11 @@ const useSchoolsStore = create(
                 try {
                     set({loading: true})
                     const response = await api.get('cabinet/schools/')
-                    const {school} = response.data
+                    const {school, all_schools} = response.data
                     set({
                         loading: false,
-                        schools: [...school]
+                        schools: [...school],
+                        allSchools: [...all_schools]
                     })
                 } catch (error) {
                     set({loading: false, error})

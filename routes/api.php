@@ -102,6 +102,7 @@ Route::group(['middleware' => 'jwt.auth'], function () {
             Route::get('', [TimetableSectionController::class, 'index'])->name('sections.timetables.index');
             Route::get('create', [TimetableSectionController::class, 'create'])->name('sections.timetables.create');
             Route::post('store', [TimetableSectionController::class, 'store'])->name('sections.timetables.store');
+            Route::get('{timetableSection}', [TimetableSectionController::class, 'getOne'])->name('section-timetable.get-one');
             Route::get('{timetableSection}/edit', [TimetableSectionController::class, 'edit'])->name(
                 'sections.timetables.edit'
             );

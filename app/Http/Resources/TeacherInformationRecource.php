@@ -17,7 +17,7 @@ class TeacherInformationRecource extends JsonResource
         return [
             'teacher_id' => $this->teacher_id,
             'occupations' => $this->occupations,
-            'teacher_experience' => $this->teacher_experience,
+            'teaching_experience' => $this->teaching_experience,
             'about_me' => $this->about_me,
         ];
     }

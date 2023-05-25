@@ -13,16 +13,16 @@ export const Login = () => {
     const navigate = useNavigate();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    // const login = useAuthStore(({ login }) => login);
-    // const user = useAuthStore(({ user }) => user);
-    // const error = useAuthStore(({ error }) => error);
-    // const clearError = useAuthStore(({clearError}) => clearError)
     const {login, user, error, clearError} = useAuthStore()
 
     const [formError, setFormError] = useState('')
 
     useEffect(() => {
         clearError()
+        if (user && !user.email_verified_at) {
+            console.log('true')
+            navigate("/not-verified", {replace: true})
+        }
         if (user) {
             switch (user.role) {
                 case "admin":
@@ -35,7 +35,7 @@ export const Login = () => {
                     navigate("/schools_owner/schools");
                     break;
                 default:
-                    navigate("/schedule");
+                    navigate("/user/schedule");
                     break;
             }
         }

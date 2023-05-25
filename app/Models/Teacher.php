@@ -33,7 +33,7 @@ class Teacher extends Model
     {
         return $this->hasMany(File::class, 'model_id')
             ->where('model_type', 'LIKE', self::TYPE)
-            ->where('type', 'LIKE', File::TYPE['image'])->orderBy('position', 'asc');
+            ->where('type', 'LIKE', File::TYPE['images'])->orderBy('position', 'asc');
     }
 
     public function school(School $school){

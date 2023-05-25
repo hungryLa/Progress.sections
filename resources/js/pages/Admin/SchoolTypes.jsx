@@ -37,19 +37,27 @@ export const SchoolTypes = () => {
     return (
         <>
             <Subtitle>Типы школ</Subtitle>
-            {loading ? <Loader /> : (
+            {loading ? <Loader/> : (
                 <>
-                    <Button type={'button'} variant={'blue'} onClick={() => openCreateSchoolTypeHandler()}>Создать тип школы</Button>
+                    <Button type={'button'} variant={'blue'} onClick={() => openCreateSchoolTypeHandler()}>Создать тип
+                        школы</Button>
                     <Table className={'school-types__table'}>
                         <TableRow head>
                             <TableCell>Название</TableCell>
                             <TableCell>Цвет</TableCell>
                             <TableCell>Действия</TableCell>
                         </TableRow>
-                        {schoolTypes && schoolTypes.map(schoolType => (
+                        {schoolTypes.length > 0 ? schoolTypes.map(schoolType => (
                             <TableRow key={schoolType.id}>
                                 <TableCell>{schoolType.title}</TableCell>
-                                <TableCell><div style={{backgroundColor: schoolType.color, width: '100%', height: '2.4rem', borderRadius: '.4rem'}}></div></TableCell>
+                                <TableCell>
+                                    <div style={{
+                                        backgroundColor: schoolType.color,
+                                        width: '100%',
+                                        height: '2.4rem',
+                                        borderRadius: '.4rem'
+                                    }}></div>
+                                </TableCell>
                                 <TableCell>
                                     <button onClick={() => chooseSchoolTypeToEdit(schoolType.id)}>
                                         <svg width={24} height={24} fill={'currentColor'}
@@ -71,14 +79,20 @@ export const SchoolTypes = () => {
                                     </button>
                                 </TableCell>
                             </TableRow>
-                        ))}
+                        )) : <TableRow>
+                            <TableCell></TableCell>
+                            <TableCell>
+                                <div style={{textAlign: "center", width: '100%'}}>Нет типов школ</div>
+                            </TableCell>
+                            <TableCell></TableCell>
+                        </TableRow>}
                     </Table>
                 </>
             )}
 
             <Modal isActive={modalIsActive}>
                 <Title>Удаление типа школы</Title>
-                <p>Вы действительно хотите удалить тип школы  {schoolTypeToDelete.title}?</p>
+                <p>Вы действительно хотите удалить тип школы {schoolTypeToDelete.title}?</p>
                 <div className={'modal__buttons'}>
                     <Button variant={'green'} onClick={async () => {
                         await deleteSchoolType(schoolTypeToDelete.id)

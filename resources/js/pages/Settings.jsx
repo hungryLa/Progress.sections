@@ -14,6 +14,7 @@ import {Error} from "../components/Error";
 import {validatePhone} from "../helpers/validatePhone";
 import {toast, ToastContainer} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css'
+import {Checkbox} from "../components/UI/Checkbox";
 
 export const Settings = () => {
     const {user: authUser, loading: authLoading} = useAuthStore()
@@ -25,7 +26,9 @@ export const Settings = () => {
         changeInformation,
         teacherInformation,
         changePassword,
-        createOrUpdateTeacherInformation
+        createOrUpdateTeacherInformation,
+        addTeacherImage,
+        deleteTeacherImage
     } = useUsersStore();
     const {
         loading: occupationLoading,
@@ -40,10 +43,13 @@ export const Settings = () => {
     const [oldPassword, setOldPassword] = useState('')
     const [newPassword, setNewPassword] = useState('')
     const [occupations, setOccupations] = useState([])
+    const [image, setImage] = useState(null)
+    const [imageToDelete, setImageToDelete] = useState(null)
     const [teachingExperience, setTeachingExperience] = useState('')
     const [aboutMe, setAboutMe] = useState('')
     const [occupationsForSelect, setOccupationsForSelect] = useState([])
     const [errors, setErrors] = useState([])
+    const [allowToast, setAllowToast] = useState(false)
 
     const handleFullName = (e) => {
         setErrors([])
@@ -77,6 +83,19 @@ export const Settings = () => {
         setErrors([])
         setAboutMe(e.target.value)
     }
+    const handleImage = (e) => {
+        setErrors([])
+        setImage(e.target.files)
+        console.log(image)
+    }
+    const handleSelect = (e) => {
+        setErrors([])
+        if (e.target.checked) {
+            setImageToDelete(e.target.value)
+        } else {
+            setImageToDelete(null)
+        }
+    }
     const handleError = (message) => setErrors((prev) => [...prev, message])
 
     useEffect(() => {
@@ -89,47 +108,90 @@ export const Settings = () => {
         setFullName(user?.full_name)
         setEmail(user?.email)
         setPhone(user?.phone_number)
-        console.log(teacherInformation)
+        console.log('user', user)
     }, [user?.full_name, user?.email, user?.phone_number]);
+
+    const isUserDataUnchanged = user?.full_name === fullName && user?.email === email && user?.phone_number === phone
+    const isTeacherDataUnchanged =
+        teacherInformation?.occupations === occupations
+        && teacherInformation?.teaching_experience === teachingExperience
+        && teacherInformation?.about_me === aboutMe
+
+    useEffect(() => {
+        if (!fullName || !email || !phone) {
+            setAllowToast(false)
+        }
+        if (fullName && email && phone) {
+            if (isUserDataUnchanged) {
+                setAllowToast(false)
+            }
+        }
+        if (teacherInformation) {
+            console.log(teacherInformation)
+            const teacherOccupations = []
+            allOccupations.forEach(occupation => {
+                teacherInformation?.occupations?.which_occupations.forEach(item => {
+                    if (occupation.title === item) {
+                        teacherOccupations.push({value: occupation.id, label: occupation.title})
+                    }
+                })
+            })
+
+            setOccupations(teacherOccupations)
+            setAboutMe(teacherInformation?.about_me || '')
+            setTeachingExperience(teacherInformation?.teaching_experience || '')
+            if (occupations && teachingExperience && aboutMe) {
+                if (isTeacherDataUnchanged) {
+                    setAllowToast(false)
+                }
+            }
+        }
+    }, [fullName, email, phone])
 
     const handleSubmit = async (e) => {
         e.preventDefault()
         setErrors([])
-        // CHANGE USER DATA
+        setAllowToast(false)
         if (fullName || email || phone) {
             if (!validateEmail(email)) {
                 handleError('Почта введена некорректно')
             }
             if (!validatePhone(phone)) {
-                setErrors((prev) => [...prev, 'Номер введен некорректно'])
+                handleError('Номер введен некорректно')
             }
-            if (errors.length === 0) await changeInformation(user?.id, fullName, phone, email).then(() => {
-                toast('Данные изменены');
-            })
+            if (errors.length === 0 && !isUserDataUnchanged) {
+                setAllowToast(true)
+                await changeInformation(user?.id, fullName, phone, email)
+                if (allowToast) toast('Данные изменены')
+            }
         }
 
-        // CHANGE PASSWORDS
         if (oldPassword || newPassword) {
             if (newPassword.length < 8) setErrors((prev) => [...prev, 'Минимальная длина пароля 8 символов'])
-            if (errors.length === 0) await changePassword(user.id, oldPassword, newPassword).then(() => {
-                toast('Пароль изменен');
-            })
+            if (errors.length === 0) {
+                await changePassword(user.id, oldPassword, newPassword)
+                toast('Пароль изменен')
+            }
         }
 
-        if ((user?.role === 'teacher') && (occupations || teachingExperience || aboutMe)) {
-            console.log(occupations)
+        if ((user?.role === 'teacher') && (occupations.length > 0 || teachingExperience || aboutMe)) {
             if (occupations.length === 0) setErrors((prev) => [...prev, 'Нужно выбрать хотя бы один вид деятельности'])
             if (occupations.length > 5) setErrors((prev) => [...prev, 'Видов деятельности не может быть более 5'])
             if (teachingExperience.length < 48) setErrors((prev) => [...prev, 'Поле "Опыт преподавания" должно содержать не менее 48 символов'])
             if (aboutMe.length < 48) setErrors((prev) => [...prev, 'Поле "Обо мне" должно содержать не менее 48 символов'])
-            if (errors.length === 0) {
+            if (errors.length === 0 && !isTeacherDataUnchanged) {
                 await createOrUpdateTeacherInformation(
-                    user.id,
-                    occupations.map(item => item.label),
+                    user?.id,
+                    occupations,
                     teachingExperience,
                     aboutMe
-                ).then(() => toast('Информация о преподавателе изменена'))
+                )
+                if (allowToast) toast('Данные о преподавателе изменены')
             }
+        }
+
+        if ((user?.role === 'teacher') && (!!image)) {
+            await addTeacherImage(user?.id, image)
         }
 
         await getOneUser(user.id)
@@ -234,6 +296,26 @@ export const Settings = () => {
                                                     }}
                                                 />
                                             </div>
+                                            <Input
+                                                label={'Изображение'}
+                                                type={'file'}
+                                                onChange={handleImage}
+                                            />
+                                        </div>
+                                        <div className="one-col">
+                                            <span
+                                                className="delete-images-title">Выберите изображение для удаления</span>
+                                            {user && user?.images.map(image => (
+                                                <Checkbox
+                                                    key={image.id}
+                                                    image
+                                                    onChange={(e) => handleSelect(e)}
+                                                    value={image.id}
+                                                    id={image.id}
+                                                    isChecked={imagesToDelete.some(item => item == image.id)}
+                                                    label={<img src={`/storage/${image.path}`} alt={image.path}/>}
+                                                />
+                                            ))}
                                         </div>
                                         <div className="one-col">
                                             <TextArea
@@ -263,15 +345,17 @@ export const Settings = () => {
                     />
                 </>
             )}
-            <ToastContainer position="top-center"
-                            autoClose={5000}
-                            hideProgressBar={true}
-                            newestOnTop={false}
-                            closeOnClick
-                            pauseOnFocusLoss
-                            draggable
-                            pauseOnHover
-                            theme="light"/>
+            <ToastContainer
+                position="top-center"
+                autoClose={5000}
+                hideProgressBar={true}
+                newestOnTop={false}
+                closeOnClick
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="light"
+            />
         </>
     );
 };

@@ -21,10 +21,6 @@ export const Navigation = ({place, isAuthenticated = true}) => {
                 title: 'О секции',
                 path: `/schools_owner/schools/${schoolId}/sections/${sectionId}`,
             },
-            // {
-            //     title: 'Расписания',
-            //     path: `/schools_owner/schools/${schoolId}/sections/${sectionId}/timetables`
-            // },
             {
                 title: 'Расписания секции',
                 path: `/schools_owner/schools/${schoolId}/sections/${sectionId}/sectionTimetables`
@@ -84,20 +80,16 @@ export const Navigation = ({place, isAuthenticated = true}) => {
                 path: "/admin/users",
             },
             {
-                title: "Список секций",
-                path: "/admin/sections",
-            },
-            {
-                title: "Комиссия",
-                path: "/admin/commission",
-            },
-            {
                 title: "Виды деятельности",
                 path: "/admin/occupations"
             },
             {
                 title: "Типы школ",
                 path: "/admin/schoolTypes/"
+            },
+            {
+                title: "Комиссия",
+                path: "/admin/commission",
             },
             {
                 title: "Выписки",
@@ -111,28 +103,46 @@ export const Navigation = ({place, isAuthenticated = true}) => {
         user: [
             {
                 title: "Мое расписание",
-                path: "schedule",
+                path: "/user/schedule",
             },
             {
                 title: "Абонементы",
-                path: "subscriptions",
+                path: "/user/subscriptions",
             },
             {
                 title: "Школы",
-                path: "schools",
+                path: "/user/schools",
             },
             {
                 title: "Избранное",
-                path: "favorites",
+                path: "/user/favorites",
             },
             {
                 title: "Аккаунты",
-                path: "accounts",
+                path: "/user/accounts",
             },
             {
                 title: "Настройки",
-                path: "settings",
+                path: "/user/settings",
             },
+        ],
+        userSchool: [
+            {
+                title: 'О школе',
+                path: `/user/schools/${schoolId}`
+            },
+            {
+                title: "Секции",
+                path: `/user/schools/${schoolId}/sections`,
+            },
+            {
+                title: "Преподаватели",
+                path: `/user/schools/${schoolId}/teachers`,
+            },
+            {
+                title: "Назад",
+                path: '/user/schools'
+            }
         ],
         teacher: [
             {
@@ -196,6 +206,9 @@ export const Navigation = ({place, isAuthenticated = true}) => {
         }
         if(user?.role === 'user') {
             setLinks(navigationLinks.user)
+        }
+        if(user?.role === 'user' && schoolId && location.pathname.split('/')[3] == schoolId) {
+            setLinks(navigationLinks.userSchool)
         }
         if(user?.role === 'schools_owner' && schoolId && location.pathname.split('/')[3] == schoolId) {
             setLinks(navigationLinks.school)

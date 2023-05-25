@@ -36,7 +36,9 @@ class  UserController extends Controller
                 $teacher = $user->getTeacher();
                 $teacher_information = $teacher->information;
                 $data['user'] = new UserResource($teacher);
-                $data['teacher_information'] = new TeacherInformationRecource($teacher_information);
+                if ($teacher_information !== null) {
+                    $data['teacher_information'] = new TeacherInformationRecource($teacher_information);
+                }
             } else {
                 $data['user'] = new UserResource($user);
             }

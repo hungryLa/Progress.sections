@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import {BrowserRouter, Navigate, Route, Routes, useLocation} from "react-router-dom";
 import {UnauthorizedLayout} from "./pages/layouts/UnauthorizedLayout";
 import {MainPage} from "./pages/Main.page";
@@ -6,7 +6,7 @@ import {AuthorizedLayout} from "./pages/layouts/AuthorizedLayout";
 import useAuthStore from "./store/useAuthStore";
 import {Users} from "./pages/Admin/Users";
 import {SchoolsTimetables} from "./pages/SchoolsOwner/SchoolsTimetables";
-import { Timetables } from "./pages/Teacher/Timetables";
+import {Timetables} from "./pages/Teacher/Timetables";
 import {NewUser} from "./pages/Admin/NewUser";
 import {Sections} from "./pages/SchoolsOwner/Sections";
 import {Schools} from "./pages/SchoolsOwner/Schools";
@@ -30,6 +30,11 @@ import {Settings} from "./pages/Settings";
 import {Teacher} from "./pages/SchoolsOwner/Teacher";
 import {SectionTimetables} from "./pages/SchoolsOwner/SectionTimetables";
 import {NewSectionTimetable} from "./pages/SchoolsOwner/NewSectionTimetable";
+import {EditSectionTimetable} from "./pages/SchoolsOwner/EditSectionTimetable";
+import {Accounts} from "./pages/User/Accounts";
+import {NewAccount} from "./pages/User/NewAccount";
+import {UserSchools} from "./pages/User/UserSchools";
+import {UserSchool} from "./pages/User/UserSchool";
 
 
 export const App = () => {
@@ -56,7 +61,6 @@ export const App = () => {
                         <Route path={'/admin/schoolTypes/'} element={<SchoolTypes/>}/>
                         <Route path={'/admin/schoolTypes/new'} element={<NewSchoolType/>}/>
                         <Route path={'/admin/schoolTypes/:schoolTypeId/edit'} element={<EditSchoolType/>}/>
-                        <Route path={'/admin/sections'} element={<Sections/>}/>
                         <Route path={'/admin/commission'} element={<h1>Комиссия</h1>}/>
                         <Route path={'/admin/extracts'} element={<h1>Выписки</h1>}/>
                         <Route path={'/admin/settings'} element={<Settings />}/>
@@ -93,7 +97,7 @@ export const App = () => {
                         />
                         <Route
                             path={'/schools_owner/schools/:schoolId/sections/:sectionId/sectionTimetables/:sectionTimetableId/edit'}
-                            element={<h1>Редактирование расписания секции</h1>}
+                            element={<EditSectionTimetable />}
                         />
                         {/* TIMETABLES */}
                         <Route path={'/schools_owner/schools/:schoolId/timetables'} element={<SchoolsTimetables/>}/>
@@ -126,13 +130,15 @@ export const App = () => {
                 )}
 
                 {user && user.role === 'user' && (
-                    <Route path={'/'} element={<AuthorizedLayout/>}>
-                        <Route path={'/schedule'} element={<h1>Моё расписание</h1>}/>
-                        <Route path={'/schools'} element={<h1>Школы</h1>}/>
-                        <Route path={'/favorites'} element={<h1>Избранное</h1>}/>
-                        <Route path={'/subscriptions'} element={<h1>Абонементы</h1>}/>
-                        <Route path={'/accounts'} element={<h1>Аккаунты</h1>}/>
-                        <Route path={'/settings'} element={<Settings />}/>
+                    <Route path={'/user/'} element={<AuthorizedLayout/>}>
+                        <Route path={'/user/schedule'} element={<h1>Моё расписание</h1>}/>
+                        <Route path={'/user/schools'} element={<UserSchools />}/>
+                        <Route path={'/user/schools/:schoolId'} element={<UserSchool />} />
+                        <Route path={'/user/favorites'} element={<h1>Избранное</h1>}/>
+                        <Route path={'/user/subscriptions'} element={<h1>Абонементы</h1>}/>
+                        <Route path={'/user/accounts'} element={<Accounts />}/>
+                        <Route path={'/user/accounts/new'} element={<NewAccount />}/>
+                        <Route path={'/user/settings'} element={<Settings />}/>
                     </Route>
                 )}
 
