@@ -147,23 +147,23 @@ export const Navigation = ({place, isAuthenticated = true}) => {
         teacher: [
             {
                 title: "Секции",
-                path: "sections",
+                path: "/teacher/sections",
             },
             {
                 title: "Школы",
-                path: "schools",
+                path: "/teacher/schools",
             },
             {
                 title: "Мои расписания",
-                path: "my-timetables",
+                path: "/teacher/timetables",
             },
             {
                 title: "Заявки",
-                path: "applications",
+                path: "/teacher/applications",
             },
             {
                 title: "Настройки",
-                path: "settings",
+                path: "/teacher/settings",
             },
         ],
         unauthorized: [

@@ -4,6 +4,7 @@ import {useParams} from "react-router-dom";
 import {useEffect} from "react";
 import {Loader} from "../../components/UI/Loader";
 import {toast, ToastContainer} from "react-toastify";
+import {TeacherProfile} from "../../components/TeacherProfile";
 
 export const Teacher = () => {
     const {schoolId, teacherId} = useParams()
@@ -16,16 +17,18 @@ export const Teacher = () => {
 
     return (
         <>
-            {loading ? <Loader /> : (
-                <>
-                    <Subtitle>{teacher?.full_name}</Subtitle>
-                    <div className="two-col">
-                        <span>Электронная почта: <a href={`mailto:${teacher?.email}`}>{teacher?.email}</a></span>
-                        {teacher?.phone ? <span>Телефон: <a href={`tel:${teacher?.phone}`}>{teacher?.phone}</a></span> : ''}
-                    </div>
-                </>
+            {loading ? <Loader/> : (
+                <TeacherProfile
+                    fullName={teacher.full_name}
+                    images={teacher?.images ? teacher.images : null}
+                    email={teacher?.email}
+                    phone={teacher?.phone_number}
+                    occupations={teacher?.information?.occupations?.which_occupations}
+                    about={teacher?.information?.about_me}
+                    experience={teacher?.information?.teaching_experience}
+                />
             )}
-            <ToastContainer />
+            <ToastContainer/>
         </>
     )
 }

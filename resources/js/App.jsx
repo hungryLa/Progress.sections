@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React from "react";
 import {BrowserRouter, Navigate, Route, Routes, useLocation} from "react-router-dom";
 import {UnauthorizedLayout} from "./pages/layouts/UnauthorizedLayout";
 import {MainPage} from "./pages/Main.page";
@@ -6,7 +6,6 @@ import {AuthorizedLayout} from "./pages/layouts/AuthorizedLayout";
 import useAuthStore from "./store/useAuthStore";
 import {Users} from "./pages/Admin/Users";
 import {SchoolsTimetables} from "./pages/SchoolsOwner/SchoolsTimetables";
-import {Timetables} from "./pages/Teacher/Timetables";
 import {NewUser} from "./pages/Admin/NewUser";
 import {Sections} from "./pages/SchoolsOwner/Sections";
 import {Schools} from "./pages/SchoolsOwner/Schools";
@@ -35,6 +34,8 @@ import {Accounts} from "./pages/User/Accounts";
 import {NewAccount} from "./pages/User/NewAccount";
 import {UserSchools} from "./pages/User/UserSchools";
 import {UserSchool} from "./pages/User/UserSchool";
+import {TeacherTimetables} from "./pages/Teacher/TeacherTimetables";
+import {NewTeacherTimeTable} from "./pages/Teacher/NewTeacherTimeTable";
 
 
 export const App = () => {
@@ -143,13 +144,13 @@ export const App = () => {
                 )}
 
                 {user && user.role === 'teacher' && (
-                    <Route path={'/'} element={<AuthorizedLayout/>}>
-                        <Route path={'/my-timetables'} element={<Timetables/>}/>
-                        <Route path={'/sections'} element={<h1>Секции</h1>}/>
-                        <Route path={'/schools'} element={<h1>Школы</h1>}/>
-                        <Route path={'/my-timetables'} element={<h1>Мои расписания</h1>}/>
-                        <Route path={'/applications'} element={<h1>Заявки</h1>}/>
-                        <Route path={'/settings'} element={<Settings />}/>
+                    <Route path={'/teacher/'} element={<AuthorizedLayout/>}>
+                        <Route path={'/teacher/sections'} element={<h1>Секции</h1>}/>
+                        <Route path={'/teacher/schools'} element={<h1>Школы</h1>}/>
+                        <Route path={'/teacher/timetables'} element={<TeacherTimetables />}/>
+                        <Route path={'/teacher/timetables/new'} element={<NewTeacherTimeTable />}/>
+                        <Route path={'/teacher/applications'} element={<h1>Заявки</h1>}/>
+                        <Route path={'/teacher/settings'} element={<Settings />}/>
                     </Route>
                 )}
 
