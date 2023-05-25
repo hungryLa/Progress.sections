@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\TimetableSection\StoreRequest;
+use App\Http\Resources\SectionRecource;
+use App\Http\Resources\TimetableSectionRecource;
 use App\Models\Section;
 use App\Models\TimetableSection;
 use Illuminate\Http\Request;

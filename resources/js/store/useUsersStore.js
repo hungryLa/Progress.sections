@@ -46,7 +46,6 @@ const useUsersStore = create(
                         user: response?.data?.user,
                         teacherInformation: response?.data?.teacher_information
                     })
-                    // console.log(get().teacherInformation)
                 } catch (error) {
                     set({loading: false})
                 }
@@ -74,16 +73,14 @@ const useUsersStore = create(
                     })
                     set({loading: false})
                 } catch (error) {
-                    console.log(error)
                     set({loading: false})
                 }
             },
             createOrUpdateTeacherInformation: async (userId, occupations, teachingExperience, aboutMe) => {
                 try {
                     set({loading: true})
-
                     const response = await api.post(`/cabinet/users/${userId}/createOrUpdateTeacherInformation`, {
-                        'occupations': occupations,
+                        'occupations': occupations.map(item => item.label),
                         'teaching_experience': teachingExperience,
                         'about_me': aboutMe
                     })
@@ -91,6 +88,29 @@ const useUsersStore = create(
                 } catch (error) {
                     set({loading: false})
                 }
+            },
+            addTeacherImage: async (teacherId, images) => {
+                try {
+                    set({loading:true, error: null})
+                    const formData = new FormData();
+                    formData.append(`files[0]`, images[0])
+                    const response = await api.post(`/cabinet/files/storeImages/teacher/${teacherId}/images`, formData)
+                    set({loading: false})
+                } catch (error) {
+                    set({loading: true, error})
+                }
+            },
+            deleteTeacherImage: async (checkbox) => {
+              try {
+                  set({loading: true, error: null})
+                  await api.delete(`/cabinet/files/deleteImagesThroughCheckBox?checkbox=${checkbox}`)
+                  set({loading: false})
+              } catch (error) {
+                  set({
+                      loading: false,
+                      error: Object.keys(error?.response?.data?.errors).map((key, value) => error.response.data.errors[key])
+                  })
+              }
             },
             addUser: async (user) => {
                 set({

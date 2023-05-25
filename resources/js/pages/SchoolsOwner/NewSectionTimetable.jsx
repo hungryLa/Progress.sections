@@ -21,7 +21,6 @@ export const NewSectionTimetable = () => {
     } = useTimetablesStore()
     const {
         loading,
-        error,
         addSectionTimetable
     } = useSectionTimetables()
     const navigate = useNavigate()
@@ -83,7 +82,9 @@ export const NewSectionTimetable = () => {
             groupPrice
         )
 
-        if (!!timetable && !!lessonPrice && !!trialPrice && errors.length === 0) navigate(`/schools_owner/schools/${schoolId}/sections/${sectionId}/sectionTimetables`)
+        if (!!timetable && !!lessonPrice && !!trialPrice && errors.length === 0) {
+            navigate(`/schools_owner/schools/${schoolId}/sections/${sectionId}/sectionTimetables`)
+        }
     }
 
     return (

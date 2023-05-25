@@ -29,6 +29,15 @@ class TimetableSectionController extends Controller
         return $data;
     }
 
+    public function getOne(Section $section, TimetableSection $timetableSection) {
+        try {
+            $section_timetable = TimetableSection::where('id', $timetableSection->id)->first();
+            return new TimetableSectionRecource($section_timetable);
+        } catch (\Exception $exception) {
+            return $exception->getMessage();
+        }
+    }
+
     public function store(Section $section, StoreRequest $request)
     {
         try {
