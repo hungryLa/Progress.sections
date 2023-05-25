@@ -1,11 +1,11 @@
 <?php
 
+use App\Models\File;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('files', function (Blueprint $table) {
             $table->id();
-            $table->enum('model_type',\App\Models\General::TYPES)->nullable();
+            $table->enum('model_type', File::TYPES)->nullable();
             $table->unsignedBigInteger('model_id')->nullable();
-            $table->enum('type',\App\Models\File::TYPE);
+            $table->enum('type', File::TYPE);
             $table->unsignedSmallInteger('position')->nullable();
             $table->string('name');
             $table->string('original_name');

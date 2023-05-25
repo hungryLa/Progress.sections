@@ -66,8 +66,6 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-//        $data['user'] = $user;
-//        return $data;
         return view('cabinet.users.edit', compact('user'));
     }
 
