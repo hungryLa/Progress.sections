@@ -287,6 +287,13 @@ img {
     }
 }
 
-.allday-hidden {
-    //display: none;
+.fc-col-header-cell-cushion {
+    padding: 1rem !important;
+    font-weight: 500;
+}
+
+.event {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
 }

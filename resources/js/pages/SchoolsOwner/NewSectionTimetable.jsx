@@ -18,7 +18,8 @@ export const NewSectionTimetable = () => {
         loading: timetablesLoading,
         getSchoolOwnerTimetables,
         schoolOwnerTimetables,
-        getSchoolsAndTeachersTimetables
+        getSchoolsAndTeachersTimetables,
+        allTimetables
     } = useTimetablesStore()
     const {
         loading,
@@ -34,14 +35,9 @@ export const NewSectionTimetable = () => {
     const [errors, setErrors] = useState([])
 
     useEffect(() => {
-        const fetchSchoolTimeTables = async () => {
-            await getSchoolOwnerTimetables(schoolId)
-        }
-
-        fetchSchoolTimeTables()
-
         getSchoolsAndTeachersTimetables(schoolId)
-    }, [schoolId, getSchoolOwnerTimetables])
+
+    }, [schoolId, getSchoolsAndTeachersTimetables])
 
     const handleTimetable = (e) => {
         setErrors([])
@@ -111,11 +107,12 @@ export const NewSectionTimetable = () => {
                                             value={timetable || ''}
                                         >
                                             <option value="" disabled defaultChecked>Выберите расписание</option>
-                                            {schoolOwnerTimetables.map((item) => (
+                                            {allTimetables.map((item) => (
                                                 <option
                                                     key={item?.id}
                                                     value={item?.id}
                                                 >
+                                                    {item?.teacher?.full_name ? item?.teacher?.full_name + ' | ' : ''}
                                                     {item?.weekday?.which_days.map((day, index) => (
                                                         <Fragment
                                                             key={day}>{`${getShortWeekdayName(day)}${index !== item?.weekday?.which_days.length - 1 ? ', ' : ' | '}`}</Fragment>

@@ -6,6 +6,7 @@ const useTimetablesStore = create(
     persist((set, get) => ({
         schoolOwnerTimetables: [],
         teacherTimetables: [],
+        allTimetables: [],
         timetable: {},
         loading: false,
         error: null,
@@ -170,9 +171,22 @@ const useTimetablesStore = create(
         getSchoolsAndTeachersTimetables: async (schoolId) => {
             try {
                 set({loading: true})
-                const response = await api.get(`/cabinet/timetables/all?school=${schoolId}`)
-                console.log(response)
-                set({loading: false})
+                const response = await api.get(`/cabinet/timetables/getAllSchoolTimetables?school=${schoolId}`)
+                const {data} = response.data
+                let allTimetables = []
+                if(data?.timetables?.length > 0) {
+                    allTimetables =data?.timetables
+                    if(data?.teachers?.length > 0) {
+                        data.teachers.forEach(teacher => {
+                            if(teacher?.timetables?.length > 0) {
+                                teacher.timetables.forEach(timetable => {
+                                    allTimetables.push({...timetable, teacher})
+                                })
+                            }
+                        })
+                    }
+                }
+                set({loading: false, allTimetables})
             } catch (error) {
                 set({loading: false})
             }
