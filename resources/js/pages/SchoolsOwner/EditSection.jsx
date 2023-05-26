@@ -53,22 +53,21 @@ export const EditSection = () => {
 
         let errorMessages = {}
 
-        if(!description) {
+        if (!description) {
             errorMessages.description = 'Поле описание не должно быть пустым'
         }
-        if(!contents) {
+        if (!contents) {
             errorMessages.contents = 'Поле содержание не должно быть пустым'
         }
 
         setErrors(errorMessages)
 
-        if(imagesToDelete.length > 0) {
+        if (imagesToDelete.length > 0) {
             await deleteImages(sectionId, imagesToDelete)
         }
-        if(images?.length > 0) {
+        if (images?.length > 0) {
             await addImage(schoolId, sectionId, images)
-        }
-        else {
+        } else {
             await editSection(
                 schoolId,
                 sectionId,
@@ -78,7 +77,7 @@ export const EditSection = () => {
                 images
             )
         }
-        if(error?.length < 1 && !errorMessages.description && !errorMessages.contents) navigate(`/schools_owner/schools/${schoolId}/sections/${sectionId}`)
+        if (error?.length < 1 && !errorMessages.description && !errorMessages.contents) navigate(`/schools_owner/schools/${schoolId}/sections/${sectionId}`)
     }
 
     const handleDelete = async () => {
@@ -90,7 +89,7 @@ export const EditSection = () => {
 
     const handleSelect = (e) => {
         let imageList = [...imagesToDelete]
-        if(e.target.checked) {
+        if (e.target.checked) {
             imageList = [...imagesToDelete, e.target.value]
         } else {
             imageList.splice(imagesToDelete.indexOf(e.target.value), 1)
@@ -138,11 +137,21 @@ export const EditSection = () => {
 
                                     {section?.images?.length > 0 ? (
                                         <div className="one-col">
-                                            <span className="delete-images-title">Выберите изображения для удаления</span>
+                                            <span
+                                                className="delete-images-title"
+                                            >
+                                                Выберите изображения для удаления
+                                            </span>
                                             {section && section?.images.map(image => (
-                                                <Checkbox key={image.id} image onChange={(e) => handleSelect(e)}
-                                                          value={image.id} id={image.id} isChecked={imagesToDelete.some(item => item == image.id)}
-                                                          label={<img src={`/storage/${image.path}`} alt={image.path}/>}/>
+                                                <Checkbox
+                                                    key={image.id}
+                                                    image
+                                                    onChange={(e) => handleSelect(e)}
+                                                    value={image.id}
+                                                    id={image.id}
+                                                    isChecked={imagesToDelete.some(item => item == image.id)}
+                                                    label={<img src={`/storage/${image.path}`} alt={image.path}/>}
+                                                />
                                             ))}
                                         </div>
                                     ) : ''}

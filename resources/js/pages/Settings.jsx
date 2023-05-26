@@ -44,7 +44,7 @@ export const Settings = () => {
     const [newPassword, setNewPassword] = useState('')
     const [occupations, setOccupations] = useState([])
     const [image, setImage] = useState(null)
-    const [imageToDelete, setImageToDelete] = useState(null)
+    const [imagesToDelete, setImagesToDelete] = useState([])
     const [teachingExperience, setTeachingExperience] = useState('')
     const [aboutMe, setAboutMe] = useState('')
     const [occupationsForSelect, setOccupationsForSelect] = useState([])
@@ -86,15 +86,15 @@ export const Settings = () => {
     const handleImage = (e) => {
         setErrors([])
         setImage(e.target.files)
-        console.log(image)
     }
     const handleSelect = (e) => {
-        setErrors([])
-        if (e.target.checked) {
-            setImageToDelete(e.target.value)
+        let imageList = [...imagesToDelete]
+        if(e.target.checked) {
+            imageList = [...imagesToDelete, e.target.value]
         } else {
-            setImageToDelete(null)
+            imageList.splice(imagesToDelete.indexOf(e.target.value), 1)
         }
+        setImagesToDelete(imageList)
     }
     const handleError = (message) => setErrors((prev) => [...prev, message])
 
@@ -108,7 +108,6 @@ export const Settings = () => {
         setFullName(user?.full_name)
         setEmail(user?.email)
         setPhone(user?.phone_number)
-        console.log('user', user)
     }, [user?.full_name, user?.email, user?.phone_number]);
 
     const isUserDataUnchanged = user?.full_name === fullName && user?.email === email && user?.phone_number === phone
@@ -127,7 +126,6 @@ export const Settings = () => {
             }
         }
         if (teacherInformation) {
-            console.log(teacherInformation)
             const teacherOccupations = []
             allOccupations.forEach(occupation => {
                 teacherInformation?.occupations?.which_occupations.forEach(item => {
@@ -192,6 +190,10 @@ export const Settings = () => {
 
         if ((user?.role === 'teacher') && (!!image)) {
             await addTeacherImage(user?.id, image)
+        }
+
+        if ((user?.role === 'teacher') && (imagesToDelete.length > 0)) {
+            await deleteTeacherImage(imagesToDelete)
         }
 
         await getOneUser(user.id)
@@ -304,7 +306,10 @@ export const Settings = () => {
                                         </div>
                                         <div className="one-col">
                                             <span
-                                                className="delete-images-title">Выберите изображение для удаления</span>
+                                                className="delete-images-title"
+                                            >
+                                                Выберите изображение для удаления
+                                            </span>
                                             {user && user?.images.map(image => (
                                                 <Checkbox
                                                     key={image.id}
@@ -312,7 +317,7 @@ export const Settings = () => {
                                                     onChange={(e) => handleSelect(e)}
                                                     value={image.id}
                                                     id={image.id}
-                                                    isChecked={imagesToDelete.some(item => item == image.id)}
+                                                    isChecked={imagesToDelete?.some(item => item == image.id)}
                                                     label={<img src={`/storage/${image.path}`} alt={image.path}/>}
                                                 />
                                             ))}

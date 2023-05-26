@@ -144,26 +144,40 @@ export const Navigation = ({place, isAuthenticated = true}) => {
                 path: '/user/schools'
             }
         ],
+        userSection: [
+            {
+                title: 'О секции',
+                path: `/user/schools/${schoolId}/sections/${sectionId}`
+            },
+            {
+                title: 'Бронь',
+                path: `/user/schools/${schoolId}/sections/${sectionId}/reservation`
+            },
+            {
+                title: "Назад",
+                path: `/user/schools/${schoolId}/sections`
+            }
+        ],
         teacher: [
             {
                 title: "Секции",
-                path: "sections",
+                path: "/teacher/sections",
             },
             {
                 title: "Школы",
-                path: "schools",
+                path: "/teacher/schools",
             },
             {
                 title: "Мои расписания",
-                path: "my-timetables",
+                path: "/teacher/timetables",
             },
             {
                 title: "Заявки",
-                path: "applications",
+                path: "/teacher/applications",
             },
             {
                 title: "Настройки",
-                path: "settings",
+                path: "/teacher/settings",
             },
         ],
         unauthorized: [
@@ -209,6 +223,9 @@ export const Navigation = ({place, isAuthenticated = true}) => {
         }
         if(user?.role === 'user' && schoolId && location.pathname.split('/')[3] == schoolId) {
             setLinks(navigationLinks.userSchool)
+        }
+        if(user?.role === 'user' && schoolId && sectionId && location.pathname.split('/')[5] == sectionId) {
+            setLinks(navigationLinks.userSection)
         }
         if(user?.role === 'schools_owner' && schoolId && location.pathname.split('/')[3] == schoolId) {
             setLinks(navigationLinks.school)

@@ -31,6 +31,14 @@ class TimetableController extends Controller
         return $data;
     }
 
+    public function getSchoolsAndTeachersTimetables(Request $request)
+    {
+        $school = School::find($request['school']);
+        $school_timetables = $school->timetables;
+        $teachers = $school->teachers;
+        dd($school_timetables);
+    }
+
     public function store(Request $request)
     {
         if ($request['teacher']) {

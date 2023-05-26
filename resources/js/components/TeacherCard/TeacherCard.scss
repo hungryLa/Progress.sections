@@ -7,8 +7,13 @@
     &__inner {
         display: flex;
         flex-direction: column;
-        padding: 2.4rem;
+        padding: 1.2rem;
         gap: 1.6rem;
+    }
+
+    &__image {
+        min-height: 25rem;
+        border-radius: .6rem;
     }
 
     &__title {

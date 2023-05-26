@@ -90,6 +90,7 @@ Route::group(['middleware' => 'jwt.auth'], function () {
 
         Route::group(['prefix' => 'timetables'], function () {
             Route::get('', [TimetableController::class, 'index'])->name('timetables.index');
+            Route::get('all', [TimetableController::class, 'getSchoolsAndTeachersTimetables'])->name('timetable.get-schools-and-teachers-timetables');
             Route::get('create', [TimetableController::class, 'create'])->name('timetables.create');
             Route::post('store', [TimetableController::class, 'store'])->name('timetables.store');
             Route::get('{timetable}', [TimetableController::class, 'getOne'])->name('timetable.get-one');

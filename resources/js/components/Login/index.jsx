@@ -29,7 +29,7 @@ export const Login = () => {
                     navigate("/admin/users");
                     break;
                 case "teacher":
-                    navigate("/sections");
+                    navigate("/teacher/sections");
                     break;
                 case "schools_owner":
                     navigate("/schools_owner/schools");
