@@ -90,9 +90,14 @@ Route::group(['middleware' => 'jwt.auth'], function () {
 
         Route::group(['prefix' => 'timetables'], function () {
             Route::get('', [TimetableController::class, 'index'])->name('timetables.index');
-            Route::get('all', [TimetableController::class, 'getSchoolsAndTeachersTimetables'])->name('timetable.get-schools-and-teachers-timetables');
+            Route::get('all', [TimetableController::class, 'getSchoolsAndTeachersTimetables'])->name(
+                'timetable.get-schools-and-teachers-timetables'
+            );
             Route::get('create', [TimetableController::class, 'create'])->name('timetables.create');
             Route::post('store', [TimetableController::class, 'store'])->name('timetables.store');
+            Route::get('getAllSchoolTimetables', [TimetableController::class, 'getAllSchoolTimetables'])->name(
+                'timetables.getAllSchoolTimetables'
+            );
             Route::get('{timetable}', [TimetableController::class, 'getOne'])->name('timetable.get-one');
             Route::get('{timetable}/edit', [TimetableController::class, 'edit'])->name('timetables.edit');
             Route::put('{timetable}/update', [TimetableController::class, 'update'])->name('timetables.update');
@@ -103,7 +108,9 @@ Route::group(['middleware' => 'jwt.auth'], function () {
             Route::get('', [TimetableSectionController::class, 'index'])->name('sections.timetables.index');
             Route::get('create', [TimetableSectionController::class, 'create'])->name('sections.timetables.create');
             Route::post('store', [TimetableSectionController::class, 'store'])->name('sections.timetables.store');
-            Route::get('{timetableSection}', [TimetableSectionController::class, 'getOne'])->name('section-timetable.get-one');
+            Route::get('{timetableSection}', [TimetableSectionController::class, 'getOne'])->name(
+                'section-timetable.get-one'
+            );
             Route::get('{timetableSection}/edit', [TimetableSectionController::class, 'edit'])->name(
                 'sections.timetables.edit'
             );

@@ -62,6 +62,14 @@ class School extends Model
         ]);
     }
 
+    public function teachersResource(): BelongsToMany
+    {
+        return $this->belongsToMany(Teacher::class, 'model_schools', 'school_id', 'model_id')->where([
+            'model_type' => Teacher::TYPE,
+        ]);
+    }
+
+
     public function school_types(): BelongsToMany
     {
         return $this->belongsToMany(SchoolType::class, 'model_schools', 'school_id', 'model_id')->where([

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\SchoolForTimetableResource;
 use App\Http\Resources\SchoolRecource;
 use App\Http\Resources\Timetable\TimetableResource;
 use App\Http\Resources\User\UserResource;
@@ -125,5 +126,10 @@ class TimetableController extends Controller
         } catch (\Exception $exception) {
             return $exception->getMessage();
         }
+    }
+
+    public function getAllSchoolTimetables(Request $request)
+    {
+        return SchoolForTimetableResource::make(School::find($request->school));
     }
 }
