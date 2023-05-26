@@ -166,6 +166,16 @@ const useTimetablesStore = create(
                     error: (typeof error === "object") ? Object.keys(error.response.data.errors).map((key, value) => error.response.data.errors[key]) : error
                 })
             }
+        },
+        getSchoolsAndTeachersTimetables: async (schoolId) => {
+            try {
+                set({loading: true})
+                const response = await api.get(`/cabinet/timetables/all?school=${schoolId}`)
+                console.log(response)
+                set({loading: false})
+            } catch (error) {
+                set({loading: false})
+            }
         }
     }), {name: 'timetables-storage'})
 )

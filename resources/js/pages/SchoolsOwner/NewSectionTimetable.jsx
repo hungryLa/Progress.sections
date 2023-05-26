@@ -17,7 +17,8 @@ export const NewSectionTimetable = () => {
     const {
         loading: timetablesLoading,
         getSchoolOwnerTimetables,
-        schoolOwnerTimetables
+        schoolOwnerTimetables,
+        getSchoolsAndTeachersTimetables
     } = useTimetablesStore()
     const {
         loading,
@@ -38,6 +39,8 @@ export const NewSectionTimetable = () => {
         }
 
         fetchSchoolTimeTables()
+
+        getSchoolsAndTeachersTimetables(schoolId)
     }, [schoolId, getSchoolOwnerTimetables])
 
     const handleTimetable = (e) => {

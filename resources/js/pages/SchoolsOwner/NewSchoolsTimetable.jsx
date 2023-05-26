@@ -12,7 +12,7 @@ import { Error } from "../../components/Error";
 export const NewSchoolsTimetable = () => {
     const navigate = useNavigate();
     const { schoolId } = useParams();
-    const { loading, createSchoolTimeTable, error } = useTimetablesStore();
+    const { loading, createSchoolTimeTable } = useTimetablesStore();
     const [weekdays, setWeekdays] = useState([]);
     const [lessonTime, setLessonTime] = useState("");
     const [workdayStart, setWorkdayStart] = useState("");

@@ -36,6 +36,8 @@ import {UserSchools} from "./pages/User/UserSchools";
 import {UserSchool} from "./pages/User/UserSchool";
 import {TeacherTimetables} from "./pages/Teacher/TeacherTimetables";
 import {NewTeacherTimeTable} from "./pages/Teacher/NewTeacherTimeTable";
+import {UserSchoolsSections} from "./pages/User/UserSchoolsSections";
+import {Reservation} from "./pages/User/Reservation";
 
 
 export const App = () => {
@@ -121,10 +123,6 @@ export const App = () => {
                                element={<h1>Преподаватели</h1>}/>
                         <Route path={'/schools_owner/schools/:schoolId/school-teachers/:teacherId'}
                                element={<Teacher/>}/>
-                        <Route path={'/schools_owner/sections/new'} element={<h1>Создать секцию</h1>}/>
-                        <Route path={'/schools_owner/lessons'} element={<h1>Виды занятий</h1>}/>
-                        <Route path={'/schools_owner/teachers'} element={<h1>Преподаватели</h1>}/>
-                        <Route path={'/schools_owner/schedules'} element={<h1>Расписания</h1>}/>
                         <Route path={'/schools_owner/settings'} element={<Settings />}/>
                         <Route path={'/schools_owner/extracts'} element={<h1>Выписки</h1>}/>
                     </Route>
@@ -134,7 +132,10 @@ export const App = () => {
                     <Route path={'/user/'} element={<AuthorizedLayout/>}>
                         <Route path={'/user/schedule'} element={<h1>Моё расписание</h1>}/>
                         <Route path={'/user/schools'} element={<UserSchools />}/>
-                        <Route path={'/user/schools/:schoolId'} element={<UserSchool />} />
+                        <Route path={'/user/schools/:schoolId'} element={<School />} />
+                        <Route path={'/user/schools/:schoolId/sections'} element={<UserSchoolsSections />} />
+                        <Route path={'/user/schools/:schoolId/sections/:sectionId'} element={<Section />} />
+                        <Route path={'/user/schools/:schoolId/sections/:sectionId/reservation'} element={<Reservation />} />
                         <Route path={'/user/favorites'} element={<h1>Избранное</h1>}/>
                         <Route path={'/user/subscriptions'} element={<h1>Абонементы</h1>}/>
                         <Route path={'/user/accounts'} element={<Accounts />}/>
