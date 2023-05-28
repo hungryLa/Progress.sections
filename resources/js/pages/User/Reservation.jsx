@@ -1,21 +1,22 @@
-import {useEffect, useState} from "react";
+import { Fragment, useEffect, useState } from "react";
 
-import {Button} from "../../components/UI/Button";
+import { Button } from "../../components/UI/Button";
 import FullCalendar from "@fullcalendar/react";
-import {Loader} from "../../components/UI/Loader";
-import {Modal} from "../../components/UI/Modal";
-import {Select} from "../../components/UI/Select";
-import {Subtitle} from "../../components/UI/Subtitle";
-import interactionPlugin from '@fullcalendar/interaction'
+import { Loader } from "../../components/UI/Loader";
+import { Modal } from "../../components/UI/Modal";
+import { Select } from "../../components/UI/Select";
+import { Subtitle } from "../../components/UI/Subtitle";
+import { getShortWeekdayName } from "../../helpers/getShortWeekdayName";
+import interactionPlugin from "@fullcalendar/interaction";
 import moment from "moment";
-import ruLocale from '@fullcalendar/core/locales/ru'
-import timeGridPlugin from "@fullcalendar/timegrid"
-import {useParams} from "react-router-dom";
+import ruLocale from "@fullcalendar/core/locales/ru";
+import timeGridPlugin from "@fullcalendar/timegrid";
+import { useParams } from "react-router-dom";
 import useSectionTimetables from "../../store/useSectionTimetables";
 import useTimetablesStore from "../../store/useTimetablesStore";
 
-const EventItem = ({info}) => {
-    const {event} = info;
+const EventItem = ({ info }) => {
+    const { event } = info;
     return (
         <div>
             <p>{event.title}</p>
@@ -25,149 +26,167 @@ const EventItem = ({info}) => {
 
 const translateDayToNumber = (day) => {
     switch (day) {
-        case 'Monday':
-            return 1
-        case 'Tuesday':
-            return 2
-        case 'Wednesday':
-            return 3
-        case 'Thursday':
-            return 4
-        case 'Friday':
-            return 5
-        case 'Saturday':
-            return 6
+        case "Monday":
+            return 1;
+        case "Tuesday":
+            return 2;
+        case "Wednesday":
+            return 3;
+        case "Thursday":
+            return 4;
+        case "Friday":
+            return 5;
+        case "Saturday":
+            return 6;
         default:
-            return 0
+            return 0;
     }
-}
+};
 
 export const Reservation = () => {
-    const {schoolId, sectionId} = useParams()
+    const { schoolId, sectionId } = useParams();
 
-    const {loading: timetableLoading, allTimetables, getSchoolsAndTeachersTimetables} = useTimetablesStore()
+    const {
+        loading: timetableLoading,
+        allTimetables,
+        getSchoolsAndTeachersTimetables,
+    } = useTimetablesStore();
     const {
         loading,
         sectionTimetables,
         sectionTimetable,
         getSectionTimetables,
-        getOneSectionTimetable
-    } = useSectionTimetables()
+        getOneSectionTimetable,
+    } = useSectionTimetables();
 
-    const [events, setEvents] = useState([])
-    const [selectedTimetable, setSelectedTimetable] = useState({})
-    const [modalIsActive, setModalIsActive] = useState(false)
-    const [mergedSchedules, setMergedSchedules] = useState([])
+    const [events, setEvents] = useState([]);
+    const [modalIsActive, setModalIsActive] = useState(false);
 
-    const [start, setStart] = useState(null)
-    const [end, setEnd] = useState(null)
-    const [days, setDays] = useState(null)
+    const [currentTimetable, setCurrentTimetable] = useState({});
+    const [currentSectionTimetable, setCurrentSectionTimetable] =
+        useState({});
 
-    const removeDuplicates = (array, property) => {
-        const uniqueValues = new Set();
-        return array.filter((obj) => {
-          const value = obj[property];
-          if (!uniqueValues.has(value)) {
-            uniqueValues.add(value);
-            return true;
-          }
-          return false;
-        });
-      };
+    const [start, setStart] = useState(null);
+    const [end, setEnd] = useState(null);
+    const [days, setDays] = useState(null);
 
     useEffect(() => {
         // Получаю расписания секций и расписания школ и учителей, объединяю данные
         const fetchData = async () => {
-            await getSectionTimetables(sectionId)
-            await getSchoolsAndTeachersTimetables(schoolId)
-            console.log('sec tt', sectionTimetables);
-            console.log('all tt', allTimetables);
-            if (sectionTimetables && allTimetables) {
-                sectionTimetables?.forEach(item => {
-                    allTimetables?.forEach(subitem => {
-                        if (item.timetable_id === subitem.id) {
-                            const itemToPush = {
-                                ...item,
-                                timetable: subitem
-                            }
-                            console.log(itemToPush)
-                            setMergedSchedules((prev) => [...prev, itemToPush])
-                        }
-                    })
-                })
-            }
-            console.log('events', events)
-        }
-        fetchData()
-    }, [])
+            await getSectionTimetables(sectionId);
+            await getSchoolsAndTeachersTimetables(schoolId);
+        };
+        fetchData();
 
-    useEffect(() => {
-        // Удаляю дубликаты
-        console.log('schedules', removeDuplicates(mergedSchedules, 'id'))
-        setMergedSchedules(removeDuplicates(mergedSchedules, 'id'))
-    }, [mergedSchedules])
+        console.log("sectionTimetables", sectionTimetables);
+        console.log("allTimetables", allTimetables);
+    }, []);
 
-    useEffect(() => {
-            console.log('all', allTimetables)
-            setStart(allTimetables[1]?.workday_start)
-            setEnd(allTimetables[1]?.workday_end)
-            setDays(allTimetables[1]?.weekday?.which_days.map(day => translateDayToNumber(day)).sort((a, b) => a - b))
-            console.log('start', start, 'end', end, 'days', days)
-            const startTime = moment(allTimetables[0]?.workday_start, 'HH:mm:ss');
-            const endTime = moment(allTimetables[0]?.workday_end, 'HH:mm:ss');
-            const lessonTime = moment.duration(allTimetables[0]?.lesson_time);
 
-            let testEvents = [];
-            let currentTime = moment(startTime);
-            while (currentTime.isBefore(endTime)) {
-                let testStart = moment(currentTime).format('HH:mm:ss')
-                let testEnd = moment(currentTime).add(lessonTime).format('HH:mm:ss');
-                testEvents.push({
-                    title: 'Lesson',
-                    startTime: testStart,
-                    endTime: testEnd,
-                    daysOfWeek: days
-                });
-                currentTime.add(lessonTime);
-            }
-            setEvents(testEvents);
-            console.log('events', events);
-
-        },
-        [allTimetables]
-    )
-
+    // Выбор расписания школы или учителя
     const handleSelectTimetable = (e) => {
-        setSelectedTimetable(e.target.value)
-    }
+        const selectedTimetableId = e.target.value
+        setCurrentTimetable(allTimetables.filter(item => item.id == selectedTimetableId)[0]);
+        console.log(currentTimetable);
+
+    };
+
+    // Вставка расписания секции на основе выбранного расписания школы или учителя
+    useEffect(() => {
+        setCurrentSectionTimetable(sectionTimetables.filter(item => item.timetable_id === currentTimetable.id)[0])
+        console.log(currentSectionTimetable)
+    }, [currentTimetable])
 
     useEffect(() => {
-        console.log(selectedTimetable);
-        // console.log('selected', sectionTimetables.filter(tt => tt.id === selectedTimetable));
-        // console.log(sectionTimetables.find(item => item.id === 12))
-    }, [selectedTimetable, setSelectedTimetable])
+        setStart(currentTimetable?.workday_start)
+        setEnd(currentTimetable?.workday_end)
+        setDays(currentTimetable?.weekday?.which_days.map(day => translateDayToNumber(day)).sort((a, b) => a - b))
 
+
+        const startTime = moment(currentTimetable?.workday_start, 'HH:mm:ss');
+        const endTime = moment(currentTimetable?.workday_end, 'HH:mm:ss');
+        const lessonTime = moment.duration(currentTimetable?.lesson_time);
+
+        let testEvents = [];
+        let currentTime = moment(startTime);
+        while (currentTime.isBefore(endTime)) {
+            let testStart = moment(currentTime).format('HH:mm:ss')
+            let testEnd = moment(currentTime).add(lessonTime).format('HH:mm:ss');
+            testEvents.push({
+                title: 'Lesson',
+                startTime: testStart,
+                endTime: testEnd,
+                daysOfWeek: days
+            });
+            currentTime.add(lessonTime);
+        }
+        setEvents(testEvents);
+        console.log('events', events);
+
+    },
+    [currentTimetable]
+)
 
     return (
         <>
             <Subtitle>Бронирование</Subtitle>
-            {loading || timetableLoading ? <Loader/> : (
+            {loading || timetableLoading ? (
+                <Loader />
+            ) : (
                 <>
+                    {currentTimetable && JSON.stringify(currentTimetable)}
+                    {currentSectionTimetable && JSON.stringify(currentSectionTimetable)}
+                    {start && <>{start}</>}
+                    {end && <>{end}</>}
+                    {days && days.map(item => <div key={item}>{JSON.stringify(item)}</div>)}
                     <div className="two-col">
-                        <Select label={'Выберите расписание'} onChange={handleSelectTimetable}>
-                            <option value=''  disabled defaultChecked>Выберите расписание</option>
-                            {sectionTimetables?.map(tt => (
-                                <option key={tt.id} value={tt.id}>{tt.id}</option>
+                        <Select
+                            label={"Выберите расписание"}
+                            onChange={handleSelectTimetable}
+                            value={currentTimetable.id || ''}
+                        >
+                            <option key={0} value="" disabled defaultChecked>
+                                Выберите расписание
+                            </option>
+                            {allTimetables?.map((item) => (
+                                <option key={item?.id} value={item?.id}>
+                                    {item?.teacher?.full_name
+                                        ? item?.teacher?.full_name + " | "
+                                        : ""}
+                                    {item?.weekday?.which_days.map(
+                                        (day, index) => (
+                                            <Fragment
+                                                key={day}
+                                            >{`${getShortWeekdayName(day)}${
+                                                index !==
+                                                item?.weekday?.which_days
+                                                    .length -
+                                                    1
+                                                    ? ", "
+                                                    : " | "
+                                            }`}</Fragment>
+                                        )
+                                    )}
+                                    {item?.workday_start.split(":")[0] +
+                                        ":" +
+                                        item?.workday_start.split(":")[1]}
+                                    -
+                                    {item?.workday_end.split(":")[0] +
+                                        ":" +
+                                        item?.workday_end.split(":")[1]}
+                                </option>
                             ))}
                         </Select>
                     </div>
-                    {events ? (
+                    {events &&
+                    currentTimetable &&
+                    currentSectionTimetable ? (
                         <FullCalendar
                             dateClick={(info) => {
-                                alert('Clicked on: ' + info.dateStr);
+                                alert("Clicked on: " + info.dateStr);
                             }}
                             eventClick={(info) => {
-                                alert(JSON.stringify(info))
+                                alert(JSON.stringify(info));
                             }}
                             selectable
                             plugins={[timeGridPlugin, interactionPlugin]}
@@ -175,18 +194,20 @@ export const Reservation = () => {
                             locale={ruLocale}
                             slotLabelFormat={{
                                 hour: "numeric",
-                                minute: '2-digit',
+                                minute: "2-digit",
                                 omitZeroMinute: false,
-                                meridiem: "short"
+                                meridiem: "short",
                             }}
                             allDaySlot={false}
-                            slotMinTime={'06:00:00'}
-                            slotMaxTime={'22:00:00'}
+                            slotMinTime={"06:00:00"}
+                            slotMaxTime={"22:00:00"}
                             events={events && events}
-                            eventContent={(info) => <EventItem info={info}/>}
-                            moreLinkClick={'popover'}
+                            eventContent={(info) => <EventItem info={info} />}
+                            moreLinkClick={"popover"}
                         />
-                    ) : ''}
+                    ) : (
+                        ""
+                    )}
                     <Modal isActive={modalIsActive}>
                         <Button
                             variant={"gray"}
@@ -200,5 +221,5 @@ export const Reservation = () => {
                 </>
             )}
         </>
-    )
-}
+    );
+};
