@@ -1,20 +1,22 @@
+import 'react-toastify/dist/ReactToastify.css'
+
+import {ToastContainer, toast} from "react-toastify";
 import {useEffect, useState} from "react";
-import {Subtitle} from "../components/UI/Subtitle";
-import useAuthStore from "../store/useAuthStore";
-import useUsersStore from "../store/useUsersStore";
-import {Loader} from "../components/UI/Loader";
+
+import {Button} from "../components/UI/Button";
+import {Checkbox} from "../components/UI/Checkbox";
+import {Error} from "../components/Error";
 import {Form} from "../components/UI/Form";
 import {Input} from "../components/UI/Input";
-import useOccupationsStore from "../store/useOccupationsStore";
-import {Button} from "../components/UI/Button";
+import {Loader} from "../components/UI/Loader";
 import ReactSelect from "react-select";
+import {Subtitle} from "../components/UI/Subtitle";
 import {TextArea} from "../components/UI/TextArea";
+import useAuthStore from "../store/useAuthStore";
+import useOccupationsStore from "../store/useOccupationsStore";
+import useUsersStore from "../store/useUsersStore";
 import {validateEmail} from "../helpers/validateEmail";
-import {Error} from "../components/Error";
 import {validatePhone} from "../helpers/validatePhone";
-import {toast, ToastContainer} from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css'
-import {Checkbox} from "../components/UI/Checkbox";
 
 export const Settings = () => {
     const {user: authUser, loading: authLoading} = useAuthStore()
@@ -43,7 +45,7 @@ export const Settings = () => {
     const [oldPassword, setOldPassword] = useState('')
     const [newPassword, setNewPassword] = useState('')
     const [occupations, setOccupations] = useState([])
-    const [image, setImage] = useState(null)
+    const [image, setImage] = useState({})
     const [imagesToDelete, setImagesToDelete] = useState([])
     const [teachingExperience, setTeachingExperience] = useState('')
     const [aboutMe, setAboutMe] = useState('')
@@ -150,23 +152,34 @@ export const Settings = () => {
         e.preventDefault()
         setErrors([])
         setAllowToast(false)
+
+        let isValid = true
+
         if (fullName || email || phone) {
+            if(fullName.length < 8) {
+                isValid = false
+                handleError('Поле "ФИО" не должно быть короче 8 символом')
+            }
             if (!validateEmail(email)) {
+                isValid = false
                 handleError('Почта введена некорректно')
             }
             if (!validatePhone(phone)) {
+                isValid = false
                 handleError('Номер введен некорректно')
             }
-            if (errors.length === 0 && !isUserDataUnchanged) {
-                setAllowToast(true)
+            if (isValid) {
                 await changeInformation(user?.id, fullName, phone, email)
-                if (allowToast) toast('Данные изменены')
+                toast('Данные изменены')
             }
         }
 
         if (oldPassword || newPassword) {
-            if (newPassword.length < 8) setErrors((prev) => [...prev, 'Минимальная длина пароля 8 символов'])
-            if (errors.length === 0) {
+            if (newPassword.length < 8) {
+                isValid = false
+                handleError('Минимальная длина пароля 8 символов')
+            }
+            if (isValid) {
                 await changePassword(user.id, oldPassword, newPassword)
                 toast('Пароль изменен')
             }
@@ -218,7 +231,7 @@ export const Settings = () => {
                                     />
                                     <Input
                                         id={'email'}
-                                        type={'email'}
+                                        type={'text'}
                                         label={'Почта'}
                                         value={email}
                                         onChange={handleEmail}

@@ -1,16 +1,17 @@
-import {useNavigate, useParams} from "react-router-dom";
-import {Fragment, useEffect, useState} from "react";
-import {Subtitle} from "../../components/UI/Subtitle";
-import {Loader} from "../../components/UI/Loader";
-import {Form} from "../../components/UI/Form";
-import {Button} from "../../components/UI/Button";
-import {Input} from "../../components/UI/Input";
+import { Fragment, useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { Error } from "../../components/Error";
+import { Button } from "../../components/UI/Button";
+import { Form } from "../../components/UI/Form";
+import { Input } from "../../components/UI/Input";
+import { Loader } from "../../components/UI/Loader";
+import { Select } from "../../components/UI/Select";
+import { Subtitle } from "../../components/UI/Subtitle";
+import { getShortWeekdayName } from "../../helpers/getShortWeekdayName";
+import { translateWeekDay } from "../../helpers/translateWeekDay";
 import useSectionTimetables from "../../store/useSectionTimetables";
 import useTimetablesStore from "../../store/useTimetablesStore";
-import {Select} from "../../components/UI/Select";
-import {translateWeekDay} from "../../helpers/translateWeekDay";
-import {getShortWeekdayName} from "../../helpers/getShortWeekdayName";
-import {Error} from "../../components/Error";
+import { toast } from "react-toastify";
 
 export const NewSectionTimetable = () => {
     const {schoolId, sectionId} = useParams()
@@ -68,20 +69,33 @@ export const NewSectionTimetable = () => {
         setErrors([])
         e.preventDefault()
 
-        if (!timetable) handleErrors('Должно быть выбрано хотя бы одно расписание')
-        if (!lessonPrice) handleErrors('Поле "Цена занятия" должно быть заполнено')
-        if (!trialPrice) handleErrors('Поле "Цена пробного занятия" должно быть заполнено')
-        console.log(errors.length)
-        await addSectionTimetable(
-            sectionId,
-            timetable,
-            lessonPrice,
-            trialPrice,
-            group,
-            groupPrice
-        )
+        let isValid = true
 
-        if (!!timetable && !!lessonPrice && !!trialPrice && errors.length === 0) {
+        if (!timetable) {
+            handleErrors('Должно быть выбрано хотя бы одно расписание')
+            isValid = false
+        }
+        if (!lessonPrice) {
+            handleErrors('Поле "Цена занятия" должно быть заполнено')
+            isValid = false
+        }
+        if (!trialPrice) {
+            handleErrors('Поле "Цена пробного занятия" должно быть заполнено')
+            isValid = false
+        }
+        console.log(errors.length)
+
+
+        if (isValid) {
+            await addSectionTimetable(
+                sectionId,
+                timetable,
+                lessonPrice,
+                trialPrice,
+                group,
+                groupPrice
+            )
+            toast('Расписание создано')
             navigate(`/schools_owner/schools/${schoolId}/sections/${sectionId}/sectionTimetables`)
         }
     }

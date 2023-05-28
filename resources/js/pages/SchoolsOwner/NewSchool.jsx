@@ -1,16 +1,17 @@
-import {Subtitle} from "../../components/UI/Subtitle";
-import useSchoolsStore from "../../store/useSchoolsStore";
 import {useEffect, useState} from "react";
-import {Loader} from "../../components/UI/Loader";
-import {Form} from "../../components/UI/Form";
+
 import {Button} from "../../components/UI/Button";
+import {Error} from "../../components/Error";
+import {Form} from "../../components/UI/Form";
 import {Input} from "../../components/UI/Input";
-import {Select} from "../../components/UI/Select";
-import useSchoolTypesStore from "../../store/useSchoolTypesStore";
+import {Loader} from "../../components/UI/Loader";
 import ReactSelect from "react-select";
+import {Select} from "../../components/UI/Select";
+import {Subtitle} from "../../components/UI/Subtitle";
 import {TextArea} from "../../components/UI/TextArea";
 import {useNavigate} from "react-router-dom";
-import {Error} from "../../components/Error";
+import useSchoolTypesStore from "../../store/useSchoolTypesStore";
+import useSchoolsStore from "../../store/useSchoolsStore";
 
 export const NewSchool = () => {
     const {getSchoolTypes, schoolTypes, loading: typesLoading} = useSchoolTypesStore()
@@ -69,9 +70,10 @@ export const NewSchool = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault()
+
         const typesToSend = types.map(type => type.value)
         await addSchool(status, recruitment, title, description, phone, address, images, typesToSend)
-        if (!error) navigate('/schools_owner/schools')
+        if (error?.length === 0) navigate('/schools_owner/schools')
     }
 
     return (
