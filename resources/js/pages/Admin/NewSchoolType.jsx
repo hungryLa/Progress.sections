@@ -7,6 +7,7 @@ import {Button} from "../../components/UI/Button";
 import {useNavigate} from "react-router-dom";
 import {validateHEXColor} from "../../helpers/validateHEXColor";
 import {Error} from "../../components/Error";
+import { toast } from "react-toastify";
 
 export const NewSchoolType = () => {
     const {addSchoolType, loading, titleError, colorError, clearErrors} = useSchoolTypesStore()
@@ -15,7 +16,6 @@ export const NewSchoolType = () => {
     const [title, setTitle] = useState('')
     const [color, setColor] = useState('#000000')
     const [errors, setErrors] = useState([])
-    const [allowRedirect, setAllowRedirect] = useState(false)
 
     const handleSetTitle = (e) => {
         setErrors([])
@@ -26,24 +26,29 @@ export const NewSchoolType = () => {
         setColor(e.target.value)
     }
 
-    useEffect(() => {
-        if(!title || !color) {
-            setAllowRedirect(false)
-        }
-    }, [title, color])
-
     const handleSubmit = async (e) => {
         e.preventDefault()
         setErrors([])
-        setAllowRedirect(false)
-        if (!title) setErrors((prev) => [...prev, 'Поле "Название" не должно быть пустым'])
-        if (!validateHEXColor(color)) setErrors((prev) => [...prev, 'Введен некорректный цвет'])
-        if (errors.length === 0) {
-            setAllowRedirect(true)
+        let isValid = true
+
+        if (!title) {
+            setErrors((prev) => [...prev, 'Поле "Название" не должно быть пустым'])
+            isValid = false
         }
-        if (allowRedirect && errors?.length === 0) {
+
+        if (title.length < 4) {
+            setErrors((prev) => [...prev, 'Поле "Название" должно состоять хотя бы из 4 символов'])
+            isValid = false
+        }
+
+        if (!validateHEXColor(color)) {
+            setErrors((prev) => [...prev, 'Введен некорректный цвет'])
+            isValid = false
+    }
+        if (isValid) {
             await addSchoolType(title, color)
             navigate('/admin/schoolTypes')
+            toast('Тип школы добавлен')
         }
     }
 

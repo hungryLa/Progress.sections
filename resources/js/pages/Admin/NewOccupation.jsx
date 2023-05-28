@@ -6,43 +6,41 @@ import { Input } from "../../components/UI/Input"
 import { Button } from "../../components/UI/Button"
 import { useNavigate } from "react-router-dom"
 import {Error} from "../../components/Error";
+import { toast } from "react-toastify"
 
 export const NewOccupation = () => {
-    // const addOccupation = useOccupationsStore(({addOccupation}) => addOccupation)
-    // const loading = useOccupationsStore(({loading}) => loading)
-    const {loading, error, addOccupation} = useOccupationsStore()
+    const {loading, addOccupation} = useOccupationsStore()
 
     const navigate = useNavigate()
 
     const [title, setTitle] = useState('')
     const [errors, setErrors] = useState([])
-    const [allowRedirect, setAllowRedirect] = useState(false)
 
     const handleSetTitle = (e) => {
         setErrors([])
         setTitle(e.target.value)
     }
 
-    useEffect(() => {
-        if(!title) {
-            setAllowRedirect(false)
-        }
-    }, [title])
-
     const handleSubmit = async (e) => {
         e.preventDefault()
         setErrors([])
-        setAllowRedirect(false)
+
+        let isValid = true
+
         if (!title) {
             setErrors((prev) => [...prev, 'Поле "Название" не должно быть пустым'])
+            isValid = false
         }
-        if(errors.length === 0) {
-            setAllowRedirect(true)
+
+        if (title.length < 4) {
+            setErrors((prev) => [...prev, 'Поле "Название" должно состоять хотя бы из 4 символов'])
+            isValid = false
         }
-        if(allowRedirect && errors?.length === 0) {
-            console.log(allowRedirect, errors.length, 'Тут')
+
+        if(isValid) {
             await addOccupation(title)
             navigate('/admin/occupations')
+            toast('Вид деятельности добавлен')
         }
     }
 

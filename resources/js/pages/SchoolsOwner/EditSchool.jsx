@@ -271,8 +271,6 @@ export const EditSchool = () => {
                                         id={'images'}
                                     />
 
-                                    {images && JSON.stringify(images)}
-
                                     {school?.images?.length > 0 ? (
                                         <div className="one-col">
                                             <span className="delete-images-title">
@@ -333,7 +331,7 @@ export const EditSchool = () => {
             )}
             <Modal isActive={modalIsActive}>
                 <Title>Удаление школы</Title>
-                <p>Вы действительно хотите удалить школу "{school.title}"?</p>
+                <p>Вы действительно хотите удалить школу "{school?.title}"?</p>
                 <div className={"modal__buttons"}>
                     <Button variant={"green"} onClick={handleDelete}>
                         Да

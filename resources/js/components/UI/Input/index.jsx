@@ -19,10 +19,11 @@ export const Input = ({
                 className="input__field"
                 type={type}
                 id={id}
-                value={value || ''}
+                value={type === 'file' ? undefined : value}
                 placeholder={placeholder}
                 onChange={onChange}
                 multiple={multiple}
+                name={id}
             />
             {error && <small className={'input__error'}>{error}</small>}
         </div>

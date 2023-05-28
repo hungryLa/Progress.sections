@@ -39,7 +39,7 @@ export const NewSchool = () => {
     useEffect(() => {
         getSchoolTypes()
         setOptions(schoolTypes.map(item => ({value: item.id, label: item.title})))
-    }, [])
+    }, [getSchoolTypes])
 
     const handleTitle = (e) => {
         setTitle(e.target.value)
@@ -54,8 +54,8 @@ export const NewSchool = () => {
         setStatus(e.target.value)
     }
     const handleImages = (e) => {
+        setImages([...e.target.files])
         console.log('images', images)
-        setImages(e.target.files)
     }
     const handleRecruitment = (e) => {
         setRecruitment(e.target.value)
@@ -149,7 +149,7 @@ export const NewSchool = () => {
                                     <Input label={'Телефон'} value={phone} onChange={handlePhone}/>
                                 </div>
                                 <div className="one-col">
-                                    <Input label={'Изображения'} type={'file'} onChange={handleImages} multiple/>
+                                    <Input id={'files'} name={'files'} label={'Изображения'} type={'file'} onChange={handleImages} multiple/>
                                     <TextArea
                                         label={'Описание'}
                                         value={description}

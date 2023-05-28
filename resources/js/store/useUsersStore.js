@@ -131,7 +131,6 @@ const useUsersStore = create(
                         roleError: '',
                         loading: false
                     })
-                    window.location.href = '/users'
                 } catch (error) {
                     if (error.response.data.errors) {
                         set({
@@ -162,7 +161,6 @@ const useUsersStore = create(
                         roleError: '',
                         loading: false
                     })
-                    window.location.href = '/users'
                 } catch (error) {
                     if (error.response.data.errors) {
                         set({

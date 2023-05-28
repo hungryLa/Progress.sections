@@ -10,6 +10,7 @@ import {TableRow} from "../../components/UI/Table/TableRow";
 import {TableCell} from "../../components/UI/Table/TableCell";
 import {useNavigate} from "react-router-dom";
 import {Loader} from "../../components/UI/Loader";
+import { toast } from "react-toastify";
 
 export const Users = () => {
     const loading = useUsersStore(({loading}) => loading)
@@ -107,6 +108,7 @@ export const Users = () => {
                     <Button variant={'green'} onClick={async () => {
                         await deleteUser(userToDelete.id)
                         setModalIsActive(false)
+                        toast(`Пользователь "${userToDelete.full_name}" удален`)
                     }}>Да</Button>
                     <Button variant={'gray'} onClick={() => {
                         setModalIsActive(false)

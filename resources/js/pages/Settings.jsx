@@ -350,17 +350,6 @@ export const Settings = () => {
                     />
                 </>
             )}
-            <ToastContainer
-                position="top-center"
-                autoClose={5000}
-                hideProgressBar={true}
-                newestOnTop={false}
-                closeOnClick
-                pauseOnFocusLoss
-                draggable
-                pauseOnHover
-                theme="light"
-            />
         </>
     );
 };
