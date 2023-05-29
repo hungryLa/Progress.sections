@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useMemo, useEffect, useState } from "react";
 
 import { Button } from "../../components/UI/Button";
 import FullCalendar from "@fullcalendar/react";
@@ -47,119 +47,136 @@ export const Reservation = () => {
     const { schoolId, sectionId } = useParams();
 
     const {
-        loading: timetableLoading,
-        allTimetables,
-        getSchoolsAndTeachersTimetables,
-    } = useTimetablesStore();
-    const {
         loading,
         sectionTimetables,
-        sectionTimetable,
         getSectionTimetables,
-        getOneSectionTimetable,
     } = useSectionTimetables();
 
     const [events, setEvents] = useState([]);
     const [modalIsActive, setModalIsActive] = useState(false);
 
-    const [currentTimetable, setCurrentTimetable] = useState({});
-    const [currentSectionTimetable, setCurrentSectionTimetable] =
-        useState({});
+    const [currentSectionTimetable, setCurrentSectionTimetable] = useState({});
 
     const [start, setStart] = useState(null);
     const [end, setEnd] = useState(null);
-    const [days, setDays] = useState(null);
+    const [days, setDays] = useState([]);
 
     useEffect(() => {
-        // Получаю расписания секций и расписания школ и учителей, объединяю данные
         const fetchData = async () => {
             await getSectionTimetables(sectionId);
-            await getSchoolsAndTeachersTimetables(schoolId);
         };
         fetchData();
 
         console.log("sectionTimetables", sectionTimetables);
-        console.log("allTimetables", allTimetables);
-    }, []);
+    }, [
+        sectionId,
+        getSectionTimetables
+    ]);
 
-
-    // Выбор расписания школы или учителя
     const handleSelectTimetable = (e) => {
-        const selectedTimetableId = e.target.value
-        setCurrentTimetable(allTimetables.filter(item => item.id == selectedTimetableId)[0]);
-        console.log(currentTimetable);
+        const selectedTimetableId = e.target.value;
+        setCurrentSectionTimetable(
+            sectionTimetables.filter((item) => item?.id == selectedTimetableId)[0]
+        );
 
+        console.log(
+            "events",
+            events,
+            "currentSectionTimetable",
+            currentSectionTimetable
+        );
     };
 
-    // Вставка расписания секции на основе выбранного расписания школы или учителя
     useEffect(() => {
-        setCurrentSectionTimetable(sectionTimetables.filter(item => item.timetable_id === currentTimetable.id)[0])
-        console.log(currentSectionTimetable)
-    }, [currentTimetable])
+        setDays(
+            currentSectionTimetable?.timetable?.weekday?.which_days
+                ?.map((day) => translateDayToNumber(day))
+                ?.sort((a, b) => a - b) || []
+        );
+    }, [currentSectionTimetable]);
 
     useEffect(() => {
-        setStart(currentTimetable?.workday_start)
-        setEnd(currentTimetable?.workday_end)
-        setDays(currentTimetable?.weekday?.which_days.map(day => translateDayToNumber(day)).sort((a, b) => a - b))
+        setStart(currentSectionTimetable?.timetable?.workday_start);
+        setEnd(currentSectionTimetable?.timetable?.workday_end);
 
-
-        const startTime = moment(currentTimetable?.workday_start, 'HH:mm:ss');
-        const endTime = moment(currentTimetable?.workday_end, 'HH:mm:ss');
-        const lessonTime = moment.duration(currentTimetable?.lesson_time);
+        const startTime = moment(currentSectionTimetable?.timetable?.workday_start, "HH:mm:ss");
+        const endTime = moment(currentSectionTimetable?.timetable?.workday_end, "HH:mm:ss");
+        const lessonTime = moment.duration(currentSectionTimetable?.timetable?.lesson_time);
+        const restStart = moment(currentSectionTimetable?.timetable?.rest_start, "HH:mm:ss");
+        const restEnd = moment(currentSectionTimetable?.timetable?.rest_end, "HH:mm:ss");
 
         let testEvents = [];
         let currentTime = moment(startTime);
         while (currentTime.isBefore(endTime)) {
-            let testStart = moment(currentTime).format('HH:mm:ss')
-            let testEnd = moment(currentTime).add(lessonTime).format('HH:mm:ss');
+            let testStart = moment(currentTime).format("HH:mm:ss");
+            let testEnd = moment(currentTime)
+                .add(lessonTime)
+                .format("HH:mm:ss");
+
             testEvents.push({
-                title: 'Lesson',
+                title: "Записаться",
                 startTime: testStart,
                 endTime: testEnd,
-                daysOfWeek: days
+                daysOfWeek: days && days,
             });
+
             currentTime.add(lessonTime);
         }
-        setEvents(testEvents);
-        console.log('events', events);
 
-    },
-    [currentTimetable]
-)
+        testEvents.forEach((event, index) => {
+            if (!currentSectionTimetable?.timetable?.without_rest) {
+                console.log(`event#${index}`, event);
+                if (
+                    moment(event.startTime, "HH:mm:ss").isBetween(
+                        moment(currentSectionTimetable?.timetable?.rest_start, "HH:mm:ss"),
+                        moment(currentSectionTimetable?.timetable?.rest_end, "HH:mm:ss"),
+                        undefined,
+                        "[)"
+                    ) ||
+                    moment(event.endTime, "HH:mm:ss").isBetween(
+                        moment(currentSectionTimetable?.timetable?.rest_start, "HH:mm:ss"),
+                        moment(currentSectionTimetable?.timetable?.rest_end, "HH:mm:ss"),
+                        undefined,
+                        "(]"
+                    )
+                ) {
+                    console.log("Неугодный", event);
+                    testEvents.splice(index, 1);
+                }
+            }
+        });
+
+        setEvents([...testEvents]);
+    }, [currentSectionTimetable?.timetable, days]);
 
     return (
         <>
             <Subtitle>Бронирование</Subtitle>
-            {loading || timetableLoading ? (
+            {loading ? (
                 <Loader />
             ) : (
                 <>
-                    {currentTimetable && JSON.stringify(currentTimetable)}
-                    {currentSectionTimetable && JSON.stringify(currentSectionTimetable)}
-                    {start && <>{start}</>}
-                    {end && <>{end}</>}
-                    {days && days.map(item => <div key={item}>{JSON.stringify(item)}</div>)}
                     <div className="two-col">
                         <Select
                             label={"Выберите расписание"}
                             onChange={handleSelectTimetable}
-                            value={currentTimetable.id || ''}
+                            value={currentSectionTimetable?.id || ""}
                         >
                             <option key={0} value="" disabled defaultChecked>
                                 Выберите расписание
                             </option>
-                            {allTimetables?.map((item) => (
+                            {sectionTimetables?.map((item) => (
                                 <option key={item?.id} value={item?.id}>
-                                    {item?.teacher?.full_name
-                                        ? item?.teacher?.full_name + " | "
+                                    {item?.timetable?.teacher?.full_name
+                                        ? item?.timetable?.teacher?.full_name + " | "
                                         : ""}
-                                    {item?.weekday?.which_days.map(
+                                    {item?.timetable?.weekday?.which_days.map(
                                         (day, index) => (
                                             <Fragment
                                                 key={day}
                                             >{`${getShortWeekdayName(day)}${
                                                 index !==
-                                                item?.weekday?.which_days
+                                                item?.timetable?.weekday?.which_days
                                                     .length -
                                                     1
                                                     ? ", "
@@ -167,20 +184,18 @@ export const Reservation = () => {
                                             }`}</Fragment>
                                         )
                                     )}
-                                    {item?.workday_start.split(":")[0] +
+                                    {item?.timetable?.workday_start.split(":")[0] +
                                         ":" +
-                                        item?.workday_start.split(":")[1]}
+                                        item?.timetable?.workday_start.split(":")[1]}
                                     -
-                                    {item?.workday_end.split(":")[0] +
+                                    {item?.timetable?.workday_end.split(":")[0] +
                                         ":" +
-                                        item?.workday_end.split(":")[1]}
+                                        item?.timetable?.workday_end.split(":")[1]}
                                 </option>
                             ))}
                         </Select>
                     </div>
-                    {events &&
-                    currentTimetable &&
-                    currentSectionTimetable ? (
+                    {events && currentSectionTimetable && currentSectionTimetable?.timetable ? (
                         <FullCalendar
                             dateClick={(info) => {
                                 alert("Clicked on: " + info.dateStr);
@@ -201,7 +216,7 @@ export const Reservation = () => {
                             allDaySlot={false}
                             slotMinTime={"06:00:00"}
                             slotMaxTime={"22:00:00"}
-                            events={events && events}
+                            events={(events && events) || []}
                             eventContent={(info) => <EventItem info={info} />}
                             moreLinkClick={"popover"}
                         />

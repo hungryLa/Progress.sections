@@ -8,6 +8,8 @@ import { useEffect, useState } from "react";
 import useTimetablesStore from "../../store/useTimetablesStore";
 import { Checkbox } from "../../components/UI/Checkbox";
 import { Error } from "../../components/Error";
+import moment from "moment";
+import { current } from "@reduxjs/toolkit";
 
 export const NewSchoolsTimetable = () => {
     const navigate = useNavigate();
@@ -21,6 +23,7 @@ export const NewSchoolsTimetable = () => {
     const [restStart, setRestStart] = useState("");
     const [restEnd, setRestEnd] = useState("");
     const [errors, setErrors] = useState([]);
+    const [restWarn, setRestWarn] = useState("");
 
     const handleWeekday = (e) => {
         let weekList = [...weekdays];
@@ -43,6 +46,56 @@ export const NewSchoolsTimetable = () => {
     const handleAddError = (value) => {
         setErrors((prev) => [...prev, value]);
     };
+
+    const handleRestStart = (e) => {
+        setRestWarn('')
+        setRestStart(e.target.value)
+    }
+
+    const handleRestEnd = (e) => {
+        setRestWarn('')
+        setRestEnd(e.target.value)
+    }
+
+    useEffect(() => {
+        if (restStart && restEnd) {
+            const startTime = moment(workdayStart, "HH:mm:ss");
+            const endTime = moment(workdayEnd, "HH:mm:ss");
+            const lessonDuration = moment.duration(lessonTime);
+
+            let events = [];
+            let currTime = moment(startTime);
+            while (currTime.isBefore(endTime)) {
+                let start = moment(currTime).format("HH:mm:ss");
+                let end = moment(currTime)
+                    .add(lessonDuration)
+                    .format("HH:mm:ss");
+
+                console.log(start);
+                console.log(end);
+
+                events.push({
+                    start,
+                    end,
+                });
+
+                currTime.add(lessonDuration);
+            }
+
+            events.forEach((event) => {
+                if (
+                    moment(event.start, "HH:mm:ss").isSameOrAfter(
+                        moment(restStart, "HH:mm:ss")
+                    ) &&
+                    moment(event.end, "HH:mm:ss").isBefore(
+                        moment(restEnd, "HH:mm:ss")
+                    )
+                ) {
+                    setRestWarn("Время обеда и занятий пересекаются");
+                }
+            });
+        }
+    }, [restStart, restEnd])
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -204,22 +257,27 @@ export const NewSchoolsTimetable = () => {
                             />
                         </div>
                         {!withRest && (
-                            <div className={"two-col"}>
-                                <Input
-                                    type={"time"}
-                                    label={"Начало обеда"}
-                                    value={restStart}
-                                    onChange={(e) =>
-                                        setRestStart(e.target.value)
-                                    }
-                                />
-                                <Input
-                                    type={"time"}
-                                    label={"Конец обеда"}
-                                    value={restEnd}
-                                    onChange={(e) => setRestEnd(e.target.value)}
-                                />
-                            </div>
+                            <>
+                                <div className={"two-col"}>
+                                    <Input
+                                        type={"time"}
+                                        label={"Начало обеда"}
+                                        value={restStart}
+                                        onChange={handleRestStart}
+                                    />
+                                    <Input
+                                        type={"time"}
+                                        label={"Конец обеда"}
+                                        value={restEnd}
+                                        onChange={handleRestEnd}
+                                    />
+                                </div>
+                                {restWarn && (
+                                    <span className="time-warn">
+                                        {restWarn}
+                                    </span>
+                                )}
+                            </>
                         )}
                     </>
                 }

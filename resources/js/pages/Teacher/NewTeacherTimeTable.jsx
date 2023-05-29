@@ -1,21 +1,22 @@
-import {Subtitle} from "../../components/UI/Subtitle";
-import {useNavigate} from "react-router-dom";
+import { Subtitle } from "../../components/UI/Subtitle";
+import { useNavigate } from "react-router-dom";
 import useTimetablesStore from "../../store/useTimetablesStore";
 import useAuthStore from "../../store/useAuthStore";
-import {useState} from "react";
-import {Error} from "../../components/Error";
-import {Checkbox} from "../../components/UI/Checkbox";
-import {Input} from "../../components/UI/Input";
-import {Button} from "../../components/UI/Button";
-import {Form} from "../../components/UI/Form";
-import {Loader} from "../../components/UI/Loader";
+import { useState } from "react";
+import { Error } from "../../components/Error";
+import { Checkbox } from "../../components/UI/Checkbox";
+import { Input } from "../../components/UI/Input";
+import { Button } from "../../components/UI/Button";
+import { Form } from "../../components/UI/Form";
+import { Loader } from "../../components/UI/Loader";
+import moment from "moment";
 
 export const NewTeacherTimeTable = () => {
-    const navigate = useNavigate()
-    const {loading: authLoading, user} = useAuthStore()
-    const {loading, createTeacherTimeTable} = useTimetablesStore()
-    const [weekdays, setWeekdays] = useState([])
-    const [lessonTime, setLessonTime] = useState("")
+    const navigate = useNavigate();
+    const { loading: authLoading, user } = useAuthStore();
+    const { loading, createTeacherTimeTable } = useTimetablesStore();
+    const [weekdays, setWeekdays] = useState([]);
+    const [lessonTime, setLessonTime] = useState("");
     const [workdayStart, setWorkdayStart] = useState("");
     const [workdayEnd, setWorkdayEnd] = useState("");
     const [withRest, setWithRest] = useState(false);
@@ -64,7 +65,63 @@ export const NewTeacherTimeTable = () => {
                 );
         }
 
+        if (restStart && restEnd) {
+            const startTime = moment(workdayStart, "HH:mm:ss");
+            const endTime = moment(workdayEnd, "HH:mm:ss");
+            const lessonDuration = moment.duration(lessonTime);
+
+            let events = [];
+            let currTime = moment(startTime);
+
+            let occurrences = 0
+
+            while (currTime.isBefore(endTime)) {
+                let start = moment(currTime).format("HH:mm:ss");
+                let end = moment(currTime)
+                    .add(lessonDuration)
+                    .format("HH:mm:ss");
+
+                console.log(start);
+                console.log(end);
+
+                events.push({
+                    start,
+                    end,
+                });
+
+                currTime.add(lessonDuration);
+            }
+
+            events.forEach((event) => {
+                if (
+                    moment(event.start, "HH:mm:ss").isBetween(
+                        moment(restStart, "HH:mm:ss"),
+                        moment(restEnd, "HH:mm:ss"),
+                        undefined,
+                        "[)"
+                    ) ||
+                    moment(event.end, "HH:mm:ss").isBetween(
+                        moment(restStart, "HH:mm:ss"),
+                        moment(restEnd, "HH:mm:ss"),
+                        undefined,
+                        "(]"
+                    )
+                ) {
+                    console.log(event);
+                    occurrences++; 
+                }
+            });
+
+            if(occurrences > 1) {
+                validationErrors.push("Время обеда и занятий пересекаются");
+            }
+        }
+
         console.log(validationErrors);
+
+        if (validationErrors.length > 0) {
+            setErrors(validationErrors);
+        }
 
         if (validationErrors.length > 0) {
             setErrors(validationErrors);
@@ -83,14 +140,13 @@ export const NewTeacherTimeTable = () => {
         }
     };
 
-
-
     return (
         <>
             <Subtitle>Новое расписание</Subtitle>
-            {loading || authLoading ? <Loader /> : (
+            {loading || authLoading ? (
+                <Loader />
+            ) : (
                 <>
-                    {errors.length !== 0 ? <Error errors={errors} /> : ""}
                     <Form
                         onSubmit={handleSubmit}
                         inputs={
@@ -175,7 +231,9 @@ export const NewTeacherTimeTable = () => {
                                         type={"time"}
                                         label={"Длительность занятия"}
                                         value={lessonTime}
-                                        onChange={(e) => setLessonTime(e.target.value)}
+                                        onChange={(e) =>
+                                            setLessonTime(e.target.value)
+                                        }
                                     />
                                 </div>
                                 <div className={"two-col"}>
@@ -191,7 +249,9 @@ export const NewTeacherTimeTable = () => {
                                         type={"time"}
                                         label={"Время конца"}
                                         value={workdayEnd}
-                                        onChange={(e) => setWorkdayEnd(e.target.value)}
+                                        onChange={(e) =>
+                                            setWorkdayEnd(e.target.value)
+                                        }
                                     />
                                 </div>
                                 <div className={"three-col"}>
@@ -218,10 +278,13 @@ export const NewTeacherTimeTable = () => {
                                             type={"time"}
                                             label={"Конец обеда"}
                                             value={restEnd}
-                                            onChange={(e) => setRestEnd(e.target.value)}
+                                            onChange={(e) =>
+                                                setRestEnd(e.target.value)
+                                            }
                                         />
                                     </div>
                                 )}
+                                {errors.length !== 0 ? <Error errors={errors} /> : ""}
                             </>
                         }
                         buttons={
@@ -233,5 +296,5 @@ export const NewTeacherTimeTable = () => {
                 </>
             )}
         </>
-    )
-}
+    );
+};

@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\TimetableSection\StoreRequest;
 use App\Http\Resources\SchoolRecource;
 use App\Http\Resources\SectionRecource;
-use App\Http\Resources\TimetableSectionRecource;
+use App\Http\Resources\TimetableSectionResource;
 use App\Http\Resources\User\UserResource;
 use App\Models\Section;
 use App\Models\TimetableSection;
@@ -17,7 +17,7 @@ class TimetableSectionController extends Controller
     public function index(Section $section)
     {
         $data['section'] = new SectionRecource($section);
-        $data['timetables'] = TimetableSectionRecource::collection($section->timetables);
+        $data['timetables'] = TimetableSectionResource::collection($section->timetables);
         return $data;
     }
 
@@ -25,14 +25,14 @@ class TimetableSectionController extends Controller
     {
         $data['school'] = new SchoolRecource($section->school);
         $data['teachers'] = UserResource::collection($data['school']->teachers);
-        $data['school_timetables'] = TimetableSectionRecource::collection($data['school']->timetables);
+        $data['school_timetables'] = TimetableSectionResource::collection($data['school']->timetables);
         return $data;
     }
 
     public function getOne(Section $section, TimetableSection $timetableSection) {
         try {
             $section_timetable = TimetableSection::where('id', $timetableSection->id)->first();
-            return new TimetableSectionRecource($section_timetable);
+            return new TimetableSectionResource($section_timetable);
         } catch (\Exception $exception) {
             return $exception->getMessage();
         }
@@ -61,7 +61,7 @@ class TimetableSectionController extends Controller
     {
         $data['school'] = new SchoolRecource($section->school);
         $data['teachers'] = UserResource::collection($data['school']->teachers);
-        $data['school_timetables'] = TimetableSectionRecource::collection($data['school']->timetables);
+        $data['school_timetables'] = TimetableSectionResource::collection($data['school']->timetables);
         return $data;
     }
 
