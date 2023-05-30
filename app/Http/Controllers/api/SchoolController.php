@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\api\FileController;
 use App\Http\Requests\School\StoreRequest;
 use App\Http\Requests\School\UpdateRequest;
 use App\Http\Resources\FileRecource;
@@ -26,19 +25,19 @@ class SchoolController extends Controller
         $user = Auth::user();
         $all_schools = [];
         if ($user->hasRole(User::ROLES['admin'])) {
-            $school = School::orderBy('id')->get();
+            $schools = School::orderBy('id')->get();
         } elseif ($user->hasRole(User::ROLES['schools_owner'])) {
-            $school = $user->schools()->orderBy('id')->get();
+            $schools = $user->schools()->orderBy('id')->get();
         } elseif ($user->hasRole(User::ROLES['teacher'])) {
-            $school = $user->schools()->orderBy('id')->get();
+            $schools = $user->schools()->orderBy('id')->get();
             $all_schools = School::where('status', School::STATUS['active'])->get();
-            $all_schools = $all_schools->diff($school);
+            $all_schools = $all_schools->diff($schools);
         } elseif ($user->hasRole(User::ROLES['user'])) {
-            $school = School::where('status', School::STATUS['active'])->orderBy('id')->get();
+            $schools = School::where('status', School::STATUS['active'])->orderBy('id')->get();
         } else {
-            $school = School::where('status', School::STATUS['active'])->orderBy('id')->get();
+            $schools = School::where('status', School::STATUS['active'])->orderBy('id')->get();
         }
-        $data['school'] = SchoolRecource::collection($school);
+        $data['schools'] = SchoolRecource::collection($schools);
         $data['all_schools'] = SchoolRecource::collection($all_schools);
         return $data;
     }
@@ -129,7 +128,7 @@ class SchoolController extends Controller
                     ]);
                 }
             }
-            if($request->school_types_to_delete) {
+            if ($request->school_types_to_delete) {
                 foreach ($request->school_types_to_delete as $school_type) {
                     ModelSchool::where([
                         'model_type' => ModelSchool::TYPES['school_types'],

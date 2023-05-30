@@ -21,4 +21,9 @@ class ModelSchool extends Model
         'teacher' => Teacher::TYPE,
         'school_types' => SchoolType::TYPE,
     ];
+
+    const TYPES_FOR_FACTORY = [
+        'user' => User::TYPE,
+        'teacher' => Teacher::TYPE,
+    ];
 }

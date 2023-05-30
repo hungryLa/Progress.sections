@@ -29,7 +29,8 @@ class TimetableSectionController extends Controller
         return $data;
     }
 
-    public function getOne(Section $section, TimetableSection $timetableSection) {
+    public function getOne(Section $section, TimetableSection $timetableSection)
+    {
         try {
             $section_timetable = TimetableSection::where('id', $timetableSection->id)->first();
             return new TimetableSectionResource($section_timetable);

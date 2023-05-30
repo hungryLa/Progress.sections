@@ -6,7 +6,6 @@ use App\Casts\TimetableDaysWeek;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use App\Models\TimetableSection;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Timetable extends Model
@@ -38,12 +37,12 @@ class Timetable extends Model
 
     public function teacher(): BelongsTo
     {
-        return $this->belongsTo(Teacher::class);
+        return $this->belongsTo(Teacher::class, 'model_id');
     }
 
     public function school(): BelongsTo
     {
-        return $this->belongsTo(School::class);
+        return $this->belongsTo(School::class, 'model_id');
     }
 
     public function timetableSection(): HasOne

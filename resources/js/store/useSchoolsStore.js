@@ -1,7 +1,6 @@
 import {create} from "zustand";
 import {persist} from "zustand/middleware";
 import api from "../middlewares/auth.middleware";
-import useSchoolTypesStore from "./useSchoolTypesStore";
 
 const useSchoolsStore = create(
     persist(
@@ -20,10 +19,10 @@ const useSchoolsStore = create(
                 try {
                     set({loading: true})
                     const response = await api.get('cabinet/schools/')
-                    const {school, all_schools} = response.data
+                    const {schools, all_schools} = response.data
                     set({
                         loading: false,
-                        schools: [...school],
+                        schools: [...schools],
                         allSchools: [...all_schools]
                     })
                 } catch (error) {
