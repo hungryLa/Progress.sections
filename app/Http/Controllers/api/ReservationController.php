@@ -20,12 +20,12 @@ class ReservationController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(TimetableSection $timetableSection, Request $request)
+    public function store(Request $request, TimetableSection $timetableSection)
     {
         try {
             $success = Reservation::create([
                 'user_id' => $request->user,
-                'timetable_section_id' => $timetableSection->id,
+                'timetable_section_id' => $request->timetableSection,
                 'client' => $request->client,
                 'date' => $request->date,
                 'time' => $request->time,

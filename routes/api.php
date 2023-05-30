@@ -8,6 +8,7 @@ use App\Http\Controllers\api\FileController;
 use App\Http\Controllers\api\OccupationController;
 use App\Http\Controllers\api\PaymentController;
 use App\Http\Controllers\api\PersonController;
+use App\Http\Controllers\api\ReservationController;
 use App\Http\Controllers\api\SchoolController;
 use App\Http\Controllers\api\SchoolTypeController;
 use App\Http\Controllers\api\SectionController;
@@ -177,7 +178,7 @@ Route::group(['middleware' => 'jwt.auth'], function () {
         });
 
         Route::group(['prefix' => 'communications', 'middleware' => 'role:schools_owner,teacher'], function () {
-            Route::get('invitations', [CommunicationController::class, 'invitation_index'])
+            Route::get('invitations', [CommunicationController::class, 'index'])
                 ->name('communications.invitation.index');
             Route::get('applications', [CommunicationController::class, 'application_index'])
                 ->name('communications.application.index');
@@ -225,6 +226,10 @@ Route::group(['middleware' => 'jwt.auth'], function () {
             Route::delete('deleteImagesThroughCheckBox', [FileController::class, 'deleteFilesThroughCheckBox'])
                 ->name('cabinet.files.deleteFilesThroughCheckBox');
             Route::post('changeImage', [FileController::class, 'changeImage'])->name('cabinet.files.changeImage');
+        });
+
+        Route::group(['prefix' => 'reservations'], function () {
+            Route::post('store', [ReservationController::class, 'store'])->name('cabinet.reservations.store');
         });
     });
 });

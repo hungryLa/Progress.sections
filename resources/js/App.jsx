@@ -38,6 +38,7 @@ import {TeacherTimetables} from "./pages/Teacher/TeacherTimetables";
 import {NewTeacherTimeTable} from "./pages/Teacher/NewTeacherTimeTable";
 import {UserSchoolsSections} from "./pages/User/UserSchoolsSections";
 import {Reservation} from "./pages/User/Reservation";
+import { TeacherSchools } from "./pages/Teacher/TeacherSchools";
 
 
 export const App = () => {
@@ -147,7 +148,7 @@ export const App = () => {
                 {user && user.role === 'teacher' && (
                     <Route path={'/teacher/'} element={<AuthorizedLayout/>}>
                         <Route path={'/teacher/sections'} element={<h1>Секции</h1>}/>
-                        <Route path={'/teacher/schools'} element={<h1>Школы</h1>}/>
+                        <Route path={'/teacher/schools'} element={<TeacherSchools />}/>
                         <Route path={'/teacher/timetables'} element={<TeacherTimetables />}/>
                         <Route path={'/teacher/timetables/new'} element={<NewTeacherTimeTable />}/>
                         <Route path={'/teacher/applications'} element={<h1>Заявки</h1>}/>
