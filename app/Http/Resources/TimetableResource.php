@@ -5,6 +5,7 @@ namespace App\Http\Resources;
 use App\Structures\TimetableDaysWeek;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Models\Timetable;
 
 class TimetableResource extends JsonResource
 {
@@ -15,17 +16,19 @@ class TimetableResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        $timetable = Timetable::find($this->id);
         if($this->type == 'teacher'){
-            $owner = $this->teacher;
+            $owner = $timetable->teacher;
         }
         elseif($this->type == 'school'){
-            $owner = $this->school;
+            $owner = $timetable->school;
         }
         else{
-            $owner = null;
+            $owner = 'ddd';
         }
         return [
             'owner' => $owner,
+            'id' => $this->id,
             'type' => $this->type,
             'model_id' => $this->model_id,
             'weekday' => $this->weekday,

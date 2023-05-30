@@ -108,7 +108,7 @@ export const NewTeacherTimeTable = () => {
                     )
                 ) {
                     console.log(event);
-                    occurrences++; 
+                    occurrences++;
                 }
             });
 

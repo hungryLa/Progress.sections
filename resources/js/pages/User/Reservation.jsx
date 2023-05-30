@@ -13,7 +13,6 @@ import ruLocale from "@fullcalendar/core/locales/ru";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import { useParams } from "react-router-dom";
 import useSectionTimetables from "../../store/useSectionTimetables";
-import useTimetablesStore from "../../store/useTimetablesStore";
 
 const EventItem = ({ info }) => {
     const { event } = info;
