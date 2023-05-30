@@ -21,7 +21,12 @@ export const UserSchoolsSections = () => {
                 <>
                     <CardContainer>
                         {sections ? sections.map(section => (
-                            <SectionCard schoolId={schoolId} section={section} path={`/user/schools/${schoolId}/sections/${section?.id}`} />
+                            <SectionCard
+                                key={section.id}
+                                schoolId={schoolId}
+                                section={section}
+                                path={`/user/schools/${schoolId}/sections/${section?.id}`}
+                            />
                         )) : 'Нет секций'}
                     </CardContainer>
                 </>

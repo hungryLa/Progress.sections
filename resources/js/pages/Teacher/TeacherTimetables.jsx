@@ -116,7 +116,7 @@ export const TeacherTimetables = () => {
                         <p>Вы действительно хотите удалить расписание?</p>
                         <div className={'modal__buttons'}>
                             <Button variant={'green'} onClick={async () => {
-                                await deleteTeachersTimetable(user.id, timetableToDelete.id)
+                                await deleteTeacherTimetable(user.id, timetableToDelete.id)
                                 setModalIsActive(false)
                             }}>Да</Button>
                             <Button variant={'gray'} onClick={() => {

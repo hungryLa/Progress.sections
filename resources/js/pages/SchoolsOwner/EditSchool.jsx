@@ -1,19 +1,21 @@
-import { Subtitle } from "../../components/UI/Subtitle";
-import useSchoolsStore from "../../store/useSchoolsStore";
 import { useEffect, useState } from "react";
-import useSchoolTypesStore from "../../store/useSchoolTypesStore";
-import { Loader } from "../../components/UI/Loader";
+import { useNavigate, useParams } from "react-router-dom";
+
+import { Button } from "../../components/UI/Button";
+import { Checkbox } from "../../components/UI/Checkbox";
 import { Error } from "../../components/Error";
 import { Form } from "../../components/UI/Form";
-import { Button } from "../../components/UI/Button";
 import { Input } from "../../components/UI/Input";
+import { Loader } from "../../components/UI/Loader";
+import { Modal } from "../../components/UI/Modal";
 import ReactSelect from "react-select";
 import { Select } from "../../components/UI/Select";
+import { Subtitle } from "../../components/UI/Subtitle";
 import { TextArea } from "../../components/UI/TextArea";
-import { useNavigate, useParams } from "react-router-dom";
-import { Checkbox } from "../../components/UI/Checkbox";
 import { Title } from "../../components/UI/Title";
-import { Modal } from "../../components/UI/Modal";
+import { toast } from "react-toastify";
+import useSchoolTypesStore from "../../store/useSchoolTypesStore";
+import useSchoolsStore from "../../store/useSchoolsStore";
 
 export const EditSchool = () => {
     const { schoolId } = useParams();
@@ -130,6 +132,7 @@ export const EditSchool = () => {
     const handleDelete = async (e) => {
         await deleteSchool(schoolId, school.title);
         setModalIsActive(false);
+        toast(`Школа "${school.title}" удалена`)
         navigate("/schools_owner/schools");
     };
 
@@ -271,8 +274,6 @@ export const EditSchool = () => {
                                         id={'images'}
                                     />
 
-                                    {images && JSON.stringify(images)}
-
                                     {school?.images?.length > 0 ? (
                                         <div className="one-col">
                                             <span className="delete-images-title">
@@ -333,7 +334,7 @@ export const EditSchool = () => {
             )}
             <Modal isActive={modalIsActive}>
                 <Title>Удаление школы</Title>
-                <p>Вы действительно хотите удалить школу "{school.title}"?</p>
+                <p>Вы действительно хотите удалить школу "{school?.title}"?</p>
                 <div className={"modal__buttons"}>
                     <Button variant={"green"} onClick={handleDelete}>
                         Да

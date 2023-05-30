@@ -19,8 +19,8 @@ export const Teacher = () => {
         <>
             {loading ? <Loader/> : (
                 <TeacherProfile
-                    fullName={teacher.full_name}
-                    images={teacher?.images ? teacher.images : null}
+                    fullName={teacher?.full_name}
+                    images={teacher?.images ? teacher?.images : null}
                     email={teacher?.email}
                     phone={teacher?.phone_number}
                     occupations={teacher?.information?.occupations?.which_occupations}

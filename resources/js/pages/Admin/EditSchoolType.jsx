@@ -10,6 +10,7 @@ import {Title} from "../../components/UI/Title";
 import {Modal} from "../../components/UI/Modal";
 import {Error} from "../../components/Error";
 import {validateHEXColor} from "../../helpers/validateHEXColor";
+import { toast } from "react-toastify";
 
 export const EditSchoolType = () => {
     const {schoolTypeId} = useParams()
@@ -50,11 +51,27 @@ export const EditSchoolType = () => {
         setErrors([])
         e.preventDefault()
 
-        if (!title) setErrors((prev) => [...prev, 'Поле "Название" не должно быть пустым'])
-        if (!validateHEXColor(color)) setErrors((prev) => [...prev, 'Введен некорректный цвет'])
+        let isValid = true
 
-        if (!errors) {
-            await editSchoolType(schoolType.id, title, color).then(() => navigate('/admin/schoolTypes'))
+        if (!title) {
+            setErrors((prev) => [...prev, 'Поле "Название" не должно быть пустым'])
+            isValid = false
+        }
+
+        if (title.length < 4) {
+            setErrors((prev) => [...prev, 'Поле "Название" должно состоять хотя бы из 4 символов'])
+            isValid = false
+        }
+
+        if (!validateHEXColor(color)) {
+            setErrors((prev) => [...prev, 'Введен некорректный цвет'])
+            isValid = false
+        }
+
+        if (isValid) {
+            await editSchoolType(schoolType.id, title, color)
+            navigate('/admin/schoolTypes')
+            toast('Тип школы изменен')
         }
     }
 
@@ -62,6 +79,7 @@ export const EditSchoolType = () => {
         await deleteSchoolType(schoolTypeId)
         setModalIsActive(false)
         navigate('/admin/schoolTypes')
+        toast('Тип школы изменен')
     }
 
     return (

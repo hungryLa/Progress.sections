@@ -46,6 +46,7 @@ class SchoolController extends Controller
     public function getOne(Request $request)
     {
         try {
+            // dd($request);
             $school = School::where('id', $request->school)->first();
             return new SchoolRecource($school);
         } catch (\Exception $exception) {

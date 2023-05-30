@@ -52,7 +52,7 @@ class School extends Model
 
     public function timetables(): HasMany
     {
-        return $this->hasMany(Timetable::class, 'model_id')->where('type', Timetable::TYPES['school']);
+        return $this->hasMany(Timetable::class,'model_id')->where('type', Timetable::TYPES['school']);
     }
 
     public function teachers(): BelongsToMany

@@ -9,6 +9,7 @@ import {useEffect, useState} from "react";
 import {Loader} from "../../components/UI/Loader";
 import {Modal} from "../../components/UI/Modal";
 import {Title} from "../../components/UI/Title";
+import { toast } from "react-toastify";
 
 export const Occupations = () => {
     const loading = useOccupationsStore(({loading}) => loading);
@@ -95,6 +96,7 @@ export const Occupations = () => {
                         variant={"green"}
                         onClick={async () => {
                             await deleteOccupation(occupationToDelete.id);
+                            toast(`Вид деятельности "${occupationToDelete.title}" удален`)
                             setModalIsActive(false);
                         }}
                     >

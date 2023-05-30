@@ -1,5 +1,4 @@
 import './Error.scss'
-import {useEffect} from "react";
 
 export const Error = ({errors}) => {
     return (

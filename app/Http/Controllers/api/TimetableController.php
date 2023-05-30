@@ -37,7 +37,6 @@ class TimetableController extends Controller
         $school = School::find($request['school']);
         $school_timetables = $school->timetables;
         $teachers = $school->teachers;
-        dd($school_timetables);
     }
 
     public function store(Request $request)

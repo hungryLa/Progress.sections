@@ -21,6 +21,7 @@ export const UserSchools = () => {
                         <CardContainer>
                             {schools.map(school => (
                                 <SchoolCard
+                                    key={school.id}
                                     id={school.id}
                                     title={school.title}
                                     description={school.description}

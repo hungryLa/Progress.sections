@@ -26,6 +26,7 @@ export const SectionTimetables = () => {
 
     useEffect(() => {
         getSectionTimetables(sectionId)
+        console.log(sectionTimetables)
     }, [])
 
     const chooseSectionsTimetableToDelete = (sectionsTimetable) => {

@@ -6,7 +6,7 @@ export const TeacherProfile = ({fullName, images = null, email, phone, occupatio
         <div className={'teacher-profile'}>
             <Subtitle className={'teacher-profile__fullname'}>{fullName}</Subtitle>
             <div className="teacher-profile__body" style={!!images ? {gridTemplateColumns: '1fr'} : {}}>
-                {images[0]?.path ? (
+                {images && images[0]?.path ? (
                     <img src={`/storage/${images[0]?.path}`} className={'teacher-profile__image'} alt=""/>
                 ) : ''}
                 <div className={"teacher-profile__info"}>

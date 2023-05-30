@@ -9,6 +9,7 @@ import {TableRow} from "../../components/UI/Table/TableRow";
 import {TableCell} from "../../components/UI/Table/TableCell";
 import {Title} from "../../components/UI/Title";
 import {Modal} from "../../components/UI/Modal";
+import { toast } from "react-toastify";
 
 export const SchoolTypes = () => {
     const {loading, error, schoolTypes, getSchoolTypes, deleteSchoolType} = useSchoolTypesStore()
@@ -96,6 +97,7 @@ export const SchoolTypes = () => {
                 <div className={'modal__buttons'}>
                     <Button variant={'green'} onClick={async () => {
                         await deleteSchoolType(schoolTypeToDelete.id)
+                        toast(`Тип школы "${schoolTypeToDelete.title}" удален`)
                         setModalIsActive(false)
                     }}>Да</Button>
                     <Button variant={'gray'} onClick={() => {
