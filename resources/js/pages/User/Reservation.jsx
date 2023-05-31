@@ -1,17 +1,21 @@
-import { Fragment, useMemo, useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 
-import { Button } from "../../components/UI/Button";
+import ruLocale from "@fullcalendar/core/locales/ru";
+import interactionPlugin from "@fullcalendar/interaction";
 import FullCalendar from "@fullcalendar/react";
+import timeGridPlugin from "@fullcalendar/timegrid";
+import moment from "moment";
+import { useParams } from "react-router-dom";
+import { Button } from "../../components/UI/Button";
+import { Form } from "../../components/UI/Form";
 import { Loader } from "../../components/UI/Loader";
 import { Modal } from "../../components/UI/Modal";
 import { Select } from "../../components/UI/Select";
 import { Subtitle } from "../../components/UI/Subtitle";
+import { Title } from "../../components/UI/Title";
 import { getShortWeekdayName } from "../../helpers/getShortWeekdayName";
-import interactionPlugin from "@fullcalendar/interaction";
-import moment from "moment";
-import ruLocale from "@fullcalendar/core/locales/ru";
-import timeGridPlugin from "@fullcalendar/timegrid";
-import { useParams } from "react-router-dom";
+import useAuthStore from "../../store/useAuthStore";
+import useReservationStore from "../../store/useReservationsStore";
 import useSectionTimetables from "../../store/useSectionTimetables";
 
 const EventItem = ({ info }) => {
@@ -43,16 +47,17 @@ const translateDayToNumber = (day) => {
 };
 
 export const Reservation = () => {
+    const { user } = useAuthStore();
     const { schoolId, sectionId } = useParams();
 
-    const {
-        loading,
-        sectionTimetables,
-        getSectionTimetables,
-    } = useSectionTimetables();
+    const { loading, sectionTimetables, getSectionTimetables } =
+        useSectionTimetables();
+    const { loading: reservationLoading, addReservation } =
+        useReservationStore();
 
     const [events, setEvents] = useState([]);
     const [modalIsActive, setModalIsActive] = useState(false);
+    const [eventInfo, setEventInfo] = useState({});
 
     const [currentSectionTimetable, setCurrentSectionTimetable] = useState({});
 
@@ -65,24 +70,14 @@ export const Reservation = () => {
             await getSectionTimetables(sectionId);
         };
         fetchData();
-
-        console.log("sectionTimetables", sectionTimetables);
-    }, [
-        sectionId,
-        getSectionTimetables
-    ]);
+    }, [sectionId, getSectionTimetables]);
 
     const handleSelectTimetable = (e) => {
         const selectedTimetableId = e.target.value;
         setCurrentSectionTimetable(
-            sectionTimetables.filter((item) => item?.id == selectedTimetableId)[0]
-        );
-
-        console.log(
-            "events",
-            events,
-            "currentSectionTimetable",
-            currentSectionTimetable
+            sectionTimetables.filter(
+                (item) => item?.id == selectedTimetableId
+            )[0]
         );
     };
 
@@ -98,11 +93,25 @@ export const Reservation = () => {
         setStart(currentSectionTimetable?.timetable?.workday_start);
         setEnd(currentSectionTimetable?.timetable?.workday_end);
 
-        const startTime = moment(currentSectionTimetable?.timetable?.workday_start, "HH:mm:ss");
-        const endTime = moment(currentSectionTimetable?.timetable?.workday_end, "HH:mm:ss");
-        const lessonTime = moment.duration(currentSectionTimetable?.timetable?.lesson_time);
-        const restStart = moment(currentSectionTimetable?.timetable?.rest_start, "HH:mm:ss");
-        const restEnd = moment(currentSectionTimetable?.timetable?.rest_end, "HH:mm:ss");
+        const startTime = moment(
+            currentSectionTimetable?.timetable?.workday_start,
+            "HH:mm:ss"
+        );
+        const endTime = moment(
+            currentSectionTimetable?.timetable?.workday_end,
+            "HH:mm:ss"
+        );
+        const lessonTime = moment.duration(
+            currentSectionTimetable?.timetable?.lesson_time
+        );
+        const restStart = moment(
+            currentSectionTimetable?.timetable?.rest_start,
+            "HH:mm:ss"
+        );
+        const restEnd = moment(
+            currentSectionTimetable?.timetable?.rest_end,
+            "HH:mm:ss"
+        );
 
         let testEvents = [];
         let currentTime = moment(startTime);
@@ -124,22 +133,26 @@ export const Reservation = () => {
 
         testEvents.forEach((event, index) => {
             if (!currentSectionTimetable?.timetable?.without_rest) {
-                console.log(`event#${index}`, event);
                 if (
-                    moment(event.startTime, "HH:mm:ss").isBetween(
-                        moment(currentSectionTimetable?.timetable?.rest_start, "HH:mm:ss"),
-                        moment(currentSectionTimetable?.timetable?.rest_end, "HH:mm:ss"),
+                    moment(
+                        currentSectionTimetable?.timetable?.rest_start,
+                        "HH:mm:ss"
+                    ).isBetween(
+                        moment(event.startTime, "HH:mm:ss"),
+                        moment(event.endTime, "HH:mm:ss"),
                         undefined,
                         "[)"
                     ) ||
-                    moment(event.endTime, "HH:mm:ss").isBetween(
-                        moment(currentSectionTimetable?.timetable?.rest_start, "HH:mm:ss"),
-                        moment(currentSectionTimetable?.timetable?.rest_end, "HH:mm:ss"),
+                    moment(
+                        currentSectionTimetable?.timetable?.rest_end,
+                        "HH:mm:ss"
+                    ).isBetween(
+                        moment(event.startTime, "HH:mm:ss"),
+                        moment(event.endTime, "HH:mm:ss"),
                         undefined,
-                        "(]"
+                        "()"
                     )
                 ) {
-                    console.log("Неугодный", event);
                     testEvents.splice(index, 1);
                 }
             }
@@ -147,6 +160,58 @@ export const Reservation = () => {
 
         setEvents([...testEvents]);
     }, [currentSectionTimetable?.timetable, days]);
+
+    const handleEventClick = (info) => {
+        setModalIsActive(true);
+        setEventInfo(info);
+    };
+
+    useEffect(() => {
+        console.log(eventInfo?.event);
+        console.log(eventInfo?.event?.start);
+        console.log(eventInfo?.event?.end);
+    }, [eventInfo]);
+
+    const [selectedUser, setSelectedUser] = useState(null);
+    const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(null);
+
+    useEffect(() => {
+        setSelectedUser(user.id);
+        console.log("selected user", selectedUser);
+    }, []);
+
+    useEffect(() => {
+        console.log("selected user", selectedUser);
+    }, [selectedUser]);
+
+    const handleSelectUser = (e) => {
+        setSelectedUser(e.target.value);
+    };
+
+    const handleSelectPaymentMethod = (e) => {
+        setSelectedPaymentMethod(e.target.value);
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        const reservationData = {
+            id: user?.id,
+            sectionTimetableId: currentSectionTimetable?.id,
+            client: selectedUser,
+            date: eventInfo?.event?.start,
+            time: eventInfo?.event?.start?.toLocaleTimeString([], {
+                hour12: false,
+            }),
+        };
+        console.log(reservationData)
+        await addReservation(
+            reservationData.id,
+            reservationData.sectionTimetableId,
+            reservationData.client,
+            reservationData.date,
+            reservationData.time
+        );
+    };
 
     return (
         <>
@@ -166,8 +231,8 @@ export const Reservation = () => {
                             </option>
                             {sectionTimetables?.map((item) => (
                                 <option key={item?.id} value={item?.id}>
-                                    {item?.timetable?.teacher?.full_name
-                                        ? item?.timetable?.teacher?.full_name + " | "
+                                    {item?.timetable?.owner
+                                        ? item?.timetable?.owner + " | "
                                         : ""}
                                     {item?.timetable?.weekday?.which_days.map(
                                         (day, index) => (
@@ -175,33 +240,38 @@ export const Reservation = () => {
                                                 key={day}
                                             >{`${getShortWeekdayName(day)}${
                                                 index !==
-                                                item?.timetable?.weekday?.which_days
-                                                    .length -
+                                                item?.timetable?.weekday
+                                                    ?.which_days.length -
                                                     1
                                                     ? ", "
                                                     : " | "
                                             }`}</Fragment>
                                         )
                                     )}
-                                    {item?.timetable?.workday_start.split(":")[0] +
+                                    {item?.timetable?.workday_start.split(
+                                        ":"
+                                    )[0] +
                                         ":" +
-                                        item?.timetable?.workday_start.split(":")[1]}
+                                        item?.timetable?.workday_start.split(
+                                            ":"
+                                        )[1]}
                                     -
-                                    {item?.timetable?.workday_end.split(":")[0] +
+                                    {item?.timetable?.workday_end.split(
+                                        ":"
+                                    )[0] +
                                         ":" +
-                                        item?.timetable?.workday_end.split(":")[1]}
+                                        item?.timetable?.workday_end.split(
+                                            ":"
+                                        )[1]}
                                 </option>
                             ))}
                         </Select>
                     </div>
-                    {events && currentSectionTimetable && currentSectionTimetable?.timetable ? (
+                    {events &&
+                    currentSectionTimetable &&
+                    currentSectionTimetable?.timetable ? (
                         <FullCalendar
-                            dateClick={(info) => {
-                                alert("Clicked on: " + info.dateStr);
-                            }}
-                            eventClick={(info) => {
-                                alert(JSON.stringify(info));
-                            }}
+                            eventClick={(info) => handleEventClick(info)}
                             selectable
                             plugins={[timeGridPlugin, interactionPlugin]}
                             initialView="timeGridWeek"
@@ -223,14 +293,59 @@ export const Reservation = () => {
                         ""
                     )}
                     <Modal isActive={modalIsActive}>
-                        <Button
-                            variant={"gray"}
-                            onClick={() => {
-                                setModalIsActive(false);
-                            }}
-                        >
-                            Close
-                        </Button>
+                        <Title>Запись</Title>
+                        <Form
+                            onSubmit={handleSubmit}
+                            inputs={
+                                <div className="one-col">
+                                    <Select
+                                        id="user"
+                                        bordered
+                                        value={selectedUser || null}
+                                        onChange={handleSelectUser}
+                                        label={"Выберите кого хотите записать"}
+                                    >
+                                        <option value={user?.id}>Себя</option>
+                                        {/* IN FUTURE ADD PERSONS AND ACCOUNTS */}
+
+                                        {/* ++++++++++++++++++++++++++++++++++ */}
+                                    </Select>
+                                    <Select
+                                        id="payment"
+                                        bordered
+                                        value={selectedPaymentMethod || null}
+                                        onChange={handleSelectPaymentMethod}
+                                        label={"Выберите способ оплаты"}
+                                    >
+                                        <option value={0}>
+                                            Банковской картой
+                                        </option>
+                                        <option value={1}>
+                                            Абонемент занятий
+                                        </option>
+                                        <option value={2}>
+                                            Денежный абонемент
+                                        </option>
+                                    </Select>
+                                </div>
+                            }
+                            buttons={
+                                <>
+                                    <Button variant={"green"} type={"submit"}>
+                                        Записаться
+                                    </Button>
+                                    <Button
+                                        variant={"gray"}
+                                        type={"button"}
+                                        onClick={() => {
+                                            setModalIsActive(false);
+                                        }}
+                                    >
+                                        Закрыть
+                                    </Button>
+                                </>
+                            }
+                        />
                     </Modal>
                 </>
             )}

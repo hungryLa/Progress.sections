@@ -19,7 +19,7 @@ class TeacherRecource extends JsonResource
             'id' => $this->id,
             'role' => $this->role,
             'images' => $this->images,
-            'schools' => $this->schools,
+            'schools' => SchoolRecource::collection($this->schools),
             'communications' => $this->communications,
             'full_name' => $this->full_name,
             'phone_number' => $this->phone_number,
