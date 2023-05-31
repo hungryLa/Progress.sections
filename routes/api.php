@@ -45,6 +45,7 @@ Route::group([
     Route::post('register', [RegisterController::class, 'register']);
     Route::post('refresh', [AuthController::class, 'refresh']);
     Route::post('me', [AuthController::class, 'me']);
+    Route::post('me-res', [AuthController::class, 'meResource']);
     Route::get('email/verify/{id}/{hash}', [VerificationController::class, 'verify'])->name(
         'api.verification.verify'
     );

@@ -64,6 +64,7 @@ class ReservationController extends Controller
             } else {
                 $data['status'] = 'error';
                 $data['message'] = __('flash.The record for this time has already been made');
+                return $data;
             }
         } catch (\Exception $exception) {
             return $exception->getMessage();

@@ -8,6 +8,7 @@ export const useReservationStore = create(
             loading: false,
             errors: [],
             reservations: [],
+            message: '',
 
             addReservation: async (
                 id,
@@ -19,7 +20,7 @@ export const useReservationStore = create(
                 price
             ) => {
                 try {
-                    set({loading: true});
+                    set({loading: true, message: ''});
                     const response = await api.post(`/cabinet/reservations/store`, {
                         'user': id,
                         'timetableSection': sectionTimetableId,
@@ -29,7 +30,9 @@ export const useReservationStore = create(
                         'payment_type': paymentType,
                         price
                     })
-                    console.log(response)
+                    if(response.data.message) {
+                        set({message: response.data.message})
+                    }
                     set({loading: false});
                 } catch (error) {
                     console.log(error);

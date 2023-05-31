@@ -55,6 +55,16 @@ const useAuthStore = create(
                     error: ''
                 })
                 localStorage.clear()
+            },
+            getUserInfo: async () => {
+                try {
+                    set({loading: true})
+                    const response = await api.post('/me-res')
+                    set({user: await response.data})
+                    set({loading: false})
+                } catch (error) {
+                    set({loading: false})
+                }
             }
         }),
         {
