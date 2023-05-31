@@ -2,7 +2,6 @@
 
 namespace Database\Factories;
 
-use App\Models\Teacher;
 use App\Models\Timetable;
 use App\Models\User;
 use App\Structures\TimetableDaysWeek;
@@ -22,16 +21,16 @@ class TimetableFactory extends Factory
     {
         return [
             'type' => $this->faker->randomElement(Timetable::TYPES),
-            'model_id' => User::where('role',User::ROLES['teacher'])->get()->random()->id,
+            'model_id' => User::where('role', User::ROLES['teacher'])->get()->random()->id,
             'weekday' => TimetableDaysWeek::fromArray([
-               'which_days' => [
-                   $this->faker->randomElement(Timetable::DAYS_WEEK),
-                   $this->faker->randomElement(Timetable::DAYS_WEEK),
-               ]
+                'which_days' => [
+                    $this->faker->randomElement(Timetable::DAYS_WEEK),
+                    $this->faker->randomElement(Timetable::DAYS_WEEK),
+                ]
             ]),
-            'lesson_time' => $this->faker->time,
-            'workday_start' => $this->faker->time,
-            'workday_end' => $this->faker->time,
+            'lesson_time' => "01:00",
+            'workday_start' => "07:00",
+            'workday_end' => "20:00",
             'without_rest' => $this->faker->boolean,
             'rest_start' => $this->faker->time,
             'rest_end' => $this->faker->time,

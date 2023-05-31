@@ -15,6 +15,7 @@ class TimetableSectionResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
+            'reservations' => ReservationResource::collection($this->reservations),
             'timetable' => new TimetableResource($this->timetable),
             'id' => $this->id,
             'section_id' => $this->section_id,

@@ -9,6 +9,8 @@ use App\Models\Occupation;
 use App\Models\School;
 use App\Models\SchoolType;
 use App\Models\Section;
+use App\Models\Subscription;
+use App\Models\SubscriptionUser;
 use App\Models\Teacher;
 use App\Models\TeacherInformation;
 use App\Models\Timetable;
@@ -55,14 +57,16 @@ class DatabaseSeeder extends Seeder
             'email_verified_at' => Carbon::now(),
         ]);
         User::factory(5)->create();
-        Teacher::factory(20)->create();
-        Occupation::factory(10)->create();
-        TeacherInformation::factory(20)->create();
-        Timetable::factory(30)->create();
-        SchoolType::factory(10)->create();
-        School::factory(40)->create();
-        Section::factory(80)->create();
-        TimetableSection::factory(10)->create();
-        ModelSchool::factory(40)->create();
+        Teacher::factory(5)->create();
+        Occupation::factory(5)->create();
+        TeacherInformation::factory(5)->create();
+        Timetable::factory(40)->create();
+        SchoolType::factory(5)->create();
+        School::factory(20)->create();
+        Section::factory(40)->create();
+        TimetableSection::factory(40)->create();
+        ModelSchool::factory(20)->create();
+        Subscription::factory(20)->create();
+        SubscriptionUser::factory(40)->create();
     }
 }

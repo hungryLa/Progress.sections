@@ -1,25 +1,25 @@
-import { Fragment, useEffect, useState } from "react";
+import {Fragment, useEffect, useState} from "react";
 
 import ruLocale from "@fullcalendar/core/locales/ru";
 import interactionPlugin from "@fullcalendar/interaction";
 import FullCalendar from "@fullcalendar/react";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import moment from "moment";
-import { useParams } from "react-router-dom";
-import { Button } from "../../components/UI/Button";
-import { Form } from "../../components/UI/Form";
-import { Loader } from "../../components/UI/Loader";
-import { Modal } from "../../components/UI/Modal";
-import { Select } from "../../components/UI/Select";
-import { Subtitle } from "../../components/UI/Subtitle";
-import { Title } from "../../components/UI/Title";
-import { getShortWeekdayName } from "../../helpers/getShortWeekdayName";
+import {useParams} from "react-router-dom";
+import {Button} from "../../components/UI/Button";
+import {Form} from "../../components/UI/Form";
+import {Loader} from "../../components/UI/Loader";
+import {Modal} from "../../components/UI/Modal";
+import {Select} from "../../components/UI/Select";
+import {Subtitle} from "../../components/UI/Subtitle";
+import {Title} from "../../components/UI/Title";
+import {getShortWeekdayName} from "../../helpers/getShortWeekdayName";
 import useAuthStore from "../../store/useAuthStore";
 import useReservationStore from "../../store/useReservationsStore";
 import useSectionTimetables from "../../store/useSectionTimetables";
 
-const EventItem = ({ info }) => {
-    const { event } = info;
+const EventItem = ({info}) => {
+    const {event} = info;
     return (
         <div>
             <p>{event.title}</p>
@@ -47,12 +47,12 @@ const translateDayToNumber = (day) => {
 };
 
 export const Reservation = () => {
-    const { user } = useAuthStore();
-    const { schoolId, sectionId } = useParams();
+    const {user} = useAuthStore();
+    const {schoolId, sectionId} = useParams();
 
-    const { loading, sectionTimetables, getSectionTimetables } =
+    const {loading, sectionTimetables, getSectionTimetables} =
         useSectionTimetables();
-    const { loading: reservationLoading, addReservation } =
+    const {loading: reservationLoading, addReservation} =
         useReservationStore();
 
     const [events, setEvents] = useState([]);
@@ -113,6 +113,7 @@ export const Reservation = () => {
             "HH:mm:ss"
         );
 
+
         let testEvents = [];
         let currentTime = moment(startTime);
         while (currentTime.isBefore(endTime)) {
@@ -122,7 +123,7 @@ export const Reservation = () => {
                 .format("HH:mm:ss");
 
             testEvents.push({
-                title: "Записаться",
+                title: `${currentSectionTimetable.lesson_price}р.`,
                 startTime: testStart,
                 endTime: testEnd,
                 daysOfWeek: days && days,
@@ -173,7 +174,7 @@ export const Reservation = () => {
     }, [eventInfo]);
 
     const [selectedUser, setSelectedUser] = useState(null);
-    const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(null);
+    const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('card');
 
     useEffect(() => {
         setSelectedUser(user.id);
@@ -203,13 +204,14 @@ export const Reservation = () => {
                 hour12: false,
             }),
         };
-        console.log(reservationData)
         await addReservation(
             reservationData.id,
             reservationData.sectionTimetableId,
             reservationData.client,
             reservationData.date,
-            reservationData.time
+            reservationData.time,
+            selectedPaymentMethod,
+            currentSectionTimetable?.lesson_price
         );
     };
 
@@ -217,7 +219,7 @@ export const Reservation = () => {
         <>
             <Subtitle>Бронирование</Subtitle>
             {loading ? (
-                <Loader />
+                <Loader/>
             ) : (
                 <>
                     <div className="two-col">
@@ -242,23 +244,23 @@ export const Reservation = () => {
                                                 index !==
                                                 item?.timetable?.weekday
                                                     ?.which_days.length -
-                                                    1
+                                                1
                                                     ? ", "
                                                     : " | "
                                             }`}</Fragment>
                                         )
                                     )}
                                     {item?.timetable?.workday_start.split(
-                                        ":"
-                                    )[0] +
+                                            ":"
+                                        )[0] +
                                         ":" +
                                         item?.timetable?.workday_start.split(
                                             ":"
                                         )[1]}
                                     -
                                     {item?.timetable?.workday_end.split(
-                                        ":"
-                                    )[0] +
+                                            ":"
+                                        )[0] +
                                         ":" +
                                         item?.timetable?.workday_end.split(
                                             ":"
@@ -286,7 +288,7 @@ export const Reservation = () => {
                             slotMinTime={"06:00:00"}
                             slotMaxTime={"22:00:00"}
                             events={(events && events) || []}
-                            eventContent={(info) => <EventItem info={info} />}
+                            eventContent={(info) => <EventItem info={info}/>}
                             moreLinkClick={"popover"}
                         />
                     ) : (
@@ -317,13 +319,13 @@ export const Reservation = () => {
                                         onChange={handleSelectPaymentMethod}
                                         label={"Выберите способ оплаты"}
                                     >
-                                        <option value={0}>
+                                        <option value={'card'} defaultChecked>
                                             Банковской картой
                                         </option>
-                                        <option value={1}>
+                                        <option value={'section_subscription'}>
                                             Абонемент занятий
                                         </option>
-                                        <option value={2}>
+                                        <option value={'money_subscription'}>
                                             Денежный абонемент
                                         </option>
                                     </Select>

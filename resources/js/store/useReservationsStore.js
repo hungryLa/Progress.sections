@@ -1,5 +1,5 @@
-import { create } from "zustand";
-import { persist } from "zustand/middleware";
+import {create} from "zustand";
+import {persist} from "zustand/middleware";
 import api from "../middlewares/auth.middleware";
 
 export const useReservationStore = create(
@@ -14,26 +14,30 @@ export const useReservationStore = create(
                 sectionTimetableId,
                 clientId,
                 date,
-                time
+                time,
+                paymentType,
+                price
             ) => {
                 try {
-                    set({ loading: true });
+                    set({loading: true});
                     const response = await api.post(`/cabinet/reservations/store`, {
                         'user': id,
                         'timetableSection': sectionTimetableId,
                         'client': clientId,
                         date,
-                        time
+                        time,
+                        'payment_type': paymentType,
+                        price
                     })
                     console.log(response)
-                    set({ loading: false });
+                    set({loading: false});
                 } catch (error) {
                     console.log(error);
-                    set({ loading: false });
+                    set({loading: false});
                 }
             },
         }),
-        { name: "reservations-storage" }
+        {name: "reservations-storage"}
     )
 );
 

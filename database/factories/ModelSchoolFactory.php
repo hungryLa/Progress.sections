@@ -27,6 +27,8 @@ class ModelSchoolFactory extends Factory
         }
         if ($model_type == ModelSchool::TYPES_FOR_FACTORY['teacher']) {
             $status = ModelSchool::STATUS['works'];
+        } else {
+            $status = null;
         }
         return [
             'status' => $status,

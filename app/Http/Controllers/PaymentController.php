@@ -8,19 +8,20 @@ use App\Models\School;
 use App\Models\Subscription;
 use App\Models\SubscriptionUser;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class PaymentController extends Controller
 {
-    public function storePayment(Request $request){
-
+    public function storePayment(Request $request)
+    {
         $school = School::find($request->school);
         $subscription = null;
         $timetable_section = null;
-        $user =\Auth::user();
-        if($request->subscription){
+        $user = Auth::user();
+        if ($request->subscription) {
             $subscription = Subscription::find($request->subscription);
             $amount = (float)number_format((float)$subscription->price, 2, '.', '');
-            $description = 'Покупка абонемента"'. $subscription->title .'"';
+            $description = 'Покупка абонемента"'.$subscription->title.'"';
         }
         $error = false;
         $message = false;
@@ -36,32 +37,35 @@ class PaymentController extends Controller
 
         $receiptItem = [
             [
-                'Name'          => $description,
-                'Price'         => $amount * 100,
-                'Quantity'      => 1.00,
-                'Amount'        => $amount * 100,
+                'Name' => $description,
+                'Price' => $amount * 100,
+                'Quantity' => 1.00,
+                'Amount' => $amount * 100,
                 'PaymentMethod' => 'full_prepayment',
                 'PaymentObject' => 'service',
-                'Tax'           => 'none'
+                'Tax' => 'none'
             ]
         ];
 
         $receipt = [
             'EmailCompany' => 'admin@progressrb.ru',
-            'Email'        => $user->email,
-            'Taxation'     => 'usn_income',
-            'Items'        => $receiptItem,
+            'Email' => $user->email,
+            'Taxation' => 'usn_income',
+            'Items' => $receiptItem,
         ];
 
         $params = [
             "OrderId" => uniqid(),               //идентификатор платежа
             "Amount" => $amount * 100,              //сумма всего платежа в копейках
             "Description" => $description,  //описание платежа
-            "SuccessURL" => route('payments.successPay',compact('user','school','subscription','timetable_section','amount')),
-            "FailURL" => route('payments.failPay',compact('school','subscription','timetable_section')),
+            "SuccessURL" => route(
+                'payments.successPay',
+                compact('user', 'school', 'subscription', 'timetable_section', 'amount')
+            ),
+            "FailURL" => route('payments.failPay', compact('school', 'subscription', 'timetable_section')),
             'Receipt' => $receipt,                  //данные для чека
-            'DATA'    => [
-                'Email'           => $user->email,
+            'DATA' => [
+                'Email' => $user->email,
             ],
         ];
 
@@ -74,7 +78,7 @@ class PaymentController extends Controller
         if ($api->error) {
             $error = true;
             $message = $api->error;
-            session()->flash('warning',$message);
+            session()->flash('warning', $message);
             return redirect()->back();
         } else {
             if ($api->paymentUrl) {
@@ -89,11 +93,10 @@ class PaymentController extends Controller
 
                 $url = $api->paymentUrl;
                 return redirect($url);
-
-            }else {
+            } else {
                 $error = true;
                 $message = 'Произошла ошибка при обработке запроса.';
-                session()->flash('warning',$message);
+                session()->flash('warning', $message);
                 return redirect()->back();
             }
         }
@@ -105,38 +108,39 @@ class PaymentController extends Controller
 //        ];
     }
 
-    public function successPay(Request $request){
+    public function successPay(Request $request)
+    {
         $subscription = Subscription::find($request->subscription);
         $school = School::find($request->school);
-        if ($request->subscription){
+        if ($request->subscription) {
             $subscriptionUser = SubscriptionUser::create([
                 'user_id' => $request->user,
                 'subscription_id' => $subscription->id,
                 'price_subscription' => $request->amount,
             ]);
-            if($subscription->type == Subscription::TYPES['deposit']){
+            if ($subscription->type == Subscription::TYPES['deposit']) {
                 $subscriptionUser->update([
                     'deposit' => $subscription->value,
                 ]);
-            }
-            elseif ($subscription->type == Subscription::TYPES['section card']){
+            } elseif ($subscription->type == Subscription::TYPES['section card']) {
                 $subscriptionUser->update([
                     'remaining_classes' => $subscription->value,
                 ]);
             }
-            if ($subscriptionUser){
-                session()->flash('success',__('other.The payment was successful'));
+            if ($subscriptionUser) {
+                session()->flash('success', __('other.The payment was successful'));
             }
-            return redirect()->route('school.subscription.index',compact('school'));
+            return redirect()->route('school.subscription.index', compact('school'));
         }
     }
 
-    public function failPay(Request $request){
+    public function failPay(Request $request)
+    {
         $subscription = Subscription::find($request->subscription);
         $school = School::find($request->school);
-        if ($request->subscription){
-            session()->flash('danger',__('other.Payment failed'));
-            return redirect()->route('school.subscription.index',compact('school'));
+        if ($request->subscription) {
+            session()->flash('danger', __('other.Payment failed'));
+            return redirect()->route('school.subscription.index', compact('school'));
         }
     }
 }
