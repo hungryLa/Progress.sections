@@ -1,3 +1,5 @@
+@import 'react-big-calendar/lib/sass/styles';
+
 :root {
     // COLORS
     --white: #FFF;
@@ -342,4 +344,8 @@ img {
     @media screen and (max-width: 480px) {
         writing-mode: vertical-lr;
     }
+}
+
+.event-disabled {
+    opacity: 0.5;
 }

@@ -1,8 +1,8 @@
-import { Fragment, useEffect, useRef, useState } from "react";
+import { Fragment, memo, useEffect, useRef, useState } from "react";
 
+import FullCalendar from "@fullcalendar/react";
 import ruLocale from "@fullcalendar/core/locales/ru";
 import interactionPlugin from "@fullcalendar/interaction";
-import FullCalendar from "@fullcalendar/react";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import moment from "moment";
 import { useParams } from "react-router-dom";
@@ -18,17 +18,40 @@ import useAuthStore from "../../store/useAuthStore";
 import useReservationStore from "../../store/useReservationsStore";
 import useSectionTimetables from "../../store/useSectionTimetables";
 import useSubscriptionUsersStore from "../../store/useSubscriptionUsersStore";
-import useSectionsStore from "../../store/useSectionsStore";
+import useCalendarStore from "../../store/useCalendarStore";
 
 const EventItem = ({ info }) => {
     const { event } = info;
+
+    const {currentSectionTimetable} = useCalendarStore()
+
+    useEffect(() => {
+        currentSectionTimetable?.reservations?.forEach((reservation) => {
+            if (
+                event?.start.toLocaleDateString() ===
+                    reservation?.date.split("-").reverse().join(".") &&
+                event?.start.toLocaleTimeString() === reservation?.time
+            ) {
+                event.setProp("color", "red");
+                return
+            } else {
+                event.setProp("color", "red");
+            }
+        });
+
+        if (event?.start < new Date()) {
+            event.setProp("color", "gray");
+        } else {
+            event.setProp("color", "var(--blue)");
+        }
+    }, [info, currentSectionTimetable?.reservations])
 
     return (
         <div>
             <p>{event.title}</p>
         </div>
     );
-};
+}
 
 const translateDayToNumber = (day) => {
     switch (day) {
@@ -55,18 +78,16 @@ export const Reservation = () => {
 
     const { loading, sectionTimetables, getSectionTimetables } =
         useSectionTimetables();
-    const {
-        loading: reservationLoading,
-        addReservation,
-        message,
-    } = useReservationStore();
+    const { loading: reservationLoading, addReservation } =
+        useReservationStore();
     const { loading: subscriptionsLoading } = useSubscriptionUsersStore();
+    const {currentSectionTimetable, getCurrentSectionTimetable} = useCalendarStore()
 
     const [events, setEvents] = useState([]);
     const [modalIsActive, setModalIsActive] = useState(false);
     const [eventInfo, setEventInfo] = useState({});
 
-    const [currentSectionTimetable, setCurrentSectionTimetable] = useState({});
+    // const [currentSectionTimetable, setCurrentSectionTimetable] = useState({});
 
     const [abonements, setAbonements] = useState([]);
 
@@ -88,8 +109,7 @@ export const Reservation = () => {
     useEffect(() => {
         setAbonements(
             user?.subsriptions?.filter(
-                (item) =>
-                    item?.school_id == schoolId && item?.section_id == sectionId
+                (item) => item?.school_id == schoolId && item?.section_id == sectionId
             )
         );
     }, [user]);
@@ -100,11 +120,7 @@ export const Reservation = () => {
 
     const handleSelectTimetable = (e) => {
         const selectedTimetableId = e.target.value;
-        setCurrentSectionTimetable(
-            sectionTimetables.filter(
-                (item) => item?.id == selectedTimetableId
-            )[0]
-        );
+        getCurrentSectionTimetable(selectedTimetableId)
     };
 
     useEffect(() => {
@@ -188,7 +204,7 @@ export const Reservation = () => {
 
     useEffect(() => {
         setSelectedUser(user.id);
-    }, []);
+    }, [user]);
 
     const handleSelectUser = (e) => {
         setSelectedUser(e.target.value);
@@ -223,113 +239,10 @@ export const Reservation = () => {
         await getSectionTimetables(sectionId);
     };
 
-    // useEffect(() => {
-    //     const calendarApi = calendarRef?.current?.getApi()
-    //     const currentEvents = calendarApi?.getEvents()
-
-    //     // currentEvents?.map((ev, index) => {
-    //     //     currentSectionTimetable?.reservations?.map(reservation => {
-    //     //         let isSameDate = ev?.start.toLocaleDateString() === reservation.date.split('-').reverse().join('.')
-    //     //         let isSameTime = ev?.start.toLocaleTimeString() === reservation.time
-    //     //         if(isSameDate && isSameTime) {
-    //     //             console.log('ev',ev._def.ui);
-    //     //             ev._def.ui.display = 'none'
-    //     //             console.log('ev',ev._def.ui.backgroundColor);
-    //     //         }
-    //     //     })
-    //     // })
-
-    //     console.log('current reservations', currentSectionTimetable.reservations);
-
-    // }, [calendarRef, events, currentSectionTimetable, setEvents])
-
-    const eventWillUnmount = (info) => {
-        // console.log(info);
-    }
-
-    const eventDidMount = (info) => {
-        const { event } = info;
-        console.log(event)
-        let crit = 0;
-        // console.log(event.start.toLocaleDateString());
-        currentSectionTimetable?.reservations?.forEach((reservation) => {
-            // console.log(
-            //     "event",
-            //     event.start.toLocaleDateString() +
-            //         " " +
-            //         event.start.toLocaleTimeString(),
-            //     "reservation",
-            //     reservation.date.split("-").reverse().join(".") +
-            //         " " +
-            //         reservation.time,
-            //     "isSameDate",
-            //     event.start.toLocaleDateString() ===
-            //         reservation.date.split("-").reverse().join("."),
-            //     "isSameTime",
-            //     event.start.toLocaleTimeString() == reservation.time
-            // );
-            const isSameDate =
-                event.start.toLocaleDateString() ==
-                reservation.date.split("-").reverse().join(".");
-            const isSameTime =
-                event.start.toLocaleTimeString() == reservation.time;
-
-            if(isSameDate || isSameTime) {
-                event.setProp('display', 'none');
-            }
-
-            if (!isSameDate || !isSameTime) {
-                event.setProp('display', 'block');
-            }
-
-            // if (isSameDate && isSameTime) {
-            //     crit = 1;
-            // }
-            // // (!isSameDate || !isSameTime) {
-
-            // // }
-            // if(crit){
-            //     event.setProp("color", "red");
-            // }else{
-            //     event.setProp("color", "blue");
-            // }
-        });
-        // currentSectionTimetable?.reservations?.find(reservation => {
-        //     reservation.date.split('-').reverse().join('.') === event.start.toLocaleDateString() && reservation.time === event.start.toLocaleTimeString()
-        // })
-        // currentSectionTimetable?.reservations?.map((reservation) => {
-        //     console.log(
-        //         "res",
-        //         reservation?.date?.split("-").reverse().join(".") +
-        //             " " +
-        //             reservation.time
-        //     );
-        //     console.log(
-        //         "event",
-        //         event.start.toLocaleDateString() +
-        //             " " +
-        //             event.start.toLocaleTimeString()
-        //     );
-        //     console.log(
-        //         "isSameDate",
-        //         reservation?.date?.split("-").reverse().join(".") ===
-        //             event.start.toLocaleDateString()
-        //     );
-        //     console.log(
-        //         "isSameTime",
-        //         reservation.time === event.start.toLocaleTimeString()
-        //     );
-        // });
-    };
-
-    const navLinkWeekClick = (start, jsE) => {
-        console.log(info, jsE)
-    }
-
     return (
         <>
             <Subtitle>Бронирование</Subtitle>
-            {loading || subscriptionsLoading ? (
+            {loading || subscriptionsLoading || reservationLoading ? (
                 <Loader />
             ) : (
                 <>
@@ -383,31 +296,31 @@ export const Reservation = () => {
                     {events &&
                     currentSectionTimetable &&
                     currentSectionTimetable?.timetable ? (
-                        <FullCalendar
-                            eventDidMount={eventDidMount}
-                            // eventDisplay={}
-                            eventWillUnmount={eventWillUnmount}
-                            navLinkWeekClick={navLinkWeekClick}
-                            ref={calendarRef}
-                            dateClick={(info) => console.log(info)}
-                            eventClick={(info) => handleEventClick(info)}
-                            selectable
-                            plugins={[timeGridPlugin, interactionPlugin]}
-                            initialView="timeGridWeek"
-                            locale={ruLocale}
-                            slotLabelFormat={{
-                                hour: "numeric",
-                                minute: "2-digit",
-                                omitZeroMinute: false,
-                                meridiem: "short",
-                            }}
-                            allDaySlot={false}
-                            slotMinTime={"06:00:00"}
-                            slotMaxTime={"22:00:00"}
-                            events={(events && events) || []}
-                            eventContent={(info) => <EventItem info={info} />}
-                            moreLinkClick={"popover"}
-                        />
+                        <>
+                            <FullCalendar
+                                ref={calendarRef}
+                                dateClick={(info) => console.log(info)}
+                                eventClick={(info) => handleEventClick(info)}
+                                selectable
+                                plugins={[timeGridPlugin, interactionPlugin]}
+                                initialView="timeGridWeek"
+                                locale={ruLocale}
+                                slotLabelFormat={{
+                                    hour: "numeric",
+                                    minute: "2-digit",
+                                    omitZeroMinute: false,
+                                    meridiem: "short",
+                                }}
+                                allDaySlot={false}
+                                slotMinTime={"06:00:00"}
+                                slotMaxTime={"22:00:00"}
+                                events={(events && events) || []}
+                                eventContent={(info) => (
+                                    <EventItem info={info} />
+                                )}
+                                moreLinkClick={"popover"}
+                            />
+                        </>
                     ) : (
                         ""
                     )}
