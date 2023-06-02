@@ -1,10 +1,5 @@
-import { Fragment, memo, useEffect, useRef, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 
-import FullCalendar from "@fullcalendar/react";
-import ruLocale from "@fullcalendar/core/locales/ru";
-import interactionPlugin from "@fullcalendar/interaction";
-import timeGridPlugin from "@fullcalendar/timegrid";
-import moment from "moment";
 import { useParams } from "react-router-dom";
 import { Button } from "../../components/UI/Button";
 import { Form } from "../../components/UI/Form";
@@ -13,67 +8,17 @@ import { Modal } from "../../components/UI/Modal";
 import { Select } from "../../components/UI/Select";
 import { Subtitle } from "../../components/UI/Subtitle";
 import { Title } from "../../components/UI/Title";
+import { WeekCalendar } from "../../components/WeekCalendar";
 import { getShortWeekdayName } from "../../helpers/getShortWeekdayName";
 import useAuthStore from "../../store/useAuthStore";
+import useCalendarStore from "../../store/useCalendarStore";
 import useReservationStore from "../../store/useReservationsStore";
 import useSectionTimetables from "../../store/useSectionTimetables";
 import useSubscriptionUsersStore from "../../store/useSubscriptionUsersStore";
-import useCalendarStore from "../../store/useCalendarStore";
-
-const EventItem = ({ info }) => {
-    const { event } = info;
-
-    const {currentSectionTimetable} = useCalendarStore()
-
-    useEffect(() => {
-        currentSectionTimetable?.reservations?.forEach((reservation) => {
-            if (
-                event?.start.toLocaleDateString() ===
-                    reservation?.date.split("-").reverse().join(".") &&
-                event?.start.toLocaleTimeString() === reservation?.time
-            ) {
-                event.setProp("color", "red");
-                return
-            } else {
-                event.setProp("color", "red");
-            }
-        });
-
-        if (event?.start < new Date()) {
-            event.setProp("color", "gray");
-        } else {
-            event.setProp("color", "var(--blue)");
-        }
-    }, [info, currentSectionTimetable?.reservations])
-
-    return (
-        <div>
-            <p>{event.title}</p>
-        </div>
-    );
-}
-
-const translateDayToNumber = (day) => {
-    switch (day) {
-        case "Monday":
-            return 1;
-        case "Tuesday":
-            return 2;
-        case "Wednesday":
-            return 3;
-        case "Thursday":
-            return 4;
-        case "Friday":
-            return 5;
-        case "Saturday":
-            return 6;
-        default:
-            return 0;
-    }
-};
+import moment from "moment";
 
 export const Reservation = () => {
-    const { user, getUserInfo, loading: authLoading } = useAuthStore();
+    const { user, getUserInfo } = useAuthStore();
     const { schoolId, sectionId } = useParams();
 
     const { loading, sectionTimetables, getSectionTimetables } =
@@ -81,19 +26,20 @@ export const Reservation = () => {
     const { loading: reservationLoading, addReservation } =
         useReservationStore();
     const { loading: subscriptionsLoading } = useSubscriptionUsersStore();
-    const {currentSectionTimetable, getCurrentSectionTimetable} = useCalendarStore()
+    const {
+        currentSectionTimetable,
+        getCurrentSectionTimetable,
+        events,
+        getTestEvents,
+        loading: calendarLoading,
+        onNavigate
+    } = useCalendarStore();
 
-    const [events, setEvents] = useState([]);
     const [modalIsActive, setModalIsActive] = useState(false);
     const [eventInfo, setEventInfo] = useState({});
 
-    // const [currentSectionTimetable, setCurrentSectionTimetable] = useState({});
-
     const [abonements, setAbonements] = useState([]);
 
-    const [days, setDays] = useState([]);
-
-    const calendarRef = useRef();
 
     useEffect(() => {
         getUserInfo();
@@ -109,90 +55,22 @@ export const Reservation = () => {
     useEffect(() => {
         setAbonements(
             user?.subsriptions?.filter(
-                (item) => item?.school_id == schoolId && item?.section_id == sectionId
+                (item) =>
+                    item?.school_id == schoolId && item?.section_id == sectionId
             )
         );
     }, [user]);
 
-    useEffect(() => {
-        console.log(abonements);
-    }, [abonements]);
-
-    const handleSelectTimetable = (e) => {
+    const handleSelectTimetable = async (e) => {
         const selectedTimetableId = e.target.value;
-        getCurrentSectionTimetable(selectedTimetableId)
+        await getCurrentSectionTimetable(selectedTimetableId);
     };
 
     useEffect(() => {
-        setDays(
-            currentSectionTimetable?.timetable?.weekday?.which_days
-                ?.map((day) => translateDayToNumber(day))
-                ?.sort((a, b) => a - b) || []
-        );
-
-        console.log(currentSectionTimetable);
+        getTestEvents();
     }, [currentSectionTimetable]);
 
-    useEffect(() => {
-        const startTime = moment(
-            currentSectionTimetable?.timetable?.workday_start,
-            "HH:mm:ss"
-        );
-        const endTime = moment(
-            currentSectionTimetable?.timetable?.workday_end,
-            "HH:mm:ss"
-        );
-        const lessonTime = moment.duration(
-            currentSectionTimetable?.timetable?.lesson_time
-        );
-
-        let testEvents = [];
-        let currentTime = moment(startTime);
-        while (currentTime.isBefore(endTime)) {
-            let testStart = moment(currentTime).format("HH:mm:ss");
-            let testEnd = moment(currentTime)
-                .add(lessonTime)
-                .format("HH:mm:ss");
-
-            testEvents.push({
-                title: `${currentSectionTimetable.lesson_price}р.`,
-                startTime: testStart,
-                endTime: testEnd,
-                daysOfWeek: days && days,
-            });
-
-            currentTime.add(lessonTime);
-        }
-
-        testEvents.forEach((event, index) => {
-            if (!currentSectionTimetable?.timetable?.without_rest) {
-                if (
-                    moment(
-                        currentSectionTimetable?.timetable?.rest_start,
-                        "HH:mm:ss"
-                    ).isBetween(
-                        moment(event.startTime, "HH:mm:ss"),
-                        moment(event.endTime, "HH:mm:ss"),
-                        undefined,
-                        "[)"
-                    ) ||
-                    moment(
-                        currentSectionTimetable?.timetable?.rest_end,
-                        "HH:mm:ss"
-                    ).isBetween(
-                        moment(event.startTime, "HH:mm:ss"),
-                        moment(event.endTime, "HH:mm:ss"),
-                        undefined,
-                        "()"
-                    )
-                ) {
-                    testEvents.splice(index, 1);
-                }
-            }
-        });
-
-        setEvents([...testEvents]);
-    }, [currentSectionTimetable?.timetable, days]);
+    useEffect(() => {console.log(events);}, [events])
 
     const handleEventClick = (info) => {
         setModalIsActive(true);
@@ -216,15 +94,17 @@ export const Reservation = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
         const reservationData = {
             id: user?.id,
             sectionTimetableId: currentSectionTimetable?.id,
             client: selectedUser,
-            date: eventInfo?.event?.start,
-            time: eventInfo?.event?.start?.toLocaleTimeString([], {
-                hour12: false,
-            }),
+            date: moment(eventInfo?.start).format('MM-DD-YYYY'),
+            time: eventInfo?.start?.toLocaleTimeString(),
         };
+
+        console.log(reservationData);
+
         await addReservation(
             reservationData.id,
             reservationData.sectionTimetableId,
@@ -237,12 +117,16 @@ export const Reservation = () => {
         setModalIsActive(false);
         await getUserInfo();
         await getSectionTimetables(sectionId);
-    };
+    }
+
 
     return (
         <>
             <Subtitle>Бронирование</Subtitle>
-            {loading || subscriptionsLoading || reservationLoading ? (
+            {loading ||
+            subscriptionsLoading ||
+            reservationLoading ||
+            calendarLoading ? (
                 <Loader />
             ) : (
                 <>
@@ -296,31 +180,7 @@ export const Reservation = () => {
                     {events &&
                     currentSectionTimetable &&
                     currentSectionTimetable?.timetable ? (
-                        <>
-                            <FullCalendar
-                                ref={calendarRef}
-                                dateClick={(info) => console.log(info)}
-                                eventClick={(info) => handleEventClick(info)}
-                                selectable
-                                plugins={[timeGridPlugin, interactionPlugin]}
-                                initialView="timeGridWeek"
-                                locale={ruLocale}
-                                slotLabelFormat={{
-                                    hour: "numeric",
-                                    minute: "2-digit",
-                                    omitZeroMinute: false,
-                                    meridiem: "short",
-                                }}
-                                allDaySlot={false}
-                                slotMinTime={"06:00:00"}
-                                slotMaxTime={"22:00:00"}
-                                events={(events && events) || []}
-                                eventContent={(info) => (
-                                    <EventItem info={info} />
-                                )}
-                                moreLinkClick={"popover"}
-                            />
-                        </>
+                        <WeekCalendar events={events} onSelectEvent={handleEventClick} onNavigate={onNavigate}/>
                     ) : (
                         ""
                     )}
