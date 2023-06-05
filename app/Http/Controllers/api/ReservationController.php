@@ -12,7 +12,6 @@ use App\Models\TimetableSection;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Redirect;
 
 class ReservationController extends Controller
 {
@@ -35,16 +34,14 @@ class ReservationController extends Controller
             $section = $timetableSection->section;
             if (
                 (count(
-                    Reservation::where([
-                        'timetable_section_id' => $timetableSection->id,
-                        'date' => $request->date,
-                        'time' => $request->time,
-                    ])->get()
-                ) == 0)
+                        Reservation::where([
+                            'timetable_section_id' => $timetableSection->id,
+                            'date' => $request->date,
+                            'time' => $request->time,
+                        ])->get()
+                    ) == 0)
             ) {
-                if ($request->payment_type == 'card') {
-                    $res = self::storePayment($request);
-                } elseif ($request->payment_type == 'section_subscription') {
+                if ($request->payment_type == 'section_subscription') {
                     $res = self::payBySectionSubscription($user, $section);
                 } elseif ($request->payment_type == 'money_subscription') {
                     $res = self::payByMoneySubscription($user, $section, $request->price);
@@ -54,7 +51,7 @@ class ReservationController extends Controller
                         'user_id' => $request->user,
                         'timetable_section_id' => $timetableSection->id,
                         'client' => $request->client,
-                        'date' => $request->date ,
+                        'date' => $request->date,
                         'time' => $request->time,
                     ]);
                     if ($success) {
@@ -68,7 +65,6 @@ class ReservationController extends Controller
                 $data['message'] = __('flash.The record for this time has already been made');
                 return $data;
             }
-            return $data;
         } catch (\Exception $exception) {
             return $exception->getMessage();
         }
@@ -100,105 +96,130 @@ class ReservationController extends Controller
 
     static function storePayment(Request $request)
     {
-        $user = Auth::user();
-        if ($request->timetableSection) {
-            $section = TimetableSection::find($request->timetableSection)->section;
-            $amount = (float)number_format((float)$request->price, 2, '.', '');
-            $description = 'Покупка занятия на "' . $section->title . '"';
-        }
-        $status = false;
-        $error = false;
-        $message = false;
-        $url = false;
-
-        $terminalKey = config('payment.TINKOFF_TERMINAL_KEY');
-        $secretKey = config('payment.TINKOFF_SECRET_KEY');
-        $percent = config('payment.CARD_PERCENT');
-
-
-        //        $amount = (float)number_format((float)$request->amount, 2, '.', '');
-        $amountCommission = $amount - ($amount * $percent); // Это число записывается на баланс аккаунта
-
-        $receiptItem = [
-            [
-                'Name' => $description,
-                'Price' => $amount * 100,
-                'Quantity' => 1.00,
-                'Amount' => $amount * 100,
-                'PaymentMethod' => 'full_prepayment',
-                'PaymentObject' => 'service',
-                'Tax' => 'none'
-            ]
-        ];
-
-        $receipt = [
-            'EmailCompany' => 'admin@progressrb.ru',
-            'Email' => $user->email,
-            'Taxation' => 'usn_income',
-            'Items' => $receiptItem,
-        ];
-
-        $params = [
-            "OrderId" => uniqid(),               //идентификатор платежа
-            "Amount" => $amount * 100,              //сумма всего платежа в копейках
-            "Description" => $description,  //описание платежа
-            "SuccessURL" => 'Success',
-            "FailURL" => 'Fail',
-            'Receipt' => $receipt,                  //данные для чека
-            'DATA' => [
-                'Email' => $user->email,
-            ],
-        ];
-
-        // Создание счета
-        $api = new TinkoffMerchantAPI(
-            $terminalKey,  //Ваш Terminal_Key
-            $secretKey   //Ваш Secret_Key
-        );
-        $api->init($params);
-        if ($api->error) {
-            $error = true;
-            $message = $api->error;
-            session()->flash('warning', $message);
-            return redirect()->back();
-        } else {
-            if ($api->paymentUrl) {
-                // Запись в бд о пополнении баланса
-                $data = [
-                    'user_id' => $user->id,
-                    'amount' => $amount,
-                    'uuid' => $api->paymentId,
-                ];
-
-                $payment = Payment::create($data);
-
-                $url = $api->paymentUrl;
-                return redirect()->away($url);
-            } else {
-                $error = true;
-                $message = 'Произошла ошибка при обработке запроса.';
-                session()->flash('warning', $message);
+        if (
+            (count(
+                    Reservation::where([
+                        'timetable_section_id' => $request->timetableSection,
+                        'date' => $request->date,
+                        'time' => $request->time,
+                    ])->get()
+                ) == 0)
+        ) {
+            $user = Auth::user();
+            if ($request->timetableSection) {
+                $section = TimetableSection::find($request->timetableSection)->section;
+                $amount = (float)number_format((float)$request->price, 2, '.', '');
+                $description = 'Покупка занятия на "'.$section->title.'"';
             }
+            $error = false;
+            $message = false;
+            $url = false;
+
+            $terminalKey = config('payment.TINKOFF_TERMINAL_KEY');
+            $secretKey = config('payment.TINKOFF_SECRET_KEY');
+            $percent = config('payment.CARD_PERCENT');
+
+
+            //        $amount = (float)number_format((float)$request->amount, 2, '.', '');
+            $amountCommission = $amount - ($amount * $percent); // Это число записывается на баланс аккаунта
+
+            $receiptItem = [
+                [
+                    'Name' => $description,
+                    'Price' => $amount * 100,
+                    'Quantity' => 1.00,
+                    'Amount' => $amount * 100,
+                    'PaymentMethod' => 'full_prepayment',
+                    'PaymentObject' => 'service',
+                    'Tax' => 'none'
+                ]
+            ];
+
+            $receipt = [
+                'EmailCompany' => 'admin@progressrb.ru',
+                'Email' => $user->email,
+                'Taxation' => 'usn_income',
+                'Items' => $receiptItem,
+            ];
+
+            $params = [
+                "OrderId" => uniqid(),               //идентификатор платежа
+                "Amount" => $amount * 100,              //сумма всего платежа в копейках
+                "Description" => $description,  //описание платежа
+                "SuccessURL" => route('cabinet.reservations.successPay', ['request' => $request]),
+                "FailURL" => route('cabinet.reservations.failPay'),
+                'Receipt' => $receipt,                  //данные для чека
+                'DATA' => [
+                    'Email' => $user->email,
+                ],
+            ];
+
+            // Создание счета
+            $api = new TinkoffMerchantAPI(
+                $terminalKey,  //Ваш Terminal_Key
+                $secretKey   //Ваш Secret_Key
+            );
+            $api->init($params);
+            if ($api->error) {
+                $error = true;
+                $message = $api->error;
+                session()->flash('warning', $message);
+                return redirect()->back();
+            } else {
+                if ($api->paymentUrl) {
+                    // Запись в бд о пополнении баланса
+                    $data = [
+                        'user_id' => $user->id,
+                        'amount' => $amount,
+                        'uuid' => $api->paymentId,
+                    ];
+
+                    $payment = Payment::create($data);
+
+                    $url = $api->paymentUrl;
+                } else {
+                    $error = true;
+                    $message = 'Произошла ошибка при обработке запроса.';
+                    session()->flash('warning', $message);
+                }
+            }
+
+            $data = [
+                'error' => $error,
+                'message' => $message,
+                'url' => $url,
+            ];
+
+            return $data;
+        } else {
+            $data['status'] = 'error';
+            $data['message'] = __('flash.The record for this time has already been made');
+            return $data;
+        }
+    }
+
+    public function successPay(Request $request)
+    {
+        try {
+            $success = Reservation::create([
+                'user_id' => $request->user,
+                'timetable_section_id' => $request->timetableSection,
+                'client' => $request->client,
+                'date' => $request->date,
+                'time' => $request->time,
+            ]);
+            $data['status'] = 'success';
+        } catch (\Exception $exception) {
+            return $exception->getMessage();
         }
 
-        $res = [
-            'status' => $status,
-            'error' => $error,
-            'message' => $message,
-            'url' => $url,
-        ];
-
-        return $res;
+        return $data;
     }
 
-    public function successPay(){
-        $res['status'] = 'success';
-        return $res;
-    }
-
-    public function failPay(){
-        $res['status'] = 'fail';
-        return $res;
+    public function failPay()
+    {
+        $data['status'] = 'fail';
+        return $data;
     }
 
     static function payBySectionSubscription(User $user, Section $section)
