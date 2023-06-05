@@ -14,6 +14,10 @@ export const UserSchoolsSections = () => {
         getSections(schoolId)
     }, [])
 
+    useEffect(() => {
+        console.log(sections)
+    }, [sections])
+
     return (
         <>
             <Subtitle>Секции</Subtitle>

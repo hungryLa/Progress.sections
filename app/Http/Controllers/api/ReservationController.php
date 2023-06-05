@@ -12,6 +12,7 @@ use App\Models\TimetableSection;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Redirect;
 
 class ReservationController extends Controller
 {
@@ -34,12 +35,12 @@ class ReservationController extends Controller
             $section = $timetableSection->section;
             if (
                 (count(
-                        Reservation::where([
-                            'timetable_section_id' => $timetableSection->id,
-                            'date' => $request->date,
-                            'time' => $request->time,
-                        ])->get()
-                    ) == 0)
+                    Reservation::where([
+                        'timetable_section_id' => $timetableSection->id,
+                        'date' => $request->date,
+                        'time' => $request->time,
+                    ])->get()
+                ) == 0)
             ) {
                 if ($request->payment_type == 'card') {
                     $res = self::storePayment($request);
@@ -53,17 +54,19 @@ class ReservationController extends Controller
                         'user_id' => $request->user,
                         'timetable_section_id' => $timetableSection->id,
                         'client' => $request->client,
-                        'date' => $request->date,
+                        'date' => $request->date ,
                         'time' => $request->time,
                     ]);
                     if ($success) {
                         $data['status'] = 'success';
                         $data['message'] = __('other.Record successfully added');
                     }
+                    return $data;
                 }
             } else {
                 $data['status'] = 'error';
                 $data['message'] = __('flash.The record for this time has already been made');
+                return $data;
             }
             return $data;
         } catch (\Exception $exception) {
@@ -101,8 +104,9 @@ class ReservationController extends Controller
         if ($request->timetableSection) {
             $section = TimetableSection::find($request->timetableSection)->section;
             $amount = (float)number_format((float)$request->price, 2, '.', '');
-            $description = 'Покупка занятия на "'.$section->title.'"';
+            $description = 'Покупка занятия на "' . $section->title . '"';
         }
+        $status = false;
         $error = false;
         $message = false;
         $url = false;
@@ -112,7 +116,7 @@ class ReservationController extends Controller
         $percent = config('payment.CARD_PERCENT');
 
 
-//        $amount = (float)number_format((float)$request->amount, 2, '.', '');
+        //        $amount = (float)number_format((float)$request->amount, 2, '.', '');
         $amountCommission = $amount - ($amount * $percent); // Это число записывается на баланс аккаунта
 
         $receiptItem = [
@@ -138,11 +142,8 @@ class ReservationController extends Controller
             "OrderId" => uniqid(),               //идентификатор платежа
             "Amount" => $amount * 100,              //сумма всего платежа в копейках
             "Description" => $description,  //описание платежа
-//            "SuccessURL" => route(
-//                'payments.successPay',
-//                compact('user', 'school', 'subscription', 'timetable_section', 'amount')
-//            ),
-//            "FailURL" => route('payments.failPay', compact('school', 'subscription', 'timetable_section')),
+            "SuccessURL" => 'Success',
+            "FailURL" => 'Fail',
             'Receipt' => $receipt,                  //данные для чека
             'DATA' => [
                 'Email' => $user->email,
@@ -172,6 +173,7 @@ class ReservationController extends Controller
                 $payment = Payment::create($data);
 
                 $url = $api->paymentUrl;
+                return redirect()->away($url);
             } else {
                 $error = true;
                 $message = 'Произошла ошибка при обработке запроса.';
@@ -179,11 +181,24 @@ class ReservationController extends Controller
             }
         }
 
-        return [
+        $res = [
+            'status' => $status,
             'error' => $error,
             'message' => $message,
             'url' => $url,
         ];
+
+        return $res;
+    }
+
+    public function successPay(){
+        $res['status'] = 'success';
+        return $res;
+    }
+
+    public function failPay(){
+        $res['status'] = 'fail';
+        return $res;
     }
 
     static function payBySectionSubscription(User $user, Section $section)

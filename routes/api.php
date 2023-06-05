@@ -45,6 +45,7 @@ Route::group([
     Route::post('register', [RegisterController::class, 'register']);
     Route::post('refresh', [AuthController::class, 'refresh']);
     Route::post('me', [AuthController::class, 'me']);
+    Route::post('me-res', [AuthController::class, 'meResource']);
     Route::get('email/verify/{id}/{hash}', [VerificationController::class, 'verify'])->name(
         'api.verification.verify'
     );
@@ -229,7 +230,12 @@ Route::group(['middleware' => 'jwt.auth'], function () {
         });
 
         Route::group(['prefix' => 'reservations'], function () {
+            Route::get('', [ReservationController::class, 'index'])->name('cabinet.reservations.index');
+            Route::get('{timetableSectionId}', [ReservationController::class, 'getReservationsByTimetableSectionId'])->name('cabinet.reservations.getReservationsByTimetableSectionId');
             Route::post('store', [ReservationController::class, 'store'])->name('cabinet.reservations.store');
+            Route::get('successPay',[ReservationController::class, 'successPay'])->name('cabinet.reservations.successPay');
+            Route::get('failPay',[ReservationController::class, 'failPay'])->name('cabinet.reservations.failPay');
+            // Route::post('storePayment', [ReservationController::class, 'storePayment'])->name('cabinet.reservations.storePayment');
         });
     });
 });

@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\User;
 
+use App\Http\Resources\SubscriptionRecource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -22,7 +23,8 @@ class UserResource extends JsonResource
             'email' => $this->email,
             'email_verified_at' => $this->email_verified_at,
             'remember_token' => $this->remember_token,
-            'images' => $this->images
+            'images' => $this->images,
+            'subsriptions' => $this->subscriptions,
         ];
     }
 }

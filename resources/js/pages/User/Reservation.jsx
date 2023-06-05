@@ -1,69 +1,52 @@
-import {Fragment, useEffect, useState} from "react";
+import { Fragment, useEffect, useState } from "react";
 
-import ruLocale from "@fullcalendar/core/locales/ru";
-import interactionPlugin from "@fullcalendar/interaction";
-import FullCalendar from "@fullcalendar/react";
-import timeGridPlugin from "@fullcalendar/timegrid";
-import moment from "moment";
-import {useParams} from "react-router-dom";
-import {Button} from "../../components/UI/Button";
-import {Form} from "../../components/UI/Form";
-import {Loader} from "../../components/UI/Loader";
-import {Modal} from "../../components/UI/Modal";
-import {Select} from "../../components/UI/Select";
-import {Subtitle} from "../../components/UI/Subtitle";
-import {Title} from "../../components/UI/Title";
-import {getShortWeekdayName} from "../../helpers/getShortWeekdayName";
+import { useParams } from "react-router-dom";
+import { Button } from "../../components/UI/Button";
+import { Form } from "../../components/UI/Form";
+import { Loader } from "../../components/UI/Loader";
+import { Modal } from "../../components/UI/Modal";
+import { Select } from "../../components/UI/Select";
+import { Subtitle } from "../../components/UI/Subtitle";
+import { Title } from "../../components/UI/Title";
+import { WeekCalendar } from "../../components/WeekCalendar";
+import { getShortWeekdayName } from "../../helpers/getShortWeekdayName";
 import useAuthStore from "../../store/useAuthStore";
+import useCalendarStore from "../../store/useCalendarStore";
 import useReservationStore from "../../store/useReservationsStore";
 import useSectionTimetables from "../../store/useSectionTimetables";
-
-const EventItem = ({info}) => {
-    const {event} = info;
-    return (
-        <div>
-            <p>{event.title}</p>
-        </div>
-    );
-};
-
-const translateDayToNumber = (day) => {
-    switch (day) {
-        case "Monday":
-            return 1;
-        case "Tuesday":
-            return 2;
-        case "Wednesday":
-            return 3;
-        case "Thursday":
-            return 4;
-        case "Friday":
-            return 5;
-        case "Saturday":
-            return 6;
-        default:
-            return 0;
-    }
-};
+import useSubscriptionUsersStore from "../../store/useSubscriptionUsersStore";
+import moment from "moment";
+import { toast } from "react-toastify";
 
 export const Reservation = () => {
-    const {user} = useAuthStore();
-    const {schoolId, sectionId} = useParams();
+    const { user, getUserInfo } = useAuthStore();
+    const { schoolId, sectionId } = useParams();
 
-    const {loading, sectionTimetables, getSectionTimetables} =
+    const { loading, sectionTimetables, getSectionTimetables } =
         useSectionTimetables();
-    const {loading: reservationLoading, addReservation} =
+    const { loading: reservationLoading, addReservation } =
         useReservationStore();
+    const { loading: subscriptionsLoading } = useSubscriptionUsersStore();
+    const {
+        currentSectionTimetable,
+        getCurrentSectionTimetable,
+        events,
+        getTestEvents,
+        loading: calendarLoading,
+        onNavigate,
+        clearDifference
+    } = useCalendarStore();
 
-    const [events, setEvents] = useState([]);
     const [modalIsActive, setModalIsActive] = useState(false);
     const [eventInfo, setEventInfo] = useState({});
+    const [selectedTimetableId, setSelectedTimetableId] = useState(null);
+    const [calendarShow, setCalendarShow] = useState(false);
 
-    const [currentSectionTimetable, setCurrentSectionTimetable] = useState({});
+    const [abonements, setAbonements] = useState([]);
 
-    const [start, setStart] = useState(null);
-    const [end, setEnd] = useState(null);
-    const [days, setDays] = useState([]);
+    useEffect(() => {
+        getUserInfo();
+    }, []);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -72,118 +55,38 @@ export const Reservation = () => {
         fetchData();
     }, [sectionId, getSectionTimetables]);
 
-    const handleSelectTimetable = (e) => {
-        const selectedTimetableId = e.target.value;
-        setCurrentSectionTimetable(
-            sectionTimetables.filter(
-                (item) => item?.id == selectedTimetableId
-            )[0]
+    useEffect(() => {
+        setAbonements(
+            user?.subsriptions?.filter(
+                (item) =>
+                    item?.school_id == schoolId && item?.section_id == sectionId
+            )
         );
+    }, [user]);
+
+    const handleSelectTimetable = async (e) => {
+        setCalendarShow(false);
+        const selectedId = e.target.value;
+        setSelectedTimetableId(selectedId);
+        await getCurrentSectionTimetable(selectedId);
+        setCalendarShow(true);
     };
 
     useEffect(() => {
-        setDays(
-            currentSectionTimetable?.timetable?.weekday?.which_days
-                ?.map((day) => translateDayToNumber(day))
-                ?.sort((a, b) => a - b) || []
-        );
-    }, [currentSectionTimetable]);
-
-    useEffect(() => {
-        setStart(currentSectionTimetable?.timetable?.workday_start);
-        setEnd(currentSectionTimetable?.timetable?.workday_end);
-
-        const startTime = moment(
-            currentSectionTimetable?.timetable?.workday_start,
-            "HH:mm:ss"
-        );
-        const endTime = moment(
-            currentSectionTimetable?.timetable?.workday_end,
-            "HH:mm:ss"
-        );
-        const lessonTime = moment.duration(
-            currentSectionTimetable?.timetable?.lesson_time
-        );
-        const restStart = moment(
-            currentSectionTimetable?.timetable?.rest_start,
-            "HH:mm:ss"
-        );
-        const restEnd = moment(
-            currentSectionTimetable?.timetable?.rest_end,
-            "HH:mm:ss"
-        );
-
-
-        let testEvents = [];
-        let currentTime = moment(startTime);
-        while (currentTime.isBefore(endTime)) {
-            let testStart = moment(currentTime).format("HH:mm:ss");
-            let testEnd = moment(currentTime)
-                .add(lessonTime)
-                .format("HH:mm:ss");
-
-            testEvents.push({
-                title: `${currentSectionTimetable.lesson_price}р.`,
-                startTime: testStart,
-                endTime: testEnd,
-                daysOfWeek: days && days,
-            });
-
-            currentTime.add(lessonTime);
-        }
-
-        testEvents.forEach((event, index) => {
-            if (!currentSectionTimetable?.timetable?.without_rest) {
-                if (
-                    moment(
-                        currentSectionTimetable?.timetable?.rest_start,
-                        "HH:mm:ss"
-                    ).isBetween(
-                        moment(event.startTime, "HH:mm:ss"),
-                        moment(event.endTime, "HH:mm:ss"),
-                        undefined,
-                        "[)"
-                    ) ||
-                    moment(
-                        currentSectionTimetable?.timetable?.rest_end,
-                        "HH:mm:ss"
-                    ).isBetween(
-                        moment(event.startTime, "HH:mm:ss"),
-                        moment(event.endTime, "HH:mm:ss"),
-                        undefined,
-                        "()"
-                    )
-                ) {
-                    testEvents.splice(index, 1);
-                }
-            }
-        });
-
-        setEvents([...testEvents]);
-    }, [currentSectionTimetable?.timetable, days]);
+        getTestEvents();
+    }, [currentSectionTimetable, selectedTimetableId, getTestEvents]);
 
     const handleEventClick = (info) => {
         setModalIsActive(true);
         setEventInfo(info);
     };
 
-    useEffect(() => {
-        console.log(eventInfo?.event);
-        console.log(eventInfo?.event?.start);
-        console.log(eventInfo?.event?.end);
-    }, [eventInfo]);
-
     const [selectedUser, setSelectedUser] = useState(null);
-    const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('card');
+    const [selectedPaymentMethod, setSelectedPaymentMethod] = useState("card");
 
     useEffect(() => {
         setSelectedUser(user.id);
-        console.log("selected user", selectedUser);
-    }, []);
-
-    useEffect(() => {
-        console.log("selected user", selectedUser);
-    }, [selectedUser]);
+    }, [user]);
 
     const handleSelectUser = (e) => {
         setSelectedUser(e.target.value);
@@ -195,31 +98,99 @@ export const Reservation = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
         const reservationData = {
             id: user?.id,
             sectionTimetableId: currentSectionTimetable?.id,
             client: selectedUser,
-            date: eventInfo?.event?.start,
-            time: eventInfo?.event?.start?.toLocaleTimeString([], {
-                hour12: false,
-            }),
+            date: moment(eventInfo?.start).format("MM-DD-YYYY"),
+            time: eventInfo?.start?.toLocaleTimeString(),
         };
-        await addReservation(
-            reservationData.id,
-            reservationData.sectionTimetableId,
-            reservationData.client,
-            reservationData.date,
-            reservationData.time,
-            selectedPaymentMethod,
-            currentSectionTimetable?.lesson_price
-        );
+
+        // if(selectedPaymentMethod === 'section_subscription' || selectedPaymentMethod === 'money_subscription') {
+            await addReservation(
+                reservationData.id,
+                reservationData.sectionTimetableId,
+                reservationData.client,
+                reservationData.date,
+                reservationData.time,
+                selectedPaymentMethod,
+                currentSectionTimetable?.lesson_price
+            );
+        // }
+
+
+        setModalIsActive(false);
+        clearDifference()
+        await getUserInfo();
+        await getSectionTimetables(sectionId);
+        await getCurrentSectionTimetable(selectedTimetableId);
+        toast("Запись совершена");
+    };
+
+    const eventPropGetter = (event, start, end, isSelected) => {
+        const currentData = moment();
+
+        const disabledStyle = {
+            backgroundColor: "gray",
+            opacity: "0.5",
+            color: "var(--blue)",
+            pointerEvents: "none",
+        };
+
+        if (
+            currentData.isAfter(moment(start)) ||
+            currentData.isAfter(moment(end))
+        ) {
+            return {
+                style: disabledStyle,
+            };
+        }
+
+        if (currentSectionTimetable) {
+            const reservations = currentSectionTimetable?.reservations;
+            if (reservations) {
+                for (const reservation of reservations) {
+                    const { date, time } = reservation;
+                    const reservationStart = moment(`${date} ${time}`);
+                    const reservationEnd = moment(reservationStart).add(
+                        currentSectionTimetable?.timetable?.lesson_time,
+                        "minute"
+                    );
+
+                    if (
+                        moment(start).isBetween(
+                            reservationStart,
+                            reservationEnd,
+                            "minutes",
+                            "[)"
+                        ) ||
+                        moment(end).isBetween(
+                            reservationStart,
+                            reservationEnd,
+                            "minutes",
+                            "(]"
+                        )
+                    ) {
+                        return {
+                            style: disabledStyle,
+                        };
+                    }
+                }
+            }
+
+            return {};
+        }
     };
 
     return (
         <>
             <Subtitle>Бронирование</Subtitle>
-            {loading ? (
-                <Loader/>
+            {loading ||
+            subscriptionsLoading ||
+            reservationLoading ||
+            calendarLoading ? (
+                <Loader />
             ) : (
                 <>
                     <div className="two-col">
@@ -239,28 +210,28 @@ export const Reservation = () => {
                                     {item?.timetable?.weekday?.which_days.map(
                                         (day, index) => (
                                             <Fragment
-                                                key={day}
+                                                key={day + index}
                                             >{`${getShortWeekdayName(day)}${
                                                 index !==
                                                 item?.timetable?.weekday
                                                     ?.which_days.length -
-                                                1
+                                                    1
                                                     ? ", "
                                                     : " | "
                                             }`}</Fragment>
                                         )
                                     )}
                                     {item?.timetable?.workday_start.split(
-                                            ":"
-                                        )[0] +
+                                        ":"
+                                    )[0] +
                                         ":" +
                                         item?.timetable?.workday_start.split(
                                             ":"
                                         )[1]}
                                     -
                                     {item?.timetable?.workday_end.split(
-                                            ":"
-                                        )[0] +
+                                        ":"
+                                    )[0] +
                                         ":" +
                                         item?.timetable?.workday_end.split(
                                             ":"
@@ -271,25 +242,13 @@ export const Reservation = () => {
                     </div>
                     {events &&
                     currentSectionTimetable &&
-                    currentSectionTimetable?.timetable ? (
-                        <FullCalendar
-                            eventClick={(info) => handleEventClick(info)}
-                            selectable
-                            plugins={[timeGridPlugin, interactionPlugin]}
-                            initialView="timeGridWeek"
-                            locale={ruLocale}
-                            slotLabelFormat={{
-                                hour: "numeric",
-                                minute: "2-digit",
-                                omitZeroMinute: false,
-                                meridiem: "short",
-                            }}
-                            allDaySlot={false}
-                            slotMinTime={"06:00:00"}
-                            slotMaxTime={"22:00:00"}
-                            events={(events && events) || []}
-                            eventContent={(info) => <EventItem info={info}/>}
-                            moreLinkClick={"popover"}
+                    currentSectionTimetable?.timetable &&
+                    calendarShow ? (
+                        <WeekCalendar
+                            events={events}
+                            onSelectEvent={handleEventClick}
+                            onNavigate={onNavigate}
+                            eventPropGetter={eventPropGetter}
                         />
                     ) : (
                         ""
@@ -319,15 +278,36 @@ export const Reservation = () => {
                                         onChange={handleSelectPaymentMethod}
                                         label={"Выберите способ оплаты"}
                                     >
-                                        <option value={'card'} defaultChecked>
+                                        <option value={"card"} defaultChecked>
                                             Банковской картой
                                         </option>
-                                        <option value={'section_subscription'}>
-                                            Абонемент занятий
-                                        </option>
-                                        <option value={'money_subscription'}>
-                                            Денежный абонемент
-                                        </option>
+                                        {abonements.map(
+                                            (item) =>
+                                                item?.pivot?.remaining_classes
+                                        )[0] && (
+                                            <option
+                                                value={"section_subscription"}
+                                            >
+                                                Абонемент занятий | Осталось{" "}
+                                                {
+                                                    abonements[0]?.pivot
+                                                        ?.remaining_classes
+                                                }{" "}
+                                                занятий
+                                            </option>
+                                        )}
+                                        {abonements.map(
+                                            (item) =>
+                                                item?.pivot?.deposit !== null
+                                        )[0] && (
+                                            <option
+                                                value={"money_subscription"}
+                                            >
+                                                Денежный абонемент | Осталось{" "}
+                                                {abonements[0]?.pivot?.deposit}{" "}
+                                                рублей
+                                            </option>
+                                        )}
                                     </Select>
                                 </div>
                             }
