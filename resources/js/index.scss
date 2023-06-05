@@ -1,17 +1,19 @@
+@import "react-big-calendar/lib/sass/styles";
+
 :root {
     // COLORS
-    --white: #FFF;
+    --white: #fff;
     --gray: rgba(241, 241, 241, 1);
-    --beige: #FFF1E9;
+    --beige: #fff1e9;
     --blue: rgba(44, 61, 115, 1);
     --blue-transparent: rgba(44, 61, 115, 0.05);
     --orange: rgba(242, 68, 5, 1);
     --orange-darken: rgb(187, 50, 0);
     --orange-transparent: rgba(209, 60, 6, 0.5);
     --green-darken: rgb(25, 135, 84);
-    --green: #41BE94;
-    --gray-light: #DAE4F8;
-    --gray-darken: #DEDEDE;
+    --green: #41be94;
+    --gray-light: #dae4f8;
+    --gray-darken: #dedede;
     --gray-darkest: #6f6f6f;
 
     // CONTAINER
@@ -25,8 +27,7 @@
     --m: 1.6rem;
     --s: 1.4rem;
 
-
-    --transition: .25s all linear;
+    --transition: 0.25s all linear;
     --radius: 1rem;
     --shadow: 0 0 2.5rem rgb(0 0 0 / 5%);
 }
@@ -34,14 +35,14 @@
 /* RESET AND BASE STYLES  */
 
 html {
-    font-family: 'Montserrat', sans-serif;
+    font-family: "Montserrat", sans-serif;
     font-size: 10px;
     color: var(--blue);
 }
 
 body {
     width: 100%;
-    background-color: #F1F1F1;
+    background-color: #f1f1f1;
 }
 
 * {
@@ -66,7 +67,9 @@ a:active {
     outline: none;
 }
 
-a, a:link, a:visited {
+a,
+a:link,
+a:visited {
     color: inherit;
     //text-decoration: none;
 }
@@ -76,7 +79,12 @@ a:hover {
     //text-decoration: none;
 }
 
-aside, nav, footer, header, section, main {
+aside,
+nav,
+footer,
+header,
+section,
+main {
     display: block;
 }
 
@@ -91,12 +99,19 @@ main {
     }
 }
 
-h1, h2, h3, h4, h5, h6, p {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
     font-size: inherit;
     font-weight: inherit;
 }
 
-ul, ul li {
+ul,
+ul li {
     list-style: none;
 }
 
@@ -104,7 +119,8 @@ img {
     vertical-align: top;
 }
 
-img, svg {
+img,
+svg {
     max-width: 100%;
     height: auto;
 }
@@ -113,7 +129,10 @@ address {
     font-style: normal;
 }
 
-input, textarea, button, select {
+input,
+textarea,
+button,
+select {
     font-family: inherit;
     font-size: inherit;
     color: inherit;
@@ -124,15 +143,18 @@ input::-ms-clear {
     display: none;
 }
 
-button, input[type="submit"] {
+button,
+input[type="submit"] {
     display: inline-block;
     box-shadow: none;
     background: transparent none;
     cursor: pointer;
 }
 
-input:focus, input:active,
-button:focus, button:active {
+input:focus,
+input:active,
+button:focus,
+button:active {
     outline: none;
 }
 
@@ -172,7 +194,7 @@ img {
 
 .delete-images-title {
     margin-top: 1.2rem;
-    margin-bottom: .8rem;
+    margin-bottom: 0.8rem;
 }
 
 .layout-swiper {
@@ -188,7 +210,6 @@ img {
         display: flex;
         align-items: center;
         width: 100% !important;
-
 
         img {
             max-width: 100%;
@@ -238,7 +259,7 @@ img {
     grid-template-rows: auto 1fr auto;
 
     .content {
-        padding: 0 0 2rem 0;
+        padding: 0 0 4.8rem 0;
         position: relative;
 
         &__image {
@@ -268,7 +289,7 @@ img {
         }
 
         @media screen and (max-width: 768px) {
-            padding: 0 0 1.2rem 0;
+            padding: 0 0 2.4rem 0;
         }
     }
 
@@ -283,7 +304,7 @@ img {
     }
 
     &-authenticated {
-        background-color: #F1F1F1;
+        background-color: #f1f1f1;
     }
 }
 
@@ -322,24 +343,140 @@ img {
 .time-warn {
     padding: 1.2rem;
     border-radius: 1rem;
-    background-color: #FFFD74;
+    background-color: #fffd74;
     text-align: center;
 }
 
-.fc {
-    margin: 3.2rem 0;
-    min-height: 45rem;
+.rbc-events-container {
+    min-width: 60px;
 }
 
-.fc-header-toolbar {
+.rbc-event {
+    transition: var(--transition);
+    min-width: 60px;
+    &:hover {
+        background-color: var(--orange);
+    }
+}
+
+.rbc-header {
+    min-height: 24px;
+    padding: 1.2rem;
+    min-width: 6rem;
+}
+
+.rbc-day-slot {
+    min-width: 60px;
+}
+
+.rbc-time-header.rbc-overflowing {
+    border-right: 0px;
+}
+
+.rbc-time-view {
+    border-radius: 1rem;
+}
+
+.rbc-time-view .rbc-row {
+    min-height: 0px;
+}
+
+.rbc-allday-cell {
+    display: none;
+}
+
+.rbc-toolbar .rbc-toolbar-label {
+    text-align: right;
+    text-transform: capitalize;
+    font-weight: 500;
+    font-size: 2rem;
+}
+
+.rbc-button-link,
+.rbc-label {
+    font-weight: 500;
+}
+
+.rbc-btn-group {
     display: flex;
     flex-direction: row;
-    flex-wrap: wrap;
-    gap: 1.2rem;
+    align-items: center;
+    gap: 0.8rem;
+
+    button {
+        border-radius: 0.6rem !important;
+        padding: 0.6rem 2.4rem;
+        border-color: var(--blue);
+        background-color: var(--blue);
+        color: var(--white);
+        transition: var(--transition);
+
+        &:hover {
+            background-color: var(--white);
+            color: var(--blue);
+            border-color: var(--blue);
+        }
+
+        &:active {
+            border-color: var(--blue);
+            background-color: var(--blue) !important;
+            color: var(--white) !important;
+        }
+    }
 }
 
-.fc-col-header-cell-cushion {
-    @media screen and (max-width: 480px) {
-        writing-mode: vertical-lr;
+@media screen and (max-width: 768px) {
+    .rbc-day-slot .rbc-event-label {
+        white-space: break-spaces;
+    }
+
+    .rbc-day-slot .rbc-events-container {
+        margin-right: 0 !important;
+    }
+    .rbc-event-content {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 540px) {
+    .rbc-header {
+        writing-mode: sideways-lr;
+        display: flex;
+        align-items: center;
+    }
+
+    .rbc-time-view {
+        overflow: auto;
+    }
+
+    .rbc-time-content {
+        overflow: unset;
+    }
+    .rbc-time-content {
+        width: max-content;
+    }
+
+    .rbc-event {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        // height: auto !important;
+
+
+        &-label {
+            white-space: pre-wrap;
+            width: 100%;
+            padding-right: 0;
+        }
+    }
+
+    .rbc-toolbar {
+        gap: 1.6rem;
+        flex-direction: column-reverse;
+        margin-bottom: 1.6rem;
+        &-label {
+            width: 100%;
+            text-align: center !important;
+        }
     }
 }

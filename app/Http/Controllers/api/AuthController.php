@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\User\UserResource;
 
 class AuthController extends Controller
 {
@@ -39,6 +40,11 @@ class AuthController extends Controller
     public function me()
     {
         return response()->json(auth()->user());
+    }
+
+    public function meResource()
+    {
+        return response()->json(new UserResource(auth()->user()));
     }
 
     /**
