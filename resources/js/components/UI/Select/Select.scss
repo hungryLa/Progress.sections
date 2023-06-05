@@ -1,7 +1,7 @@
 .select {
     display: flex;
     flex-direction: column;
-    gap: .8rem;
+    gap: 0.8rem;
 
     &__wrapper {
         display: flex;
@@ -21,6 +21,8 @@
             transform: translateY(-50%);
             right: 3rem;
             position: absolute;
+            background-color: #fff;
+            padding-left: 6px;
         }
     }
 
@@ -31,7 +33,7 @@
     }
 
     &__label {
-        margin-bottom: .8rem;
+        margin-bottom: 0.8rem;
     }
 
     &__error {
@@ -61,7 +63,7 @@
 
         &:focus {
             border-color: var(--orange);
-            box-shadow: inset 0px 0px 10px rgba(255, 121, 121, 0.25)
+            box-shadow: inset 0px 0px 10px rgba(255, 121, 121, 0.25);
         }
     }
 }

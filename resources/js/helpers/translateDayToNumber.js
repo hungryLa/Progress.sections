@@ -13,6 +13,6 @@ export const translateDayToNumber = (day) => {
         case "Saturday":
             return 6;
         default:
-            return 0;
+            return 7;
     }
 };

@@ -9,6 +9,10 @@ const useCalendarStore = create((set, get) => ({
     events: [],
     difference: 0,
 
+    clearDifference: () => {
+        set({difference: 0})
+    },
+
     setDifference: (value) => {
         set({ difference: get().difference + value });
     },
@@ -29,13 +33,10 @@ const useCalendarStore = create((set, get) => ({
 
         if (some.toLocaleDateString() == lastDate.toLocaleDateString()) {
             set({ difference: 0 });
-            console.log(Math.abs(get().difference));
         } else if (type === "PREV") {
             get().setDifference(-1);
-            console.log(Math.abs(get().difference));
         } else if (type === "NEXT") {
             get().setDifference(1);
-            console.log(Math.abs(get().difference));
         }
 
         const days =
@@ -68,89 +69,67 @@ const useCalendarStore = create((set, get) => ({
                     .add(lessonTime)
                     .format("HH:mm:ss");
 
-                const currentDate = moment().format("YYYY-MM-DD");
+                let current = moment();
+                let currentD;
 
-                const startDateTime = moment(`${currentDate} ${testStart}`);
-                const endDateTime = moment(`${currentDate} ${testEnd}`);
+                currentD = current.format("YYYY-MM-DD");
 
-                if (day === moment(startDateTime).day()) {
-                    if (get().difference > 0) {
-                        testEvents.push({
-                            title: `${
-                                get().currentSectionTimetable.lesson_price
-                            }р.`,
-                            start: startDateTime
-                                .add(Math.abs(get().difference), "week")
-                                .toDate(),
-                            end: endDateTime
-                                .add(Math.abs(get().difference), "week")
-                                .toDate(),
-                        });
-                    }
-                    else if (get().difference < 0) {
-                        testEvents.push({
-                            title: `${
-                                get().currentSectionTimetable.lesson_price
-                            }р.`,
-                            start: startDateTime
-                                .subtract(Math.abs(get().difference), "week")
-                                .toDate(),
-                            end: endDateTime
-                                .subtract(Math.abs(get().difference), "week")
-                                .toDate(),
-                        });
-                    }
-                    else testEvents.push({
-                        title: `${
-                            get().currentSectionTimetable.lesson_price
-                        }р.`,
-                        start: startDateTime.toDate(),
-                        end: endDateTime.toDate(),
-                    });
-                } else {
-                    if (get().difference > 0) {
-                        testEvents.push({
-                            title: `${
-                                get().currentSectionTimetable.lesson_price
-                            }р.`,
-                            start: startDateTime
-                                .add(Math.abs(get().difference), "week")
-                                .toDate(),
-                            end: endDateTime
-                                .add(Math.abs(get().difference), "week")
-                                .toDate(),
-                        });
-                    }
-                    else if (get().difference < 0) {
-                        testEvents.push({
-                            title: `${
-                                get().currentSectionTimetable.lesson_price
-                            }р.`,
-                            start: startDateTime
-                                .subtract(Math.abs(get().difference), "week")
-                                .toDate(),
-                            end: endDateTime
-                                .subtract(Math.abs(get().difference), "week")
-                                .toDate(),
-                        });
-                    }
-                    else testEvents.push({
-                        title: `${
-                            get().currentSectionTimetable.lesson_price
-                        }р.`,
-                        start: startDateTime.toDate(),
-                        end: endDateTime.toDate(),
-                    });
+                const startDateTime = moment(`${currentD} ${testStart}`);
+                const endDateTime = moment(`${currentD} ${testEnd}`);
+
+                const dayDifference =
+                    (day - moment(startDateTime).day() + 7) % 7;
+                let startDateToAddOrSubtract = startDateTime;
+                let endDateToAddOrSubtract = endDateTime;
+                if (get().difference > 0) {
+                    startDateToAddOrSubtract = startDateToAddOrSubtract.add(
+                        Math.abs(get().difference),
+                        "week"
+                    );
+                    endDateToAddOrSubtract = endDateToAddOrSubtract.add(
+                        Math.abs(get().difference),
+                        "week"
+                    );
+                } else if (get().difference < 0) {
+                    startDateToAddOrSubtract =
+                        startDateToAddOrSubtract.subtract(
+                            Math.abs(get().difference),
+                            "week"
+                        );
+                    endDateToAddOrSubtract = endDateToAddOrSubtract.subtract(
+                        Math.abs(get().difference),
+                        "week"
+                    );
                 }
+                if (dayDifference > 0) {
+                    startDateToAddOrSubtract = startDateToAddOrSubtract.add(
+                        dayDifference,
+                        "day"
+                    );
+                    endDateToAddOrSubtract = endDateToAddOrSubtract.add(
+                        dayDifference,
+                        "day"
+                    );
+                } else if (dayDifference < 0) {
+                    startDateToAddOrSubtract =
+                        startDateToAddOrSubtract.subtract(dayDifference, "day");
+                    endDateToAddOrSubtract = endDateToAddOrSubtract.subtract(
+                        dayDifference,
+                        "day"
+                    );
+                }
+
+                startDateToAddOrSubtract = startDateToAddOrSubtract.toDate();
+                endDateToAddOrSubtract = endDateToAddOrSubtract.toDate();
+
+                testEvents.push({
+                    title: `${get().currentSectionTimetable.lesson_price}р.`,
+                    start: startDateToAddOrSubtract,
+                    end: endDateToAddOrSubtract,
+                });
 
                 currentTime.add(lessonTime);
             }
-
-            testEvents.forEach((event, index) => {
-                if (moment(event.start).isBefore(moment())) {
-                    testEvents.splice(index, 1);
-                }
-            });
         });
 
         set({ events: [...testEvents], loading: false });
@@ -218,12 +197,14 @@ const useCalendarStore = create((set, get) => ({
                 currentTime.add(lessonTime);
             }
 
-            // testEvents.forEach((event, index) => {
-            //     if (moment(event.start).isBetween(moment())) {
-            //         testEvents.splice(index, 1);
-            //     }
-            // });
+            testEvents.forEach((event, index) => {
+                if (moment(event.start).isBetween(moment())) {
+                    testEvents.splice(index, 1);
+                }
+            });
         });
+
+
 
         set({ events: [...testEvents], loading: false });
     },

@@ -24,20 +24,12 @@ const localizer = dateFnsLocalizer({
     locales,
 });
 
-export const WeekCalendar = ({ events, onSelectEvent, onNavigate }) => {
+export const WeekCalendar = ({ date, events, onSelectEvent, onNavigate, eventPropGetter }) => {
     const [calendarEvents, setCalendarEvents] = useState([]);
 
     useEffect(() => {
         setCalendarEvents([...events]);
     }, [events, onNavigate]);
-
-    const eventPropGetter = useCallback((event, start, end, isSelected) => ({
-        ...(isSelected && {
-            style: {
-                backgroundColor: "#000",
-            },
-        }),
-    }));
 
     const messages = {
         today: "Сегодня",
@@ -50,6 +42,7 @@ export const WeekCalendar = ({ events, onSelectEvent, onNavigate }) => {
     return (
         <div className="calendar">
             <Calendar
+                defaultDate={moment()}
                 onNavigate={onNavigate}
                 culture="ru"
                 localizer={localizer}
@@ -63,7 +56,7 @@ export const WeekCalendar = ({ events, onSelectEvent, onNavigate }) => {
                 startAccessor={"start"}
                 endAccessor={"end"}
                 onSelectEvent={onSelectEvent}
-                style={{ height: 500 }}
+                style={{ height: 'auto' }}
             />
         </div>
     );

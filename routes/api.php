@@ -230,7 +230,12 @@ Route::group(['middleware' => 'jwt.auth'], function () {
         });
 
         Route::group(['prefix' => 'reservations'], function () {
+            Route::get('', [ReservationController::class, 'index'])->name('cabinet.reservations.index');
+            Route::get('{timetableSectionId}', [ReservationController::class, 'getReservationsByTimetableSectionId'])->name('cabinet.reservations.getReservationsByTimetableSectionId');
             Route::post('store', [ReservationController::class, 'store'])->name('cabinet.reservations.store');
+            Route::get('successPay',[ReservationController::class, 'successPay'])->name('cabinet.reservations.successPay');
+            Route::get('failPay',[ReservationController::class, 'failPay'])->name('cabinet.reservations.failPay');
+            // Route::post('storePayment', [ReservationController::class, 'storePayment'])->name('cabinet.reservations.storePayment');
         });
     });
 });

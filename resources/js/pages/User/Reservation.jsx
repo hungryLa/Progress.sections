@@ -16,6 +16,7 @@ import useReservationStore from "../../store/useReservationsStore";
 import useSectionTimetables from "../../store/useSectionTimetables";
 import useSubscriptionUsersStore from "../../store/useSubscriptionUsersStore";
 import moment from "moment";
+import { toast } from "react-toastify";
 
 export const Reservation = () => {
     const { user, getUserInfo } = useAuthStore();
@@ -32,14 +33,16 @@ export const Reservation = () => {
         events,
         getTestEvents,
         loading: calendarLoading,
-        onNavigate
+        onNavigate,
+        clearDifference
     } = useCalendarStore();
 
     const [modalIsActive, setModalIsActive] = useState(false);
     const [eventInfo, setEventInfo] = useState({});
+    const [selectedTimetableId, setSelectedTimetableId] = useState(null);
+    const [calendarShow, setCalendarShow] = useState(false);
 
     const [abonements, setAbonements] = useState([]);
-
 
     useEffect(() => {
         getUserInfo();
@@ -62,15 +65,16 @@ export const Reservation = () => {
     }, [user]);
 
     const handleSelectTimetable = async (e) => {
-        const selectedTimetableId = e.target.value;
-        await getCurrentSectionTimetable(selectedTimetableId);
+        setCalendarShow(false);
+        const selectedId = e.target.value;
+        setSelectedTimetableId(selectedId);
+        await getCurrentSectionTimetable(selectedId);
+        setCalendarShow(true);
     };
 
     useEffect(() => {
         getTestEvents();
-    }, [currentSectionTimetable]);
-
-    useEffect(() => {console.log(events);}, [events])
+    }, [currentSectionTimetable, selectedTimetableId, getTestEvents]);
 
     const handleEventClick = (info) => {
         setModalIsActive(true);
@@ -99,26 +103,85 @@ export const Reservation = () => {
             id: user?.id,
             sectionTimetableId: currentSectionTimetable?.id,
             client: selectedUser,
-            date: moment(eventInfo?.start).format('MM-DD-YYYY'),
+            date: moment(eventInfo?.start).format("MM-DD-YYYY"),
             time: eventInfo?.start?.toLocaleTimeString(),
         };
 
-        console.log(reservationData);
+        // if(selectedPaymentMethod === 'section_subscription' || selectedPaymentMethod === 'money_subscription') {
+            await addReservation(
+                reservationData.id,
+                reservationData.sectionTimetableId,
+                reservationData.client,
+                reservationData.date,
+                reservationData.time,
+                selectedPaymentMethod,
+                currentSectionTimetable?.lesson_price
+            );
+        // }
 
-        await addReservation(
-            reservationData.id,
-            reservationData.sectionTimetableId,
-            reservationData.client,
-            reservationData.date,
-            reservationData.time,
-            selectedPaymentMethod,
-            currentSectionTimetable?.lesson_price
-        );
+
         setModalIsActive(false);
+        clearDifference()
         await getUserInfo();
         await getSectionTimetables(sectionId);
-    }
+        await getCurrentSectionTimetable(selectedTimetableId);
+        toast("Запись совершена");
+    };
 
+    const eventPropGetter = (event, start, end, isSelected) => {
+        const currentData = moment();
+
+        const disabledStyle = {
+            backgroundColor: "gray",
+            opacity: "0.5",
+            color: "var(--blue)",
+            pointerEvents: "none",
+        };
+
+        if (
+            currentData.isAfter(moment(start)) ||
+            currentData.isAfter(moment(end))
+        ) {
+            return {
+                style: disabledStyle,
+            };
+        }
+
+        if (currentSectionTimetable) {
+            const reservations = currentSectionTimetable?.reservations;
+            if (reservations) {
+                for (const reservation of reservations) {
+                    const { date, time } = reservation;
+                    const reservationStart = moment(`${date} ${time}`);
+                    const reservationEnd = moment(reservationStart).add(
+                        currentSectionTimetable?.timetable?.lesson_time,
+                        "minute"
+                    );
+
+                    if (
+                        moment(start).isBetween(
+                            reservationStart,
+                            reservationEnd,
+                            "minutes",
+                            "[)"
+                        ) ||
+                        moment(end).isBetween(
+                            reservationStart,
+                            reservationEnd,
+                            "minutes",
+                            "(]"
+                        )
+                    ) {
+                        return {
+                            style: disabledStyle,
+                        };
+                    }
+                }
+            }
+
+            return {};
+        }
+    };
 
     return (
         <>
@@ -179,8 +242,14 @@ export const Reservation = () => {
                     </div>
                     {events &&
                     currentSectionTimetable &&
-                    currentSectionTimetable?.timetable ? (
-                        <WeekCalendar events={events} onSelectEvent={handleEventClick} onNavigate={onNavigate}/>
+                    currentSectionTimetable?.timetable &&
+                    calendarShow ? (
+                        <WeekCalendar
+                            events={events}
+                            onSelectEvent={handleEventClick}
+                            onNavigate={onNavigate}
+                            eventPropGetter={eventPropGetter}
+                        />
                     ) : (
                         ""
                     )}
