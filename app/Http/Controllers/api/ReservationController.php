@@ -65,6 +65,7 @@ class ReservationController extends Controller
                 $data['status'] = 'error';
                 $data['message'] = __('flash.The record for this time has already been made');
             }
+            return $data;
         } catch (\Exception $exception) {
             return $exception->getMessage();
         }
@@ -193,7 +194,7 @@ class ReservationController extends Controller
                 $subscription_user = SubscriptionUser::where([
                     'user_id' => $user->id,
                     'subscription_id' => $subscription->id,
-                ])->first();
+                ])->orderBy('remaining_classes', 'desc')->first();
                 break;
             }
         }
@@ -223,7 +224,7 @@ class ReservationController extends Controller
                 $subscription_user = SubscriptionUser::where([
                     'user_id' => $user->id,
                     'subscription_id' => $subscription->id,
-                ])->first();
+                ])->orderBy('deposit', 'desc')->first();
                 break;
             }
         }

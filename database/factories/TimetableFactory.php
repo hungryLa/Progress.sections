@@ -26,6 +26,7 @@ class TimetableFactory extends Factory
                 'which_days' => [
                     $this->faker->randomElement(Timetable::DAYS_WEEK),
                     $this->faker->randomElement(Timetable::DAYS_WEEK),
+                    $this->faker->randomElement(Timetable::DAYS_WEEK),
                 ]
             ]),
             'lesson_time' => "01:00",
