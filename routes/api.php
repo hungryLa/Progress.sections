@@ -237,7 +237,7 @@ Route::group(['middleware' => 'jwt.auth'], function () {
             Route::post('storePayment', [ReservationController::class, 'storePayment'])->name(
                 'cabinet.reservations.storePayment'
             );
-            Route::get('successPay', [ReservationController::class, 'successPay'])->name(
+            Route::post('successPay', function(){dd('fuck');})->name(
                 'cabinet.reservations.successPay'
             );
             Route::get('failPay', [ReservationController::class, 'failPay'])->name('cabinet.reservations.failPay');

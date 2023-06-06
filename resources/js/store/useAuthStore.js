@@ -27,8 +27,10 @@ const useAuthStore = create(
                     if(!localStorage.getItem('token')) {
                         localStorage.setItem('token', access_token)
                     }
+                    set({loading:false})
                 } catch (error) {
                     set({
+                        loading: false,
                         user: null,
                         token: '',
                         error: "Неверный логин или пароль"
@@ -43,7 +45,6 @@ const useAuthStore = create(
                     set({
                         user: null,
                         token: '',
-                        error: "Неверный логин или пароль",
                         loading: false
                     })
                 }

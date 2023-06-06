@@ -24,7 +24,7 @@ export const Reservation = () => {
 
     const { loading, sectionTimetables, getSectionTimetables } =
         useSectionTimetables();
-    const { loading: reservationLoading, addReservation } =
+    const { loading: reservationLoading, addReservation, addReservationByCard, url } =
         useReservationStore();
     const { loading: subscriptionsLoading } = useSubscriptionUsersStore();
     const {
@@ -107,7 +107,7 @@ export const Reservation = () => {
             time: eventInfo?.start?.toLocaleTimeString(),
         };
 
-        // if(selectedPaymentMethod === 'section_subscription' || selectedPaymentMethod === 'money_subscription') {
+        if(selectedPaymentMethod === 'section_subscription' || selectedPaymentMethod === 'money_subscription') {
             await addReservation(
                 reservationData.id,
                 reservationData.sectionTimetableId,
@@ -117,7 +117,16 @@ export const Reservation = () => {
                 selectedPaymentMethod,
                 currentSectionTimetable?.lesson_price
             );
-        // }
+        }
+
+        if(selectedPaymentMethod === 'card') {
+            await addReservationByCard(
+                reservationData.sectionTimetableId,
+                reservationData.date,
+                reservationData.time,
+                currentSectionTimetable?.lesson_price
+            )
+        }
 
 
         setModalIsActive(false);
