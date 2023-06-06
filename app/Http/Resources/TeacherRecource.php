@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Http\Resources\TimetableSection\TimetableSectionWithSectionResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -26,6 +27,7 @@ class TeacherRecource extends JsonResource
             'email' => $this->email,
             'email_verified_at' => $this->email_verified_at,
             'remember_token' => $this->remember_token,
+            'sections' => $this->sections,
         ];
     }
 }

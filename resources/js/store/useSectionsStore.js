@@ -29,6 +29,25 @@ const useSectionsStore = create(
                 set({loading: false, error})
             }
         },
+
+        getSection: async (sectionId) => {
+            try {
+                set({loading: true, error: [], occupationError: '', descriptionError: '', contentsError: ''})
+                const response = await api.get(`cabinet/schools/${schoolId}/sections/${sectionId}`)
+                const {data} = response.data
+                set({
+                    loading: false,
+                    section: data,
+                    error: [],
+                    occupationError: '',
+                    descriptionError: '',
+                    contentsError: ''
+                })
+            } catch (error) {
+                set({error, loading: false})
+            }
+        },
+
         getOneSection: async (schoolId, sectionId) => {
             try {
                 set({loading: true, error: [], occupationError: '', descriptionError: '', contentsError: ''})

@@ -31,8 +31,10 @@ class PersonController extends Controller
                 'date_birth' => $request->date_birth,
             ]);
             if ($success) {
-                session()->flash('success', __('other.Record successfully added'));
+                $data['status'] = 'success';
+                $data['message'] = __('other.Record successfully added');
             }
+            return $data;
         } catch (\Exception $exception) {
             return $exception->getMessage();
         }

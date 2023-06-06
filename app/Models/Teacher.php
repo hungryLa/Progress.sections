@@ -69,9 +69,9 @@ class Teacher extends Model
         return $this->hasMany(Timetable::class,'model_id')->where('type',Timetable::TYPES['teacher']);
     }
 
-    public function timetable_sections(): HasMany
+    public function sections(): HasMany
     {
-        return $this->hasMany(TimetableSection::class,'teacher_id');
+        return $this->timetables->timetableSection->section;
     }
 
     public function information(): HasOne

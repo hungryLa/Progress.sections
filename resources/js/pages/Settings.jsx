@@ -226,20 +226,20 @@ export const Settings = () => {
                                     <Input
                                         id={'fio'}
                                         label={'ФИО'}
-                                        value={fullName}
+                                        value={fullName || ''}
                                         onChange={handleFullName}
                                     />
                                     <Input
                                         id={'email'}
                                         type={'text'}
                                         label={'Почта'}
-                                        value={email}
+                                        value={email || ''}
                                         onChange={handleEmail}
                                     />
                                     <Input
                                         id={'phone'}
                                         label={'Телефон'}
-                                        value={phone}
+                                        value={phone || ''}
                                         onChange={handlePhone}
                                     />
                                 </div>
@@ -248,14 +248,14 @@ export const Settings = () => {
                                         id={'old-password'}
                                         type={'password'}
                                         label={'Старый пароль'}
-                                        value={oldPassword}
+                                        value={oldPassword || ''}
                                         onChange={handleOldPassword}
                                     />
                                     <Input
                                         id={'new-password'}
                                         type={'password'}
                                         label={'Новый пароль'}
-                                        value={newPassword}
+                                        value={newPassword || ''}
                                         onChange={handleNewPassword}
                                     />
                                 </div>
