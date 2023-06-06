@@ -147,6 +147,7 @@ class ReservationController extends Controller
                 "Amount" => $amount * 100,              //сумма всего платежа в копейках
                 "Description" => $description,  //описание платежа
                 "SuccessURL" => route('cabinet.reservations.successPay', ['request' => $request]),
+                // "SuccessURL" => route('cabinet.reservations.successPay', ['request' => $request]),
                 "FailURL" => route('cabinet.reservations.failPay'),
                 'Receipt' => $receipt,                  //данные для чека
                 'DATA' => [
@@ -208,6 +209,7 @@ class ReservationController extends Controller
                 'date' => $request->date,
                 'time' => $request->time,
             ]);
+            dd('here');
             $data['status'] = 'success';
         } catch (\Exception $exception) {
             return $exception->getMessage();
@@ -218,6 +220,7 @@ class ReservationController extends Controller
 
     public function failPay()
     {
+        dd('fail');
         $data['status'] = 'fail';
         return $data;
     }

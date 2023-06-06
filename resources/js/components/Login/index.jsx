@@ -13,7 +13,7 @@ export const Login = () => {
     const navigate = useNavigate();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const {login, user, error, clearError} = useAuthStore()
+    const {login, user, error, clearError, loading} = useAuthStore()
 
     const [formError, setFormError] = useState('')
 
@@ -42,6 +42,8 @@ export const Login = () => {
     }, [user]);
 
     const handleSubmit = async (e) => {
+        setFormError('')
+        clearError()
         e.preventDefault();
         if(!email && !password) {
             setFormError('Заполните все поля')
@@ -122,7 +124,7 @@ export const Login = () => {
                                     Зарегистрироваться
                                 </Button>
                                 <Button type="submit" variant={"blue"}>
-                                    Войти
+                                    {loading ? 'Вход...' : 'Войти'}
                                 </Button>
                             </div>
                         </form>
