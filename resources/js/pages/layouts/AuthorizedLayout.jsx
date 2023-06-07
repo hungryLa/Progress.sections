@@ -1,29 +1,37 @@
 import {Header} from "../../components/Header";
 import {Footer} from "../../components/Footer";
-import {Outlet, useLocation} from "react-router-dom";
+import {Outlet} from "react-router-dom";
 import {Sidebar} from "../../components/Sidebar";
 import {Container} from "../../components/Container";
 import {Menu} from "../../components/Menu";
 import useMenuStore from "../../store/useMenuStore";
 import {Title} from "../../components/UI/Title";
 import useContentStore from "../../store/useContentStore";
-import {useEffect} from "react";
 import {Swiper, SwiperSlide} from "swiper/react";
 import {Autoplay, Pagination} from "swiper";
 
 import 'swiper/scss';
 import 'swiper/scss/pagination';
 import 'swiper/scss/autoplay';
+import {VerificationError} from "../../components/VerificationError";
+import useAuthStore from "../../store/useAuthStore";
+import {useEffect} from "react";
 
 export const AuthorizedLayout = () => {
     const isMenuActive = useMenuStore(store => store.isMenuActive)
     const pageImages = useContentStore(store => store.pageImages)
     const pageTitle = useContentStore(store => store.pageTitle)
+    const {user, getUserInfo} = useAuthStore()
+
+    useEffect(() => {
+        getUserInfo()
+    }, [])
 
     return (
         <div className='page page-authenticated'>
             <Header/>
             <section className='content'>
+                {!user?.email_verified_at ? <VerificationError/> : ''}
                 <Container>
                     {/*{pageImages ? <img className={'content__image'} src={pageImages} alt=""/> : ''}*/}
                     {pageImages ? (

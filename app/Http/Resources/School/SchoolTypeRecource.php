@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Resources\TimetableSection;
+namespace App\Http\Resources\School;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class TimetableSectionWithSectionResource extends JsonResource
+class SchoolTypeRecource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,7 +16,8 @@ class TimetableSectionWithSectionResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'section' => $this->section,
+            'title' => $this->title,
+            'color' => $this->color,
         ];
     }
 }

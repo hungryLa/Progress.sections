@@ -4,9 +4,9 @@ namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\TimetableSection\StoreRequest;
-use App\Http\Resources\SchoolRecource;
+use App\Http\Resources\School\SchoolRecource;
 use App\Http\Resources\SectionRecource;
-use App\Http\Resources\TimetableSectionResource;
+use App\Http\Resources\TimetableSection\TimetableSectionResource;
 use App\Http\Resources\User\UserResource;
 use App\Models\Section;
 use App\Models\TimetableSection;

@@ -1,5 +1,5 @@
-import { create } from "zustand";
-import { persist } from "zustand/middleware";
+import {create} from "zustand";
+import {persist} from "zustand/middleware";
 import api from "../middlewares/auth.middleware";
 
 export const useReservationStore = create(
@@ -9,7 +9,6 @@ export const useReservationStore = create(
             errors: [],
             message: "",
             url: "",
-            message: "",
             userId: null,
             sectionTimetableId: null,
             clientId: null,
@@ -25,11 +24,13 @@ export const useReservationStore = create(
                 paymentType,
                 price
             ) => {
-                set({ user: id,
+                set({
+                    user: id,
                     sectionTimetableId: sectionTimetableId,
                     clientId: clientId,
                     date: date,
-                    time: time, });
+                    time: time,
+                });
                 console.log('store', get().userId, get().sectionTimetableId, get().clientId, get().date, get().time)
                 try {
                     set({
@@ -48,10 +49,10 @@ export const useReservationStore = create(
                             price,
                         }
                     );
-                    set({ loading: false });
+                    set({loading: false});
                 } catch (error) {
                     console.log(error);
-                    set({ loading: false });
+                    set({loading: false});
                 }
             },
             addReservationByCard: async (
@@ -63,27 +64,27 @@ export const useReservationStore = create(
                 price
             ) => {
                 try {
-                    set({ loading: true });
+                    set({loading: true});
                     const response = await api.post(
                         `/cabinet/reservations/storePayment`,
                         {
                             'user': id,
                             'client': clientId,
                             'timetableSection': sectionTimetableId,
-                            'date' :date,
+                            'date': date,
                             'time': time,
                             'price': price,
                         }
                     );
                     console.log(response);
                     window.location.replace(response.data.url);
-                    set({ loading: false, url: response?.data?.url });
+                    set({loading: false, url: response?.data?.url});
                 } catch (error) {
-                    set({ loading: true, message: "" });
+                    set({loading: true, message: ""});
                 }
             },
         }),
-        { name: "reservations-storage" }
+        {name: "reservations-storage"}
     )
 );
 

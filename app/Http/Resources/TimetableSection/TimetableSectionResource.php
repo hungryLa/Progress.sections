@@ -1,7 +1,9 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\TimetableSection;
 
+use App\Http\Resources\ReservationResource;
+use App\Http\Resources\Timetable\TimetableResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 

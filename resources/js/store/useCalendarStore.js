@@ -1,7 +1,7 @@
-import { create } from "zustand";
+import {create} from "zustand";
 import moment from "moment";
 import useSectionTimetables from "./useSectionTimetables";
-import { translateDayToNumber } from "../helpers/translateDayToNumber";
+import {translateDayToNumber} from "../helpers/translateDayToNumber";
 
 const useCalendarStore = create((set, get) => ({
     loading: false,
@@ -14,7 +14,7 @@ const useCalendarStore = create((set, get) => ({
     },
 
     setDifference: (value) => {
-        set({ difference: get().difference + value });
+        set({difference: get().difference + value});
     },
 
     getCurrentSectionTimetable: (timetableId) => {
@@ -27,12 +27,12 @@ const useCalendarStore = create((set, get) => ({
     },
 
     onNavigate: (some, _, type) => {
-        set({ loading: true });
+        set({loading: true});
         const currentDate = moment().toDate();
         let lastDate = currentDate;
 
         if (some.toLocaleDateString() == lastDate.toLocaleDateString()) {
-            set({ difference: 0 });
+            set({difference: 0});
         } else if (type === "PREV") {
             get().setDifference(-1);
         } else if (type === "NEXT") {
@@ -42,8 +42,8 @@ const useCalendarStore = create((set, get) => ({
         const days =
             get()
                 .currentSectionTimetable?.timetable?.weekday?.which_days?.map(
-                    (day) => translateDayToNumber(day)
-                )
+                (day) => translateDayToNumber(day)
+            )
                 ?.sort((a, b) => a - b) || [];
 
         let testEvents = [];
@@ -132,16 +132,85 @@ const useCalendarStore = create((set, get) => ({
             }
         });
 
-        set({ events: [...testEvents], loading: false });
+        set({events: [...testEvents], loading: false});
+    },
+
+    getEventsForTeacher: (currentSection) => {
+        set({loading: false})
+        const days = currentSection?.timetableSections[0]?.timetable?.weekday?.which_days?.map(
+            day => translateDayToNumber(day)
+        )?.sort((a, b) => a - b) || []
+        let events = []
+
+        days.forEach((day) => {
+            const startTime = moment(
+                currentSection?.timetableSections[0]?.timetable?.workday_start,
+                "HH:mm:ss"
+            );
+            const endTime = moment(
+                currentSection?.timetableSections[0]?.timetable?.workday_end,
+                "HH:mm:ss"
+            );
+            const lessonTime = moment.duration(
+                currentSection?.timetableSections[0]?.timetable?.lesson_time
+            );
+
+            let currentTime = moment(startTime);
+
+            while (currentTime.isBefore(endTime)) {
+                let testStart = moment(currentTime).format("HH:mm:ss");
+                let testEnd = moment(currentTime)
+                    .add(lessonTime)
+                    .format("HH:mm:ss");
+
+                const currentDate = moment().format("YYYY-MM-DD");
+
+                const startDateTime = moment(`${currentDate} ${testStart}`);
+                const endDateTime = moment(`${currentDate} ${testEnd}`);
+
+                if (day === moment(startDateTime).day()) {
+                    events.push({
+                        title: `${
+                            get().currentSectionTimetable.lesson_price
+                        }р.`,
+                        start: startDateTime.toDate(),
+                        end: endDateTime.toDate(),
+                    });
+                } else {
+                    events.push({
+                        title: `${
+                            get().currentSectionTimetable.lesson_price
+                        }p.`,
+                        start: moment(startDateTime)
+                            .subtract(moment(startDateTime).day() - day, "day")
+                            .toDate(),
+                        end: moment(endDateTime)
+                            .subtract(moment(startDateTime).day() - day, "day")
+                            .toDate(),
+                    });
+                }
+
+                currentTime.add(lessonTime);
+            }
+
+            events.forEach((event, index) => {
+                if (moment(event.start).isBetween(moment())) {
+                    events.splice(index, 1);
+                }
+            });
+
+            set({events: [...events], loading: false});
+        })
     },
 
     getTestEvents: () => {
-        set({ loading: true });
+        set({loading: true});
+        console.log('currentSectionTimeTable', get().currentSectionTimetable)
         const days =
             get()
                 .currentSectionTimetable?.timetable?.weekday?.which_days?.map(
-                    (day) => translateDayToNumber(day)
-                )
+                (day) => translateDayToNumber(day)
+            )
                 ?.sort((a, b) => a - b) || [];
 
         let testEvents = [];
@@ -205,20 +274,19 @@ const useCalendarStore = create((set, get) => ({
         });
 
 
-
-        set({ events: [...testEvents], loading: false });
+        set({events: [...testEvents], loading: false});
     },
 
     getEvents: () => {
-        set({ loading: true });
+        set({loading: true});
         const days =
             get()
                 .currentSectionTimetable?.timetable?.weekday?.which_days?.map(
-                    (day) => translateDayToNumber(day)
-                )
+                (day) => translateDayToNumber(day)
+            )
                 ?.sort((a, b) => a - b) || [];
 
-        set({ loading: true });
+        set({loading: true});
         const startTime = moment(
             get().currentSectionTimetable?.timetable?.workday_start,
             "HH:mm:ss"
@@ -287,7 +355,7 @@ const useCalendarStore = create((set, get) => ({
             }
         });
 
-        set({ loading: false, events: [...testEvents], loading: false });
+        set({loading: false, events: [...testEvents]});
     },
 }));
 export default useCalendarStore;

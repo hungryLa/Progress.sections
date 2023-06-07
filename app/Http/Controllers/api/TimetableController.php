@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\SchoolForTimetableResource;
-use App\Http\Resources\SchoolRecource;
+use App\Http\Resources\School\SchoolForTimetableResource;
+use App\Http\Resources\School\SchoolRecource;
 use App\Http\Resources\Timetable\TimetableResource;
 use App\Http\Resources\User\UserResource;
 use App\Models\School;

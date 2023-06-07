@@ -1,0 +1,31 @@
+.verification-error {
+    margin: 1.2rem 0;
+    height: min-content;
+
+    .container {
+        height: auto;
+    }
+
+    &__message {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 2.4rem;
+        background-color: rgba(242, 68, 5, .15);
+        color: var(--orange);
+        padding: 2.4rem;
+        border-radius: 1rem;
+        font-size: 1.6rem;
+
+        button {
+            text-decoration: underline;
+            color: var(--blue);
+            cursor: pointer;
+        }
+
+        @media screen and (max-width: 768px) {
+            text-align: center;
+        }
+    }
+}

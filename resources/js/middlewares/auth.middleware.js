@@ -7,7 +7,7 @@ const api = axios.create({
 const getToken = () => {
     let token = null
     const localStorage = window.localStorage.getItem('token')
-    if(localStorage) {
+    if (localStorage) {
         token = localStorage
     }
     return token
@@ -21,9 +21,7 @@ api.interceptors.request.use((config) => {
 api.interceptors.response.use(
     (response) => response,
     (error) => {
-        // console.log(error)
-        if(error?.response?.status === 401) {
-            // console.log(window.location.href)
+        if (error?.response?.status === 401) {
             if(window.location.href === 'http://localhost:8000/') {
                 localStorage.clear()
             } else {

@@ -12,6 +12,7 @@ const useSectionsStore = create(
         occupationError: '',
         descriptionError: '',
         contentsError: '',
+        teacherSections: [],
         getSections: async (schoolId) => {
             try {
                 set({loading: true, error: [], occupationError: '', descriptionError: '', contentsError: ''})
@@ -150,6 +151,17 @@ const useSectionsStore = create(
                     loading: false,
                     error
                 })
+            }
+        },
+        getTeacherSections: async (teacherId) => {
+            try {
+                set({loading: true})
+                const response = await api.get(`/cabinet/teachers/${teacherId}/getSections`)
+                // console.log('teachers sections', response)
+                set({loading: false, teacherSections: response?.data?.sections})
+            } catch (error) {
+                console.log(error)
+                set({loading: false})
             }
         }
     }), {

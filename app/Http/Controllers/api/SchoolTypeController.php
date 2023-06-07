@@ -4,9 +4,7 @@ namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SchoolType\StoreRequest;
-use App\Http\Requests\SchoolType\UpdateRequest;
-use App\Http\Resources\SchoolTypeRecource;
-use App\Http\Resources\SectionRecource;
+use App\Http\Resources\School\SchoolTypeRecource;
 use App\Models\SchoolType;
 use Illuminate\Http\Request;
 

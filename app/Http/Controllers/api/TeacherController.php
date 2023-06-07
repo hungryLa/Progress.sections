@@ -6,13 +6,15 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Teacher\StoreRequest;
 use App\Http\Requests\Teacher\UpdateRequest;
 use App\Http\Resources\CommunicationRecource;
-use App\Http\Resources\TeacherRecource;
-use App\Http\Resources\User\UserResource;
+use App\Http\Resources\Section\SectionWithTimetableResource;
+use App\Http\Resources\Teacher\TeacherResource;
 use App\Mail\WelcomeMail;
 use App\Models\Communication;
 use App\Models\ModelSchool;
 use App\Models\School;
+use App\Models\Section;
 use App\Models\Teacher;
+use App\Models\TimetableSection;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -28,8 +30,8 @@ class TeacherController extends Controller
     {
         $invitations = $school->invitations()->where('status', Communication::STATUS['invited'])->get();
         $teachers = Teacher::where('role', User::ROLES['teacher'])->get();
-        $data['active_teachers'] = TeacherRecource::collection($school->teachers);
-        $data['teachers'] = TeacherRecource::collection($teachers->diff($data['active_teachers']));
+        $data['active_teachers'] = TeacherResource::collection($school->teachers);
+        $data['teachers'] = TeacherResource::collection($teachers->diff($data['active_teachers']));
         $data['invitations'] = CommunicationRecource::collection($invitations);
         return $data;
     }
@@ -38,21 +40,36 @@ class TeacherController extends Controller
     {
         try {
             $teacher = Teacher::where('id', $request->teacher)->first();
-            return new TeacherRecource($teacher);
+            return new TeacherResource($teacher);
         } catch (\Exception $exception) {
             return $exception->getMessage();
         }
     }
 
-    public function getOneTeacher(Request $request)
+    public function getSections(Teacher $teacher)
     {
         try {
-            $teacher = Teacher::where('id', $request->userId)->first();
-            return new TeacherRecource($teacher);
+            $timetables = $teacher->timetables;
+
+            $timetableSections = collect(new TimetableSection);
+            foreach ($timetables as $timetable) {
+                if ($timetable->timetableSection) {
+                    $timetableSections->push($timetable->timetableSection);
+                }
+            }
+            $sections = collect(new Section);
+            foreach ($timetableSections as $timetableSection) {
+                if ($timetableSection->section) {
+                    $sections->push($timetableSection->section);
+                }
+            }
+            $data['sections'] = SectionWithTimetableResource::collection($sections);
+            return $data;
         } catch (\Exception $exception) {
             return $exception->getMessage();
         }
     }
+
 
     /**
      * Store a newly created resource in storage.

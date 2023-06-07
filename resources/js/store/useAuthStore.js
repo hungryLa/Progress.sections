@@ -11,6 +11,8 @@ const useAuthStore = create(
             status: "",
             expiresIn: null,
             loading: false,
+            teacher: {},
+
             clearError: () => {
                 set({ error: "" });
             },

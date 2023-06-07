@@ -173,12 +173,13 @@ const useTimetablesStore = create(
                 set({loading: true})
                 const response = await api.get(`/cabinet/timetables/getAllSchoolTimetables?school=${schoolId}`)
                 const {data} = response.data
+                console.log('data', data)
                 let allTimetables = []
-                if(data?.timetables?.length > 0) {
-                    allTimetables =data?.timetables
-                    if(data?.teachers?.length > 0) {
+                if (data?.timetables?.length > 0) {
+                    allTimetables = data?.timetables
+                    if (data?.teachers?.length > 0) {
                         data.teachers.forEach(teacher => {
-                            if(teacher?.timetables?.length > 0) {
+                            if (teacher?.timetables?.length > 0) {
                                 teacher.timetables.forEach(timetable => {
                                     allTimetables.push({...timetable, teacher})
                                 })

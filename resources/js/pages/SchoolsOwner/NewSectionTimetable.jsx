@@ -1,21 +1,20 @@
-import { Fragment, useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import {Fragment, useEffect, useState} from "react";
+import {useNavigate, useParams} from "react-router-dom";
 
-import { Button } from "../../components/UI/Button";
-import { Error } from "../../components/Error";
-import { Form } from "../../components/UI/Form";
-import { Input } from "../../components/UI/Input";
-import { Loader } from "../../components/UI/Loader";
-import { Select } from "../../components/UI/Select";
-import { Subtitle } from "../../components/UI/Subtitle";
-import { getShortWeekdayName } from "../../helpers/getShortWeekdayName";
-import { toast } from "react-toastify";
-import { translateWeekDay } from "../../helpers/translateWeekDay";
+import {Button} from "../../components/UI/Button";
+import {Error} from "../../components/Error";
+import {Form} from "../../components/UI/Form";
+import {Input} from "../../components/UI/Input";
+import {Loader} from "../../components/UI/Loader";
+import {Select} from "../../components/UI/Select";
+import {Subtitle} from "../../components/UI/Subtitle";
+import {getShortWeekdayName} from "../../helpers/getShortWeekdayName";
+import {toast} from "react-toastify";
 import useSectionTimetables from "../../store/useSectionTimetables";
 import useTimetablesStore from "../../store/useTimetablesStore";
 
 export const NewSectionTimetable = () => {
-    const { schoolId, sectionId } = useParams();
+    const {schoolId, sectionId} = useParams();
     const {
         loading: timetablesLoading,
         getSchoolOwnerTimetables,
@@ -23,7 +22,7 @@ export const NewSectionTimetable = () => {
         getSchoolsAndTeachersTimetables,
         allTimetables,
     } = useTimetablesStore();
-    const { loading, addSectionTimetable } = useSectionTimetables();
+    const {loading, addSectionTimetable} = useSectionTimetables();
     const navigate = useNavigate();
 
     const [timetable, setTimetable] = useState(null);
@@ -36,6 +35,10 @@ export const NewSectionTimetable = () => {
     useEffect(() => {
         getSchoolsAndTeachersTimetables(schoolId);
     }, [schoolId, getSchoolsAndTeachersTimetables]);
+
+    useEffect(() => {
+        console.log(allTimetables)
+    }, [allTimetables])
 
     const handleTimetable = (e) => {
         setErrors([]);
@@ -102,10 +105,10 @@ export const NewSectionTimetable = () => {
         <>
             <Subtitle>Создание расписания секции</Subtitle>
             {loading || timetablesLoading ? (
-                <Loader />
+                <Loader/>
             ) : (
                 <>
-                    {errors.length > 0 ? <Error errors={errors} /> : ""}
+                    {errors.length > 0 ? <Error errors={errors}/> : ""}
                     <Form
                         onSubmit={handleSubmit}
                         inputs={
@@ -131,7 +134,7 @@ export const NewSectionTimetable = () => {
                                             >
                                                 {item?.teacher?.full_name
                                                     ? item?.teacher?.full_name +
-                                                      " | "
+                                                    " | "
                                                     : ""}
                                                 {item?.weekday?.which_days.map(
                                                     (day, index) => (
@@ -144,23 +147,23 @@ export const NewSectionTimetable = () => {
                                                             item?.weekday
                                                                 ?.which_days
                                                                 .length -
-                                                                1
+                                                            1
                                                                 ? ", "
                                                                 : " | "
                                                         }`}</Fragment>
                                                     )
                                                 )}
                                                 {item?.workday_start.split(
-                                                    ":"
-                                                )[0] +
+                                                        ":"
+                                                    )[0] +
                                                     ":" +
                                                     item?.workday_start.split(
                                                         ":"
                                                     )[1]}
                                                 -
                                                 {item?.workday_end.split(
-                                                    ":"
-                                                )[0] +
+                                                        ":"
+                                                    )[0] +
                                                     ":" +
                                                     item?.workday_end.split(
                                                         ":"
@@ -204,7 +207,7 @@ export const NewSectionTimetable = () => {
                         }
                         buttons={
                             <Button type={"submit"} variant={"blue"}>
-                                {loading ? <Loader /> : "Создать"}
+                                {loading ? <Loader/> : "Создать"}
                             </Button>
                         }
                     />
