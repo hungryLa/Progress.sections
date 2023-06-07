@@ -1,8 +1,8 @@
-import { Container } from "../Container";
-import { Title } from "../UI/Title";
-import { Navigation } from "../Navigation";
 import { useEffect } from "react";
 import useAuthStore from "../../store/useAuthStore";
+import { Container } from "../Container";
+import { Navigation } from "../Navigation";
+import { Title } from "../UI/Title";
 import "./Menu.scss";
 
 export const Menu = ({ isActive }) => {
@@ -14,9 +14,11 @@ export const Menu = ({ isActive }) => {
         // const scrollbarWidth = windowWidth - documentWidth;
         // document.body.style.paddingRight = scrollbarWidth + "px";
         if (isActive) {
-            document.body.style.position = "fixed";
+            document.body.style.overflow = "hidden";
+            document.body.style.paddingRight = "calc(100vw-100%)";
         } else {
-            document.body.style.position = "relative";
+            document.body.style.overflow = "scroll";
+            document.body.style.paddingRight = "0";
         }
     }, [isActive]);
 
@@ -24,19 +26,21 @@ export const Menu = ({ isActive }) => {
         <div className={`menu ${isActive ? "menu-active" : ""}`}>
             <Container>
                 <div className={`menu__inner`}>
-                    <div
-                        className={"menu__navigation"}
-                        style={
-                            innerWidth > 1280
-                                ? { display: "none" }
-                                : { display: "flex" }
-                        }
-                    >
-                        <Title>Меню</Title>
-                        <Navigation
-                            place={"menu"}
-                        />
-                    </div>
+                    {user ? (
+                        <div
+                            className={"menu__navigation"}
+                            style={
+                                innerWidth > 1280
+                                    ? { display: "none" }
+                                    : { display: "flex" }
+                            }
+                        >
+                            <Title>Меню</Title>
+                            <Navigation place={"menu"} />
+                        </div>
+                    ) : (
+                        ""
+                    )}
                     <div className={"menu__contacts"}>
                         <Title>Контакты</Title>
                         <ul className={"menu__contacts__list"}>

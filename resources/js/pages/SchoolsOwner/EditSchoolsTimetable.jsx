@@ -1,12 +1,13 @@
-import { useNavigate, useParams } from "react-router-dom";
-import { Subtitle } from "../../components/UI/Subtitle";
-import { Form } from "../../components/UI/Form";
-import { Button } from "../../components/UI/Button";
-import { Input } from "../../components/UI/Input";
 import { useEffect, useState } from "react";
-import useTimetablesStore from "../../store/useTimetablesStore";
-import { Checkbox } from "../../components/UI/Checkbox";
+import { useNavigate, useParams } from "react-router-dom";
 import { Error } from "../../components/Error";
+import { Button } from "../../components/UI/Button";
+import { Checkbox } from "../../components/UI/Checkbox";
+import { Form } from "../../components/UI/Form";
+import { Input } from "../../components/UI/Input";
+import { Subtitle } from "../../components/UI/Subtitle";
+import useTimetablesStore from "../../store/useTimetablesStore";
+import { toast } from "react-toastify";
 
 export const EditSchoolsTimetable = () => {
     const navigate = useNavigate();
@@ -46,6 +47,7 @@ export const EditSchoolsTimetable = () => {
     }, [timetable]);
 
     const handleWeekday = (e) => {
+        setErrors([]);
         let weekList = [...weekdays];
         if (e.target.checked) {
             weekList = [...weekdays, e.target.value];
@@ -56,15 +58,17 @@ export const EditSchoolsTimetable = () => {
     };
 
     const handleRest = (e) => {
+        setErrors([]);
         if (e.target.checked) {
-            setWithRest(e.target.value);
+            setWithRest(true);
         } else {
             setWithRest(false);
         }
-    };
-
-    const handleAddError = (value) => {
-        setErrors((prev) => [...prev, value]);
+        if (withRest === false) {
+            setRestStart("");
+            setRestEnd("");
+        }
+        console.log(withRest);
     };
 
     const handleSubmit = async (e) => {
@@ -105,6 +109,7 @@ export const EditSchoolsTimetable = () => {
                 restStart,
                 restEnd
             );
+            toast("Данные расписания изменены");
             navigate(`/schools_owner/schools/${schoolId}/timetables`);
         }
     };
@@ -197,7 +202,10 @@ export const EditSchoolsTimetable = () => {
                                 type={"time"}
                                 label={"Длительность занятия"}
                                 value={lessonTime}
-                                onChange={(e) => setLessonTime(e.target.value)}
+                                onChange={(e) => {
+                                    setErrors([]);
+                                    setLessonTime(e.target.value);
+                                }}
                             />
                         </div>
                         <div className={"two-col"}>
@@ -205,15 +213,19 @@ export const EditSchoolsTimetable = () => {
                                 type={"time"}
                                 label={"Время начала"}
                                 value={workdayStart}
-                                onChange={(e) =>
-                                    setWorkdayStart(e.target.value)
-                                }
+                                onChange={(e) => {
+                                    setErrors([]);
+                                    setWorkdayStart(e.target.value);
+                                }}
                             />
                             <Input
                                 type={"time"}
                                 label={"Время конца"}
                                 value={workdayEnd}
-                                onChange={(e) => setWorkdayEnd(e.target.value)}
+                                onChange={(e) => {
+                                    setErrors([]);
+                                    setWorkdayEnd(e.target.value);
+                                }}
                             />
                         </div>
                         <div className={"three-col"}>
@@ -221,7 +233,7 @@ export const EditSchoolsTimetable = () => {
                                 id={"rest"}
                                 name={"rest"}
                                 label={"Без обеда"}
-                                value={withRest}
+                                value={withRest || false}
                                 onChange={handleRest}
                                 isChecked={withRest}
                             />
@@ -231,16 +243,20 @@ export const EditSchoolsTimetable = () => {
                                 <Input
                                     type={"time"}
                                     label={"Начало обеда"}
-                                    value={restStart}
-                                    onChange={(e) =>
-                                        setRestStart(e.target.value)
-                                    }
+                                    value={restStart || null}
+                                    onChange={(e) => {
+                                        setErrors([]);
+                                        setRestStart(e.target.value);
+                                    }}
                                 />
                                 <Input
                                     type={"time"}
                                     label={"Конец обеда"}
-                                    value={restEnd}
-                                    onChange={(e) => setRestEnd(e.target.value)}
+                                    value={restEnd || null}
+                                    onChange={(e) => {
+                                        setErrors([]);
+                                        setRestEnd(e.target.value);
+                                    }}
                                 />
                             </div>
                         )}

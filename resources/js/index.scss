@@ -51,6 +51,10 @@ body {
     border: none;
 }
 
+#root {
+    position: relative;
+}
+
 *,
 *::before,
 *::after {
@@ -90,7 +94,7 @@ main {
 
 main {
     overflow: auto;
-    padding: 2.5rem 0 2.5rem 2.5rem;
+    padding: 2.5rem .6rem 2.5rem 2.5rem;
     border-left: 1px solid rgba(44, 61, 115, 0.25);
 
     @media screen and (max-width: 1280px) {

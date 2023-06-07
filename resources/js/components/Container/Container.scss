@@ -3,4 +3,9 @@
     padding: 0 var(--container-offset);
     margin: 0 auto;
     height: 100%;
+
+    @media screen and (max-width: 768px) {
+        max-width: calc(var(--container-width) + 1.2rem * 2);
+        padding: 0 1.2rem;
+    }
 }

@@ -1,15 +1,17 @@
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 
-import {Button} from "../../components/UI/Button";
-import {Error} from "../../components/Error";
-import {Form} from "../../components/UI/Form";
-import {Input} from "../../components/UI/Input";
-import {Loader} from "../../components/UI/Loader";
+import { useNavigate } from "react-router-dom";
 import ReactSelect from "react-select";
-import {Select} from "../../components/UI/Select";
-import {Subtitle} from "../../components/UI/Subtitle";
-import {TextArea} from "../../components/UI/TextArea";
-import {useNavigate} from "react-router-dom";
+import { toast } from "react-toastify";
+import { Error } from "../../components/Error";
+import { Button } from "../../components/UI/Button";
+import { Form } from "../../components/UI/Form";
+import { Input } from "../../components/UI/Input";
+import { Loader } from "../../components/UI/Loader";
+import { Select } from "../../components/UI/Select";
+import { Subtitle } from "../../components/UI/Subtitle";
+import { TextArea } from "../../components/UI/TextArea";
+import { validatePhone } from '../../helpers/validatePhone';
 import useSchoolTypesStore from "../../store/useSchoolTypesStore";
 import useSchoolsStore from "../../store/useSchoolsStore";
 
@@ -18,12 +20,6 @@ export const NewSchool = () => {
     const navigate = useNavigate()
     const {
         addSchool,
-        error,
-        titleError,
-        descriptionError,
-        phoneError,
-        addressError,
-        imagesError,
         loading
     } = useSchoolsStore()
 
@@ -36,44 +32,108 @@ export const NewSchool = () => {
     const [address, setAddress] = useState('')
     const [images, setImages] = useState([])
     const [options, setOptions] = useState([])
+    const [errors, setErrors] = useState([])
 
     useEffect(() => {
         getSchoolTypes()
         setOptions(schoolTypes.map(item => ({value: item.id, label: item.title})))
     }, [getSchoolTypes])
 
+    const handleErrors = (value) => {
+        setErrors(prev => [...prev, value])
+    }
+
     const handleTitle = (e) => {
+        setErrors([])
         setTitle(e.target.value)
     }
     const handleDescription = (e) => {
+        setErrors([])
         setDescription(e.target.value)
     }
     const handleTypes = (types) => {
+        setErrors([])
         setTypes(types)
     }
     const handleStatus = (e) => {
+        setErrors([])
         setStatus(e.target.value)
     }
     const handleImages = (e) => {
+        setErrors([])
         setImages([...e.target.files])
-        console.log('images', images)
     }
     const handleRecruitment = (e) => {
+        setErrors([])
         setRecruitment(e.target.value)
     }
     const handleAddress = (e) => {
+        setErrors([])
         setAddress(e.target.value)
     }
     const handlePhone = (e) => {
+        setErrors([])
         setPhone(e.target.value)
     }
 
     const handleSubmit = async (e) => {
         e.preventDefault()
+        setErrors([])
 
         const typesToSend = types.map(type => type.value)
-        await addSchool(status, recruitment, title, description, phone, address, images, typesToSend)
-        if (error?.length === 0) navigate('/schools_owner/schools')
+
+        let isValid = true
+
+        if(!title) {
+            handleErrors('Поле "Название" обязательно для заполнения')
+            isValid = false
+        }
+
+        if(title.length < 8) {
+            handleErrors('Поле "Название" должно содержать не менее 8 символов')
+            isValid = false
+        }
+
+        if(typesToSend.length === 0) {
+            handleErrors('Поле "Тип школы" обязательно для заполнения')
+            isValid = false
+        }
+
+        if(!address) {
+            handleErrors('Поле "Адрес" обязательно для заполнения')
+            isValid = false
+        }
+
+        if(address.length < 12) {
+            handleErrors('Поле "Адрес" должно содержать не менее 12 символов')
+            isValid = false
+        }
+
+        if(!phone) {
+            handleErrors('Поле "Номер телефона" обязательно для заполнения')
+            isValid = false
+        }
+
+        if(!validatePhone(phone)) {
+            handleErrors('Поле "Номер телефона" имеет некрректное значение')
+            isValid = false
+        }
+
+        if(!description) {
+            handleErrors('Поле "Описание" обязательно для заполнения')
+            isValid = false
+        }
+
+        if(description.length < 48 || description.length > 255) {
+            handleErrors('Поле "Описание" должно содержать не менее 48 символов и не более 255 символов')
+            isValid = false
+        }
+
+        if(isValid) {
+            await addSchool(status, recruitment, title, description, phone, address, images, typesToSend)
+            toast('Школа создана')
+            navigate('/schools_owner/schools')
+        }
     }
 
     return (
@@ -81,7 +141,7 @@ export const NewSchool = () => {
             <Subtitle>Создание школы</Subtitle>
             {loading || typesLoading ? <Loader/> : (
                 <>
-                    {error?.length > 0 && <Error errors={error}/>}
+                    {errors?.length > 0 ? <Error errors={errors}/> : ''}
                     <Form
                         onSubmit={handleSubmit}
                         inputs={
@@ -89,7 +149,7 @@ export const NewSchool = () => {
                                 <div className='two-col'>
                                     <Input
                                         label={'Название'}
-                                        value={title}
+                                        value={title && title}
                                         onChange={handleTitle}
                                         id={'title'}
                                         type={'text'}

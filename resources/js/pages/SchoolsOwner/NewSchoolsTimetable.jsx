@@ -1,15 +1,14 @@
-import { useNavigate, useParams } from "react-router-dom";
-import { Subtitle } from "../../components/UI/Subtitle";
-import { Form } from "../../components/UI/Form";
-import { Button } from "../../components/UI/Button";
-import { Input } from "../../components/UI/Input";
-import { Select } from "../../components/UI/Select";
-import { useEffect, useState } from "react";
-import useTimetablesStore from "../../store/useTimetablesStore";
-import { Checkbox } from "../../components/UI/Checkbox";
-import { Error } from "../../components/Error";
 import moment from "moment";
-import { current } from "@reduxjs/toolkit";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { toast } from "react-toastify";
+import { Error } from "../../components/Error";
+import { Button } from "../../components/UI/Button";
+import { Checkbox } from "../../components/UI/Checkbox";
+import { Form } from "../../components/UI/Form";
+import { Input } from "../../components/UI/Input";
+import { Subtitle } from "../../components/UI/Subtitle";
+import useTimetablesStore from "../../store/useTimetablesStore";
 
 export const NewSchoolsTimetable = () => {
     const navigate = useNavigate();
@@ -26,6 +25,7 @@ export const NewSchoolsTimetable = () => {
     const [restWarn, setRestWarn] = useState("");
 
     const handleWeekday = (e) => {
+        setErrors([])
         let weekList = [...weekdays];
         if (e.target.checked) {
             weekList = [...weekdays, e.target.value];
@@ -36,6 +36,7 @@ export const NewSchoolsTimetable = () => {
     };
 
     const handleRest = (e) => {
+        setErrors([])
         if (e.target.checked) {
             setWithRest(e.target.value);
         } else {
@@ -43,19 +44,16 @@ export const NewSchoolsTimetable = () => {
         }
     };
 
-    const handleAddError = (value) => {
-        setErrors((prev) => [...prev, value]);
+    const handleRestStart = (e) => {
+        setErrors([])
+        setRestWarn("");
+        setRestStart(e.target.value);
     };
 
-    const handleRestStart = (e) => {
-        setRestWarn('')
-        setRestStart(e.target.value)
-    }
-
     const handleRestEnd = (e) => {
-        setRestWarn('')
-        setRestEnd(e.target.value)
-    }
+        setRestWarn("");
+        setRestEnd(e.target.value);
+    };
 
     useEffect(() => {
         if (restStart && restEnd) {
@@ -95,11 +93,11 @@ export const NewSchoolsTimetable = () => {
                 }
             });
         }
-    }, [restStart, restEnd])
+    }, [restStart, restEnd]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setErrors([]); // Clear previous errors
+        setErrors([]);
         const validationErrors = [];
         if (weekdays.length < 1)
             validationErrors.push("Дни недели обязательны для заполнения");
@@ -135,6 +133,7 @@ export const NewSchoolsTimetable = () => {
                 restStart,
                 restEnd
             );
+            toast("Расписание создано");
             navigate(`/schools_owner/schools/${schoolId}/timetables`);
         }
     };
@@ -227,7 +226,10 @@ export const NewSchoolsTimetable = () => {
                                 type={"time"}
                                 label={"Длительность занятия"}
                                 value={lessonTime}
-                                onChange={(e) => setLessonTime(e.target.value)}
+                                onChange={(e) => {
+                                    setErrors([])
+                                    setLessonTime(e.target.value)
+                                }}
                             />
                         </div>
                         <div className={"two-col"}>

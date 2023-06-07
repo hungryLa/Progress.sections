@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-    baseURL: 'http://127.0.0.1:8002/api/'
+    baseURL: 'http://127.0.0.1:8000/api/'
 })
 
 const getToken = () => {
@@ -24,7 +24,7 @@ api.interceptors.response.use(
         // console.log(error)
         if(error?.response?.status === 401) {
             // console.log(window.location.href)
-            if(window.location.href === 'http://localhost:8002/') {
+            if(window.location.href === 'http://localhost:8000/') {
                 localStorage.clear()
             } else {
                 localStorage.clear()
