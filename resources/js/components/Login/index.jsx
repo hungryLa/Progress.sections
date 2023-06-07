@@ -8,6 +8,8 @@ import useAuthStore from "../../store/useAuthStore";
 import { Input } from "../UI/Input";
 import { Button } from "../UI/Button";
 import {shallow} from "zustand/shallow";
+import { Error } from "../Error";
+import { validateEmail } from "../../helpers/validateEmail";
 
 export const Login = () => {
     const navigate = useNavigate();
@@ -15,10 +17,14 @@ export const Login = () => {
     const [password, setPassword] = useState("");
     const {login, user, error, clearError, loading} = useAuthStore()
 
-    const [formError, setFormError] = useState('')
+    const [errors, setErrors] = useState([])
+
+    const handleError = (value) => {
+        setErrors(prev => [...prev, value])
+    }
 
     useEffect(() => {
-        clearError()
+        setErrors([])
         if (user && !user.email_verified_at) {
             console.log('true')
             navigate("/not-verified", {replace: true})
@@ -42,45 +48,55 @@ export const Login = () => {
     }, [user]);
 
     const handleSubmit = async (e) => {
-        setFormError('')
+        setErrors([])
         clearError()
         e.preventDefault();
-        if(!email && !password) {
-            setFormError('Заполните все поля')
-            return;
-        }
+
+        let isValid = true
+
         if(!email){
-            setFormError('Введите email')
-            return;
+            handleError('Введите почту')
+            isValid = false
+        }
+        if(!validateEmail(email)) {
+            handleError('Почта введена некорректно')
+            isValid = false
         }
         if(!password){
-            setFormError('Введите пароль')
-            return;
+            handleError('Введите пароль')
+            isValid = false;
         }
         if(password.length < 8) {
-            setFormError('Пароль должен быть не короче 8 символов')
-            return;
+            handleError('Пароль должен быть не короче 8 символов')
+            isValid = false;
         }
 
-        if(!formError) {
+        if(isValid) {
             await login(email, password);
         }
-
-        if(error) {
-            setFormError(error)
-        }
     };
+
+    useEffect(() => {
+        setErrors([])
+        if(error !== "") handleError(error)
+    }, [error])
+
+    useEffect(() => {clearError()}, [])
+
+    useEffect(() => {
+        console.log(errors);
+    }, [errors])
 
     const emailHandler = (e) => {
         setEmail(e.target.value)
         clearError()
-        setFormError('')
+        setErrors([])
     }
 
     const passwordHandler = (e) => {
         setPassword(e.target.value)
         clearError()
-        setFormError('')
+        setErrors([])
     }
 
     const handleRedirect = (e) => {
@@ -101,6 +117,7 @@ export const Login = () => {
                             Решение проблем с безналичной оплатой, контролем
                             посещаемости, табелированием и отчетностью
                         </p>
+                        {errors.length > 0 ? <Error errors={errors} /> : ''}
                         <form onSubmit={handleSubmit}>
                             <Input
                                 type={"text"}
@@ -116,8 +133,6 @@ export const Login = () => {
                                 value={password}
                                 onChange={passwordHandler}
                             />
-                            {formError && <small className="login__error">{formError}</small>}
-                            {error && <small className="login__error">{error}</small>}
                             <Link className="login__link" to={'/password-reset'}>Восстановить пароль</Link>
                             <div className="login__buttons">
                                 <Button type="button" variant={"white"} onClick={handleRedirect}>

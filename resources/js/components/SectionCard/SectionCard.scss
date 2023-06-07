@@ -13,6 +13,7 @@
 
     img {
         border-radius: .6rem;
+        aspect-ratio: 16/9;
     }
 
     &__title {
@@ -21,6 +22,7 @@
     }
 
     &__description {
+        word-break: break-all;
         overflow: hidden;
         text-overflow: ellipsis;
         display: -moz-box;

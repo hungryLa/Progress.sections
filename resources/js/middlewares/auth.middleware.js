@@ -21,10 +21,8 @@ api.interceptors.request.use((config) => {
 api.interceptors.response.use(
     (response) => response,
     (error) => {
-        // console.log(error)
         if (error?.response?.status === 401) {
-            // console.log(window.location.href)
-            if (window.location.href === 'http://localhost:8000/') {
+            if(window.location.href === 'http://localhost:8000/') {
                 localStorage.clear()
             } else {
                 localStorage.clear()

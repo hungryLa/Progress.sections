@@ -1,21 +1,22 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
+import ReactSelect from "react-select";
+import { toast } from "react-toastify";
+import { Error } from "../../components/Error";
 import { Button } from "../../components/UI/Button";
 import { Checkbox } from "../../components/UI/Checkbox";
-import { Error } from "../../components/Error";
 import { Form } from "../../components/UI/Form";
 import { Input } from "../../components/UI/Input";
 import { Loader } from "../../components/UI/Loader";
 import { Modal } from "../../components/UI/Modal";
-import ReactSelect from "react-select";
 import { Select } from "../../components/UI/Select";
 import { Subtitle } from "../../components/UI/Subtitle";
 import { TextArea } from "../../components/UI/TextArea";
 import { Title } from "../../components/UI/Title";
-import { toast } from "react-toastify";
 import useSchoolTypesStore from "../../store/useSchoolTypesStore";
 import useSchoolsStore from "../../store/useSchoolsStore";
+import { validatePhone } from "../../helpers/validatePhone";
 
 export const EditSchool = () => {
     const { schoolId } = useParams();
@@ -27,7 +28,6 @@ export const EditSchool = () => {
     } = useSchoolTypesStore();
     const {
         loading,
-        error,
         school,
         getOneSchool,
         editSchool,
@@ -45,6 +45,7 @@ export const EditSchool = () => {
     const [address, setAddress] = useState("");
     const [images, setImages] = useState([]);
     const [imagesToDelete, setImagesToDelete] = useState([]);
+    const [errors, setErrors] = useState([]);
 
     const [modalIsActive, setModalIsActive] = useState(false);
 
@@ -74,32 +75,45 @@ export const EditSchool = () => {
     }, []);
 
     const handleTitle = (e) => {
+        setErrors([]);
         setTitle(e.target.value);
     };
     const handleDescription = (e) => {
+        setErrors([]);
         setDescription(e.target.value);
     };
     const handleTypes = (types) => {
+        setErrors([]);
         setTypes(types);
     };
     const handleStatus = (e) => {
+        setErrors([]);
         setStatus(e.target.value);
     };
     const handleImages = (e) => {
+        setErrors([]);
         setImages(e.target.files);
-        console.log(images)
+        console.log(images);
     };
     const handleRecruitment = (e) => {
+        setErrors([]);
         setRecruitment(e.target.value);
     };
     const handleAddress = (e) => {
+        setErrors([]);
         setAddress(e.target.value);
     };
     const handlePhone = (e) => {
+        setErrors([]);
         setPhone(e.target.value);
     };
 
+    const handleErrors = (value) => {
+        setErrors((prev) => [...prev, value]);
+    };
+
     const handleSelect = (e) => {
+        setErrors([]);
         const value = e.target.value;
         setImagesToDelete((prevImagesToDelete) => {
             if (e.target.checked) {
@@ -114,25 +128,84 @@ export const EditSchool = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setErrors([]);
+
         if (imagesToDelete.length > 0) await deleteImages(imagesToDelete);
         if (images?.length > 0) await addImages(school.id, images);
-        await editSchool(
-            schoolId,
-            status,
-            recruitment,
-            title,
-            description,
-            address,
-            phone,
-            types
-        );
-        if (error.length < 1) navigate(`/schools_owner/schools/${schoolId}`);
+
+        let isValid = true;
+
+        if (!title) {
+            handleErrors('Поле "Название" обязательно для заполнения');
+            isValid = false;
+        }
+
+        if (title.length < 8) {
+            handleErrors(
+                'Поле "Название" должно содержать не менее 8 символов'
+            );
+            isValid = false;
+        }
+
+        if (types.length === 0) {
+            handleErrors('Поле "Тип школы" обязательно для заполнения');
+            isValid = false;
+        }
+
+        if (!address) {
+            handleErrors('Поле "Адрес" обязательно для заполнения');
+            isValid = false;
+        }
+
+        if (address.length < 12) {
+            handleErrors('Поле "Адрес" должно содержать не менее 12 символов');
+            isValid = false;
+        }
+
+        if (!phone) {
+            handleErrors('Поле "Номер телефона" обязательно для заполнения');
+            isValid = false;
+        }
+
+        if (!validatePhone(phone)) {
+            handleErrors('Поле "Номер телефона" имеет некрректное значение');
+            isValid = false;
+        }
+
+        if (!description) {
+            handleErrors('Поле "Описание" обязательно для заполнения');
+            isValid = false;
+        }
+
+        if (description.length < 48 || description.length > 255) {
+            handleErrors(
+                'Поле "Описание" должно содержать не менее 48 символов и не более 255 символов'
+            );
+            isValid = false;
+        }
+
+        console.log(isValid);
+
+        if (isValid) {
+            await editSchool(
+                schoolId,
+                status,
+                recruitment,
+                title,
+                description,
+                address,
+                phone,
+                types
+            );
+            toast('Данные о школе изменены')
+            navigate(`/schools_owner/schools/${schoolId}`)
+        }
     };
 
     const handleDelete = async (e) => {
         await deleteSchool(schoolId, school.title);
         setModalIsActive(false);
-        toast(`Школа "${school.title}" удалена`)
+        toast(`Школа "${school.title}" удалена`);
         navigate("/schools_owner/schools");
     };
 
@@ -143,7 +216,7 @@ export const EditSchool = () => {
                 <Loader />
             ) : (
                 <>
-                    {error && Array.isArray(error) && <Error errors={error} />}
+                    {errors.length > 0 ? <Error errors={errors} /> : ''}
                     <Form
                         onSubmit={handleSubmit}
                         inputs={
@@ -271,7 +344,7 @@ export const EditSchool = () => {
                                         type={"file"}
                                         onChange={handleImages}
                                         multiple
-                                        id={'images'}
+                                        id={"images"}
                                     />
 
                                     {school?.images?.length > 0 ? (
@@ -291,7 +364,10 @@ export const EditSchool = () => {
                                                         }
                                                         value={image.id}
                                                         id={image.id}
-                                                        isChecked={imagesToDelete.some(item => item == image.id)}
+                                                        isChecked={imagesToDelete.some(
+                                                            (item) =>
+                                                                item == image.id
+                                                        )}
                                                         label={
                                                             <img
                                                                 src={`/storage/${image.path}`}

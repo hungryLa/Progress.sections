@@ -49,6 +49,7 @@
     }
 
     &__description {
+        word-break:break-all;
         overflow: hidden;
         text-overflow: ellipsis;
         display: -moz-box;

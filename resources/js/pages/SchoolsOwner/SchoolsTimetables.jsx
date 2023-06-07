@@ -10,6 +10,7 @@ import {translateWeekDay} from "../../helpers/translateWeekDay";
 import {Button} from "../../components/UI/Button";
 import {Title} from "../../components/UI/Title";
 import {Modal} from "../../components/UI/Modal";
+import { toast } from "react-toastify";
 
 export const SchoolsTimetables = () => {
     const {schoolId} = useParams()
@@ -114,6 +115,7 @@ export const SchoolsTimetables = () => {
                         <div className={'modal__buttons'}>
                             <Button variant={'green'} onClick={async () => {
                                 await deleteSchoolsOwnerTimetable(schoolId, timetableToDelete.id)
+                                toast('Расписание удалено')
                                 setModalIsActive(false)
                             }}>Да</Button>
                             <Button variant={'gray'} onClick={() => {
