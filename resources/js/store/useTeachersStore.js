@@ -25,7 +25,7 @@ const useTeachersStore = create(
             } catch (error) {
                 set({
                     loading: false,
-                    error: Object.keys(error.response.data.errors).map((key, value) => error.response.data.errors[key])
+                    // error: Object.keys(error.response.data.errors).map((key, value) => error.response.data.errors[key])
                 })
             }
         },

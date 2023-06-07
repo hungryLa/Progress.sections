@@ -101,7 +101,7 @@ Route::group(['middleware' => 'jwt.auth'], function () {
                 'timetables.getAllSchoolTimetables'
             );
             Route::get('{timetable}', [TimetableController::class, 'getOne'])->name('timetable.get-one');
-            Route::get('{timetable}/edit', [TimetableContFroller::class, 'edit'])->name('timetables.edit');
+            Route::get('{timetable}/edit', [TimetableController::class, 'edit'])->name('timetables.edit');
             Route::put('{timetable}/update', [TimetableController::class, 'update'])->name('timetables.update');
             Route::delete('{timetable}/delete', [TimetableController::class, 'destroy'])->name('timetables.delete');
         });
@@ -217,7 +217,7 @@ Route::group(['middleware' => 'jwt.auth'], function () {
         Route::group(['prefix' => 'people'], function () {
             Route::get('', [PersonController::class, 'index'])->name('cabinet.people.index');
             Route::post('store', [PersonController::class, 'store'])->name('cabinet.people.store');
-            Route::post('{person}/delete', [PersonController::class, 'destroy'])->name('cabinet.people.delete');
+            Route::delete('{person}/delete', [PersonController::class, 'destroy'])->name('cabinet.people.delete');
         });
 
         Route::group(['prefix' => 'files'], function () {
@@ -231,15 +231,11 @@ Route::group(['middleware' => 'jwt.auth'], function () {
 
         Route::group(['prefix' => 'reservations'], function () {
             Route::get('', [ReservationController::class, 'index'])->name('cabinet.reservations.index');
-            Route::get('{timetableSectionId}', [ReservationController::class, 'getReservationsByTimetableSectionId']
-            )->name('cabinet.reservations.getReservationsByTimetableSectionId');
             Route::post('store', [ReservationController::class, 'store'])->name('cabinet.reservations.store');
             Route::post('storePayment', [ReservationController::class, 'storePayment'])->name(
                 'cabinet.reservations.storePayment'
             );
-            Route::post('successPay', function(){dd('fuck');})->name(
-                'cabinet.reservations.successPay'
-            );
+            Route::post('successPay', [ReservationController::class, 'successPay'])->name('cabinet.reservations.successPay');
             Route::get('failPay', [ReservationController::class, 'failPay'])->name('cabinet.reservations.failPay');
         });
     });

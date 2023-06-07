@@ -31,7 +31,7 @@ import {SectionTimetables} from "./pages/SchoolsOwner/SectionTimetables";
 import {NewSectionTimetable} from "./pages/SchoolsOwner/NewSectionTimetable";
 import {EditSectionTimetable} from "./pages/SchoolsOwner/EditSectionTimetable";
 import {Accounts} from "./pages/User/Accounts";
-import {NewAccount} from "./pages/User/NewAccount";
+import {LinkUser} from "./pages/User/LinkUser";
 import {UserSchools} from "./pages/User/UserSchools";
 import {UserSchool} from "./pages/User/UserSchool";
 import {TeacherTimetables} from "./pages/Teacher/TeacherTimetables";
@@ -39,6 +39,10 @@ import {NewTeacherTimeTable} from "./pages/Teacher/NewTeacherTimeTable";
 import {UserSchoolsSections} from "./pages/User/UserSchoolsSections";
 import {Reservation} from "./pages/User/Reservation";
 import { TeacherSchools } from "./pages/Teacher/TeacherSchools";
+import { SuccessPay } from "./pages/User/SuccessPay";
+import { FailPay } from "./pages/User/FailPay";
+import { NewPerson } from "./pages/User/NewPerson";
+import { TeacherSections } from "./pages/Teacher/TeacherSections";
 
 
 export const App = () => {
@@ -140,14 +144,17 @@ export const App = () => {
                         <Route path={'/user/favorites'} element={<h1>Избранное</h1>}/>
                         <Route path={'/user/subscriptions'} element={<h1>Абонементы</h1>}/>
                         <Route path={'/user/accounts'} element={<Accounts />}/>
-                        <Route path={'/user/accounts/new'} element={<NewAccount />}/>
+                        <Route path={'/user/accounts/link-user'} element={<LinkUser />}/>
+                        <Route path={'/user/accounts/new-person'} element={<NewPerson />}/>
                         <Route path={'/user/settings'} element={<Settings />}/>
+                        <Route path={'/user/successPay'} element={<SuccessPay />} />
+                        <Route path={'/user/failPay'} element={<FailPay />} />
                     </Route>
                 )}
 
                 {user && user.role === 'teacher' && (
                     <Route path={'/teacher/'} element={<AuthorizedLayout/>}>
-                        <Route path={'/teacher/sections'} element={<h1>Секции</h1>}/>
+                        <Route path={'/teacher/sections'} element={<TeacherSections />}/>
                         <Route path={'/teacher/schools'} element={<TeacherSchools />}/>
                         <Route path={'/teacher/timetables'} element={<TeacherTimetables />}/>
                         <Route path={'/teacher/timetables/new'} element={<NewTeacherTimeTable />}/>

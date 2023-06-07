@@ -44,6 +44,16 @@ class TeacherController extends Controller
         }
     }
 
+    public function getOneTeacher(Request $request)
+    {
+        try {
+            $teacher = Teacher::where('id', $request->userId)->first();
+            return new TeacherRecource($teacher);
+        } catch (\Exception $exception) {
+            return $exception->getMessage();
+        }
+    }
+
     /**
      * Store a newly created resource in storage.
      */

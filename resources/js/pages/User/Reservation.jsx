@@ -17,15 +17,21 @@ import useSectionTimetables from "../../store/useSectionTimetables";
 import useSubscriptionUsersStore from "../../store/useSubscriptionUsersStore";
 import moment from "moment";
 import { toast } from "react-toastify";
+import usePersonsStore from "../../store/usePersonsStore";
 
 export const Reservation = () => {
     const { user, getUserInfo } = useAuthStore();
     const { schoolId, sectionId } = useParams();
 
+    const { getPersons, linkedUsers, people } = usePersonsStore();
     const { loading, sectionTimetables, getSectionTimetables } =
         useSectionTimetables();
-    const { loading: reservationLoading, addReservation, addReservationByCard, url } =
-        useReservationStore();
+    const {
+        loading: reservationLoading,
+        addReservation,
+        addReservationByCard,
+        url,
+    } = useReservationStore();
     const { loading: subscriptionsLoading } = useSubscriptionUsersStore();
     const {
         currentSectionTimetable,
@@ -34,7 +40,7 @@ export const Reservation = () => {
         getTestEvents,
         loading: calendarLoading,
         onNavigate,
-        clearDifference
+        clearDifference,
     } = useCalendarStore();
 
     const [modalIsActive, setModalIsActive] = useState(false);
@@ -46,6 +52,10 @@ export const Reservation = () => {
 
     useEffect(() => {
         getUserInfo();
+    }, []);
+
+    useEffect(() => {
+        getPersons();
     }, []);
 
     useEffect(() => {
@@ -107,7 +117,10 @@ export const Reservation = () => {
             time: eventInfo?.start?.toLocaleTimeString(),
         };
 
-        if(selectedPaymentMethod === 'section_subscription' || selectedPaymentMethod === 'money_subscription') {
+        if (
+            selectedPaymentMethod === "section_subscription" ||
+            selectedPaymentMethod === "money_subscription"
+        ) {
             await addReservation(
                 reservationData.id,
                 reservationData.sectionTimetableId,
@@ -119,18 +132,19 @@ export const Reservation = () => {
             );
         }
 
-        if(selectedPaymentMethod === 'card') {
+        if (selectedPaymentMethod === "card") {
             await addReservationByCard(
+                reservationData.id,
+                reservationData.client,
                 reservationData.sectionTimetableId,
                 reservationData.date,
                 reservationData.time,
                 currentSectionTimetable?.lesson_price
-            )
+            );
         }
 
-
         setModalIsActive(false);
-        clearDifference()
+        clearDifference();
         await getUserInfo();
         await getSectionTimetables(sectionId);
         await getCurrentSectionTimetable(selectedTimetableId);
@@ -277,7 +291,18 @@ export const Reservation = () => {
                                     >
                                         <option value={user?.id}>Себя</option>
                                         {/* IN FUTURE ADD PERSONS AND ACCOUNTS */}
-
+                                        {linkedUsers &&
+                                            linkedUsers.map((linkedUser) => (
+                                                <option value={linkedUser?.id}>
+                                                    {linkedUser?.full_name}
+                                                </option>
+                                            ))}
+                                        {people &&
+                                            people.map((person) => (
+                                                <option value={person?.id}>
+                                                    {person?.full_name}
+                                                </option>
+                                            ))}
                                         {/* ++++++++++++++++++++++++++++++++++ */}
                                     </Select>
                                     <Select

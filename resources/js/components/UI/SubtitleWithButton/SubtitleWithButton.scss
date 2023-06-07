@@ -1,0 +1,14 @@
+.subtitle-with-button {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: row;
+
+    .subtitle {
+        margin-bottom: 0;
+    }
+
+    &:not(:first-child) {
+        margin-top: 4.8rem;
+    }
+}

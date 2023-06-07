@@ -10,6 +10,11 @@ export const useReservationStore = create(
             message: "",
             url: "",
             message: "",
+            userId: null,
+            sectionTimetableId: null,
+            clientId: null,
+            date: null,
+            time: null,
 
             addReservation: async (
                 id,
@@ -20,8 +25,17 @@ export const useReservationStore = create(
                 paymentType,
                 price
             ) => {
+                set({ user: id,
+                    sectionTimetableId: sectionTimetableId,
+                    clientId: clientId,
+                    date: date,
+                    time: time, });
+                console.log('store', get().userId, get().sectionTimetableId, get().clientId, get().date, get().time)
                 try {
-                    set({ loading: true, message: "" });
+                    set({
+                        loading: true,
+                        message: "",
+                    });
                     const response = await api.post(
                         `/cabinet/reservations/store`,
                         {
@@ -34,32 +48,36 @@ export const useReservationStore = create(
                             price,
                         }
                     );
-                    set({ loading: false});
+                    set({ loading: false });
                 } catch (error) {
                     console.log(error);
                     set({ loading: false });
                 }
             },
             addReservationByCard: async (
+                id,
+                clientId,
                 sectionTimetableId,
                 date,
                 time,
                 price
             ) => {
                 try {
-                    set({loading: true})
+                    set({ loading: true });
                     const response = await api.post(
                         `/cabinet/reservations/storePayment`,
                         {
-                           'timetableSection': sectionTimetableId,
-                            date,
-                            time,
-                            price,
+                            'user': id,
+                            'client': clientId,
+                            'timetableSection': sectionTimetableId,
+                            'date' :date,
+                            'time': time,
+                            'price': price,
                         }
                     );
-                    console.log(response)
+                    console.log(response);
                     window.location.replace(response.data.url);
-                    set({loading: false, url: response?.data?.url})
+                    set({ loading: false, url: response?.data?.url });
                 } catch (error) {
                     set({ loading: true, message: "" });
                 }

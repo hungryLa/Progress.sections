@@ -111,16 +111,26 @@ class  UserController extends Controller
     {
         try {
             $user = User::where('email', $request->email)->first();
-            if (Hash::check($request->password, $user->password)) {
-                $success = ModelUser::create([
-                    'model_type' => ModelUser::TYPES['users'],
-                    'model_id' => $user->id,
-                    'user_id' => Auth::user()->id,
-                ]);
-                if ($success) {
-                    session()->flash('success', __('other.The user is successfully linked'));
+            if(!$user) {
+                    $data['status'] = 'error';
+                    $data['message'] = 'Такого пользователя не существует';
+            }else {
+                if (Hash::check($request->password, $user->password)) {
+                    $success = ModelUser::create([
+                        'model_type' => ModelUser::TYPES['users'],
+                        'model_id' => $user->id,
+                        'user_id' => Auth::user()->id,
+                    ]);
+                    if ($success) {
+                        $data['status'] = 'success';
+                        $data['message'] = __('other.The user is successfully linked');
+                    }
+                } else {
+                    $data['status'] = 'error';
+                    $data['message'] = 'Введены неверные данные';
                 }
             }
+            return  $data;
         } catch (\Exception $exception) {
             return $exception->getMessage();
         }
