@@ -3,11 +3,10 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
-use Illuminate\Mail\Mailables\Content;
-use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\URL;
 
 class VerifyMail extends Mailable
 {
@@ -16,13 +15,22 @@ class VerifyMail extends Mailable
     /**
      * Create a new message instance.
      */
-    public function __construct()
+    public $data;
+
+    public function __construct($data)
     {
-        //
+        $this->data = $data;
     }
 
     public function build()
     {
+        $url = URL::temporarySignedRoute(
+            'verification.verify', now()->addDay(), [
+                'id' => $this->data['user']->id,
+                'hash' => Hash::make($this->data['user']->email),
+            ]
+        );
+        $this->data['url'] = $url;
         $subject = "Подтверждение почты";
         return $this->view('emails.verify')->subject($subject);
     }

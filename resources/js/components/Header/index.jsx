@@ -2,7 +2,6 @@ import {NavLink} from "react-router-dom";
 import './Header.scss';
 import {Container} from "../Container";
 import {useEffect, useState} from "react";
-import {Menu} from "../Menu";
 import useMenuStore from "../../store/useMenuStore";
 
 export const Header = () => {
@@ -11,13 +10,13 @@ export const Header = () => {
     const toggleMenu = useMenuStore(state => state.toggleIsMenuActive)
 
     useEffect(() => {
-       const handleScroll = () => {
-           const currentPosition = window.scrollY;
-           currentPosition > 0 ? setIsSticky(true) : setIsSticky(false);
-       };
+        const handleScroll = () => {
+            const currentPosition = window.scrollY;
+            currentPosition > 0 ? setIsSticky(true) : setIsSticky(false);
+        };
 
-       window.addEventListener('scroll', handleScroll);
-       return () => window.removeEventListener('scroll', handleScroll)
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll)
     }, []);
 
     return (

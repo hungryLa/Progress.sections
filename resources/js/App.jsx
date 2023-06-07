@@ -1,5 +1,5 @@
 import React from "react";
-import {BrowserRouter, Navigate, Route, Routes, useLocation} from "react-router-dom";
+import {BrowserRouter, Navigate, Route, Routes} from "react-router-dom";
 import {UnauthorizedLayout} from "./pages/layouts/UnauthorizedLayout";
 import {MainPage} from "./pages/Main.page";
 import {AuthorizedLayout} from "./pages/layouts/AuthorizedLayout";
@@ -33,16 +33,16 @@ import {EditSectionTimetable} from "./pages/SchoolsOwner/EditSectionTimetable";
 import {Accounts} from "./pages/User/Accounts";
 import {LinkUser} from "./pages/User/LinkUser";
 import {UserSchools} from "./pages/User/UserSchools";
-import {UserSchool} from "./pages/User/UserSchool";
 import {TeacherTimetables} from "./pages/Teacher/TeacherTimetables";
 import {NewTeacherTimeTable} from "./pages/Teacher/NewTeacherTimeTable";
 import {UserSchoolsSections} from "./pages/User/UserSchoolsSections";
 import {Reservation} from "./pages/User/Reservation";
-import { TeacherSchools } from "./pages/Teacher/TeacherSchools";
-import { SuccessPay } from "./pages/User/SuccessPay";
-import { FailPay } from "./pages/User/FailPay";
-import { NewPerson } from "./pages/User/NewPerson";
-import { TeacherSections } from "./pages/Teacher/TeacherSections";
+import {TeacherSchools} from "./pages/Teacher/TeacherSchools";
+import {SuccessPay} from "./pages/User/SuccessPay";
+import {FailPay} from "./pages/User/FailPay";
+import {NewPerson} from "./pages/User/NewPerson";
+import {TeacherSections} from "./pages/Teacher/TeacherSections";
+import {Verify} from "./pages/Verify";
 
 
 export const App = () => {
@@ -71,7 +71,7 @@ export const App = () => {
                         <Route path={'/admin/schoolTypes/:schoolTypeId/edit'} element={<EditSchoolType/>}/>
                         <Route path={'/admin/commission'} element={<h1>Комиссия</h1>}/>
                         <Route path={'/admin/extracts'} element={<h1>Выписки</h1>}/>
-                        <Route path={'/admin/settings'} element={<Settings />}/>
+                        <Route path={'/admin/settings'} element={<Settings/>}/>
                     </Route>
                 )}
 
@@ -105,7 +105,7 @@ export const App = () => {
                         />
                         <Route
                             path={'/schools_owner/schools/:schoolId/sections/:sectionId/sectionTimetables/:sectionTimetableId/edit'}
-                            element={<EditSectionTimetable />}
+                            element={<EditSectionTimetable/>}
                         />
                         {/* TIMETABLES */}
                         <Route path={'/schools_owner/schools/:schoolId/timetables'} element={<SchoolsTimetables/>}/>
@@ -117,18 +117,18 @@ export const App = () => {
                         <Route path={'/schools_owner/schools/:schoolId/teachers'} element={<SchoolsTeachers/>}/>
                         <Route path={'/schools_owner/schools/:schoolId/teachers/new'} element={<NewTeacher/>}/>
                         <Route path={'/schools_owner/schools/:schoolId/all-teachers'}
-                               element={<h1>Все преподаватели</h1>} />
+                               element={<h1>Все преподаватели</h1>}/>
                         <Route path={'/schools_owner/schools/:schoolId/all-teachers/:teacherId'}
-                               element={<h1>Свободный преподаватель</h1>} />
+                               element={<h1>Свободный преподаватель</h1>}/>
                         <Route path={'/schools_owner/schools/:schoolId/invited-teachers'}
-                               element={<h1>Приглашенные преподаватели</h1>} />
+                               element={<h1>Приглашенные преподаватели</h1>}/>
                         <Route path={'/schools_owner/schools/:schoolId/invited-teachers/:teacherId'}
-                               element={<h1>Приглашенный преподаватель</h1>} />
+                               element={<h1>Приглашенный преподаватель</h1>}/>
                         <Route path={'/schools_owner/schools/:schoolId/school-teachers'}
                                element={<h1>Преподаватели</h1>}/>
                         <Route path={'/schools_owner/schools/:schoolId/school-teachers/:teacherId'}
                                element={<Teacher/>}/>
-                        <Route path={'/schools_owner/settings'} element={<Settings />}/>
+                        <Route path={'/schools_owner/settings'} element={<Settings/>}/>
                         <Route path={'/schools_owner/extracts'} element={<h1>Выписки</h1>}/>
                     </Route>
                 )}
@@ -136,33 +136,34 @@ export const App = () => {
                 {user && user.role === 'user' && (
                     <Route path={'/user/'} element={<AuthorizedLayout/>}>
                         <Route path={'/user/schedule'} element={<h1>Моё расписание</h1>}/>
-                        <Route path={'/user/schools'} element={<UserSchools />}/>
-                        <Route path={'/user/schools/:schoolId'} element={<School />} />
-                        <Route path={'/user/schools/:schoolId/sections'} element={<UserSchoolsSections />} />
-                        <Route path={'/user/schools/:schoolId/sections/:sectionId'} element={<Section />} />
-                        <Route path={'/user/schools/:schoolId/sections/:sectionId/reservation'} element={<Reservation />} />
+                        <Route path={'/user/schools'} element={<UserSchools/>}/>
+                        <Route path={'/user/schools/:schoolId'} element={<School/>}/>
+                        <Route path={'/user/schools/:schoolId/sections'} element={<UserSchoolsSections/>}/>
+                        <Route path={'/user/schools/:schoolId/sections/:sectionId'} element={<Section/>}/>
+                        <Route path={'/user/schools/:schoolId/sections/:sectionId/reservation'}
+                               element={<Reservation/>}/>
                         <Route path={'/user/favorites'} element={<h1>Избранное</h1>}/>
                         <Route path={'/user/subscriptions'} element={<h1>Абонементы</h1>}/>
-                        <Route path={'/user/accounts'} element={<Accounts />}/>
-                        <Route path={'/user/accounts/link-user'} element={<LinkUser />}/>
-                        <Route path={'/user/accounts/new-person'} element={<NewPerson />}/>
-                        <Route path={'/user/settings'} element={<Settings />}/>
-                        <Route path={'/user/successPay'} element={<SuccessPay />} />
-                        <Route path={'/user/failPay'} element={<FailPay />} />
+                        <Route path={'/user/accounts'} element={<Accounts/>}/>
+                        <Route path={'/user/accounts/link-user'} element={<LinkUser/>}/>
+                        <Route path={'/user/accounts/new-person'} element={<NewPerson/>}/>
+                        <Route path={'/user/settings'} element={<Settings/>}/>
+                        <Route path={'/user/successPay'} element={<SuccessPay/>}/>
+                        <Route path={'/user/failPay'} element={<FailPay/>}/>
                     </Route>
                 )}
 
                 {user && user.role === 'teacher' && (
                     <Route path={'/teacher/'} element={<AuthorizedLayout/>}>
-                        <Route path={'/teacher/sections'} element={<TeacherSections />}/>
-                        <Route path={'/teacher/schools'} element={<TeacherSchools />}/>
-                        <Route path={'/teacher/timetables'} element={<TeacherTimetables />}/>
-                        <Route path={'/teacher/timetables/new'} element={<NewTeacherTimeTable />}/>
+                        <Route path={'/teacher/sections'} element={<TeacherSections/>}/>
+                        <Route path={'/teacher/schools'} element={<TeacherSchools/>}/>
+                        <Route path={'/teacher/timetables'} element={<TeacherTimetables/>}/>
+                        <Route path={'/teacher/timetables/new'} element={<NewTeacherTimeTable/>}/>
                         <Route path={'/teacher/applications'} element={<h1>Заявки</h1>}/>
-                        <Route path={'/teacher/settings'} element={<Settings />}/>
+                        <Route path={'/teacher/settings'} element={<Settings/>}/>
                     </Route>
                 )}
-
+                <Route path={`/email/verify/:id/:hash`} element={<Verify/>}/>
                 <Route path={'*'} element={<Navigate to={'/'}/>}/>
             </Routes>
         </BrowserRouter>

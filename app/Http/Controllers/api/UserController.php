@@ -5,7 +5,7 @@ namespace App\Http\Controllers\api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\ChangePasswordRequest;
 use App\Http\Requests\User\StoreRequest;
-use App\Http\Resources\TeacherInformationRecource;
+use App\Http\Resources\Teacher\TeacherInformationRecource;
 use App\Http\Resources\User\UserResource;
 use App\Mail\WelcomeMail;
 use App\Models\ModelUser;
@@ -111,10 +111,10 @@ class  UserController extends Controller
     {
         try {
             $user = User::where('email', $request->email)->first();
-            if(!$user) {
-                    $data['status'] = 'error';
-                    $data['message'] = 'Такого пользователя не существует';
-            }else {
+            if (!$user) {
+                $data['status'] = 'error';
+                $data['message'] = 'Такого пользователя не существует';
+            } else {
                 if (Hash::check($request->password, $user->password)) {
                     $success = ModelUser::create([
                         'model_type' => ModelUser::TYPES['users'],
@@ -130,7 +130,7 @@ class  UserController extends Controller
                     $data['message'] = 'Введены неверные данные';
                 }
             }
-            return  $data;
+            return $data;
         } catch (\Exception $exception) {
             return $exception->getMessage();
         }

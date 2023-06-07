@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\School;
 
+use App\Http\Resources\Teacher\TeacherWithTimetablesResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class SchoolRecource extends JsonResource
+class SchoolForTimetableResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -15,8 +16,6 @@ class SchoolRecource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'school_types' => $this->school_types,
-            'images' => $this->images,
             'id' => $this->id,
             'status' => $this->status,
             'recruitment_open' => $this->recruitment_open,
@@ -25,6 +24,8 @@ class SchoolRecource extends JsonResource
             'description' => $this->description,
             'phone_number' => $this->phone_number,
             'address' => $this->address,
+            'timetables' => $this->timetables,
+            'teachers' => TeacherWithTimetablesResource::collection($this->teachers),
         ];
     }
 }

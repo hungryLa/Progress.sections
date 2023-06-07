@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\School\StoreRequest;
 use App\Http\Requests\School\UpdateRequest;
 use App\Http\Resources\FileRecource;
-use App\Http\Resources\SchoolRecource;
+use App\Http\Resources\School\SchoolRecource;
 use App\Models\File;
 use App\Models\ModelSchool;
 use App\Models\School;

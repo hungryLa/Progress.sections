@@ -25,7 +25,7 @@ class WelcomeMail extends Mailable
     public function build()
     {
         $url = URL::temporarySignedRoute(
-            'api.verification.verify', now()->addHour(), [
+            'verification.verify', now()->addDay(), [
                 'id' => $this->data['user']->id,
                 'hash' => Hash::make($this->data['user']->email),
             ]

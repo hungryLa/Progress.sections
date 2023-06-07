@@ -5,7 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Section extends Model
@@ -18,11 +17,6 @@ class Section extends Model
     const MAX_FILES = [
         'images' => 4
     ];
-
-    public function users(): BelongsToMany
-    {
-        return $this->belongsToMany(User::class, 'model_sections', 'section_id', 'model_id');
-    }
 
     public function files(): HasMany
     {
@@ -46,20 +40,21 @@ class Section extends Model
 
     public function school(): BelongsTo
     {
-        return $this->belongsTo(School::class,'school_id');
+        return $this->belongsTo(School::class, 'school_id');
     }
 
-    public function timetables() : HasMany
+    public function timetables(): HasMany
     {
-        return $this->hasMany(TimetableSection::class,'section_id');
+        return $this->hasMany(TimetableSection::class, 'section_id');
     }
 
-    public function occupation(): BelongsTo{
-        return $this->belongsTo(Occupation::class,'occupation_id');
+    public function occupation(): BelongsTo
+    {
+        return $this->belongsTo(Occupation::class, 'occupation_id');
     }
 
     public function subscription(): HasMany
     {
-        return $this->hasMany(Subscription::class,'section_id');
+        return $this->hasMany(Subscription::class, 'section_id');
     }
 }

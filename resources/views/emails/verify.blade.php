@@ -9,8 +9,8 @@
 </h2>
 <br>
 
-<a href="{{$url}}" class="btn btn-success">{{__('other.Confirm Email')}}</a>
+<a href="{{url($data['url'])}}" class="btn btn-success">{{__('other.Confirm Email')}}</a>
 
-{{$url}}
+<p>{{url($data['url'])}}</p>
 </body>
 </html>

@@ -10,6 +10,8 @@ const useAuthStore = create(
             error: null,
             expiresIn: null,
             loading: false,
+            teacher: {},
+
             clearError: () => {
                 set({error: ''})
             },
@@ -24,10 +26,10 @@ const useAuthStore = create(
                         error: '',
                         loading: false
                     })
-                    if(!localStorage.getItem('token')) {
+                    if (!localStorage.getItem('token')) {
                         localStorage.setItem('token', access_token)
                     }
-                    set({loading:false})
+                    set({loading: false})
                 } catch (error) {
                     set({
                         loading: false,
@@ -41,7 +43,7 @@ const useAuthStore = create(
                     set({
                         user: await response.data
                     })
-                } catch(error) {
+                } catch (error) {
                     set({
                         user: null,
                         token: '',
@@ -66,7 +68,8 @@ const useAuthStore = create(
                 } catch (error) {
                     set({loading: false})
                 }
-            }
+            },
+
         }),
         {
             name: 'auth-storage'

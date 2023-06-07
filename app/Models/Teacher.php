@@ -36,7 +36,8 @@ class Teacher extends Model
             ->where('type', 'LIKE', File::TYPE['images'])->orderBy('position', 'asc');
     }
 
-    public function school(School $school){
+    public function school(School $school)
+    {
         return ModelSchool::where([
             'model_type' => ModelSchool::TYPES['teacher'],
             'model_id' => $this->id,
@@ -44,38 +45,38 @@ class Teacher extends Model
         ])->first();
     }
 
-    public function schools():BelongsToMany{
-        return $this->belongsToMany(School::class,'model_schools','model_id','school_id');
+    public function schools(): BelongsToMany
+    {
+        return $this->belongsToMany(School::class, 'model_schools', 'model_id', 'school_id');
     }
 
-    public function communications(){
-        return $this->hasMany(Communication::class,'user_id');
+    public function communications()
+    {
+        return $this->hasMany(Communication::class, 'user_id');
     }
 
-    public function invitations(){
-        return $this->hasMany(Communication::class,'user_id')->where('type',Communication::TYPES['invitation']);
+    public function invitations()
+    {
+        return $this->hasMany(Communication::class, 'user_id')->where('type', Communication::TYPES['invitation']);
     }
 
-    public function job_requests(){
-        return $this->hasMany(Communication::class,'user_id')->where('type',Communication::TYPES['job request']);
+    public function job_requests()
+    {
+        return $this->hasMany(Communication::class, 'user_id')->where('type', Communication::TYPES['job request']);
     }
 
-    public function user(): BelongsTo{
-        return $this->belongsTo(User::class,'user_id');
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     public function timetables(): HasMany
     {
-        return $this->hasMany(Timetable::class,'model_id')->where('type',Timetable::TYPES['teacher']);
-    }
-
-    public function sections(): HasMany
-    {
-        return $this->timetables->timetableSection->section;
+        return $this->hasMany(Timetable::class, 'model_id')->where('type', Timetable::TYPES['teacher']);
     }
 
     public function information(): HasOne
     {
-        return $this->hasOne(TeacherInformation::class,'teacher_id');
+        return $this->hasOne(TeacherInformation::class, 'teacher_id');
     }
 }
