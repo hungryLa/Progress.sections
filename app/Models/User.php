@@ -101,4 +101,9 @@ class User extends Authenticatable implements MustVerifyEmail, JWTSubject
         return $this->belongsToMany(Subscription::class, 'subscription_users')
             ->withPivot(['price_subscription', 'deposit', 'remaining_classes']);
     }
+
+    public function reservations(): HasMany
+    {
+        return $this->hasMany(Reservation::class,'user_id');
+    }
 }

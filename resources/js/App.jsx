@@ -164,7 +164,7 @@ export const App = () => {
                     </Route>
                 )}
                 <Route path={`/email/verify/:id/:hash`} element={<Verify/>}/>
-                <Route path={'*'} element={<Navigate to={'/'}/>}/>
+                <Route path={'*'} element={<Navigate to={'/user/schedule'}/>}/>
             </Routes>
         </BrowserRouter>
     )

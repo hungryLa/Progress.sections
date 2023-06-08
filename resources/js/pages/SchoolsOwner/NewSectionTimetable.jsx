@@ -178,14 +178,14 @@ export const NewSectionTimetable = () => {
                                         type={"number"}
                                         id={"lesson-price"}
                                         label={"Цена занятия *"}
-                                        value={lessonPrice}
+                                        value={lessonPrice || ''}
                                         onChange={handleLessonPrice}
                                     />
                                     <Input
                                         type={"number"}
                                         id={"trial-price"}
                                         label={"Цена пробного занятия *"}
-                                        value={trialPrice}
+                                        value={trialPrice || ''}
                                         onChange={handleTrialPrice}
                                     />
                                     <Input
@@ -193,13 +193,13 @@ export const NewSectionTimetable = () => {
                                         id={"group"}
                                         label={"Количество мест"}
                                         value={group}
-                                        onChange={handleGroup}
+                                        onChange={handleGroup || ''}
                                     />
                                     <Input
                                         type={"number"}
                                         id={"group-price"}
                                         label={"Цена группового занятия"}
-                                        value={groupPrice}
+                                        value={groupPrice || ''}
                                         onChange={handleGroupPrice}
                                     />
                                 </div>
