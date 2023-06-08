@@ -95,7 +95,7 @@ export const Reservation = () => {
     const [selectedPaymentMethod, setSelectedPaymentMethod] = useState("card");
 
     useEffect(() => {
-        setSelectedUser(user.id);
+        setSelectedUser(user.full_name);
     }, [user]);
 
     const handleSelectUser = (e) => {
@@ -220,7 +220,7 @@ export const Reservation = () => {
                         <Select
                             label={"Выберите расписание"}
                             onChange={handleSelectTimetable}
-                            value={currentSectionTimetable?.id || ""}
+                            value={selectedTimetableId || ""}
                         >
                             <option key={0} value="" disabled defaultChecked>
                                 Выберите расписание
@@ -289,17 +289,17 @@ export const Reservation = () => {
                                         onChange={handleSelectUser}
                                         label={"Выберите кого хотите записать"}
                                     >
-                                        <option value={user?.id}>Себя</option>
+                                        <option value={user?.full_name}>Себя</option>
                                         {/* IN FUTURE ADD PERSONS AND ACCOUNTS */}
                                         {linkedUsers &&
                                             linkedUsers.map((linkedUser) => (
-                                                <option value={linkedUser?.id}>
+                                                <option key={linkedUser?.id} value={linkedUser?.full_name}>
                                                     {linkedUser?.full_name}
                                                 </option>
                                             ))}
                                         {people &&
                                             people.map((person) => (
-                                                <option value={person?.id}>
+                                                <option key={person?.id} value={person?.full_name}>
                                                     {person?.full_name}
                                                 </option>
                                             ))}

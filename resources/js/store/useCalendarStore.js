@@ -26,6 +26,10 @@ const useCalendarStore = create((set, get) => ({
         });
     },
 
+    setCurrentSectionTimetable: (sectionTimetable) => {
+        set({currentSectionTimetable: sectionTimetable})
+    },
+
     onNavigate: (some, _, type) => {
         set({loading: true});
         const currentDate = moment().toDate();
@@ -77,8 +81,7 @@ const useCalendarStore = create((set, get) => ({
                 const startDateTime = moment(`${currentD} ${testStart}`);
                 const endDateTime = moment(`${currentD} ${testEnd}`);
 
-                const dayDifference =
-                    (day - moment(startDateTime).day() + 7) % 7;
+                const dayDifference = day - moment(startDateTime).day();
                 let startDateToAddOrSubtract = startDateTime;
                 let endDateToAddOrSubtract = endDateTime;
                 if (get().difference > 0) {
@@ -112,9 +115,119 @@ const useCalendarStore = create((set, get) => ({
                     );
                 } else if (dayDifference < 0) {
                     startDateToAddOrSubtract =
-                        startDateToAddOrSubtract.subtract(dayDifference, "day");
+                        startDateToAddOrSubtract.subtract(Math.abs(dayDifference), "day");
                     endDateToAddOrSubtract = endDateToAddOrSubtract.subtract(
+                        Math.abs(dayDifference),
+                        "day"
+                    );
+                }
+
+                startDateToAddOrSubtract = startDateToAddOrSubtract.toDate();
+                endDateToAddOrSubtract = endDateToAddOrSubtract.toDate();
+
+                testEvents.push({
+                    title: `${get().currentSectionTimetable.lesson_price}р.`,
+                    start: startDateToAddOrSubtract,
+                    end: endDateToAddOrSubtract,
+                });
+
+                currentTime.add(lessonTime);
+            }
+        });
+
+        set({events: [...testEvents], loading: false});
+    },
+
+    onTeacherNavigate: (some, _, type) => {
+        set({loading: true});
+        const currentDate = moment().toDate();
+        let lastDate = currentDate;
+
+        if (some.toLocaleDateString() == lastDate.toLocaleDateString()) {
+            set({difference: 0});
+        } else if (type === "PREV") {
+            get().setDifference(-1);
+        } else if (type === "NEXT") {
+            get().setDifference(1);
+        }
+
+        const days =
+            get()
+                .currentSectionTimetable?.timetable?.weekday?.which_days?.map(
+                (day) => translateDayToNumber(day)
+            )
+                ?.sort((a, b) => a - b) || [];
+
+
+        let testEvents = [];
+
+        days.forEach((day) => {
+            const startTime = moment(
+                get().currentSectionTimetable?.timetable?.workday_start,
+                "HH:mm:ss"
+            );
+            const endTime = moment(
+                get().currentSectionTimetable?.timetable?.workday_end,
+                "HH:mm:ss"
+            );
+            const lessonTime = moment.duration(
+                get().currentSectionTimetable?.timetable?.lesson_time
+            );
+
+            let currentTime = moment(startTime);
+
+            while (currentTime.isBefore(endTime)) {
+                let testStart = moment(currentTime).format("HH:mm:ss");
+                let testEnd = moment(currentTime)
+                    .add(lessonTime)
+                    .format("HH:mm:ss");
+
+                let current = moment();
+                let currentD;
+
+                currentD = current.format("YYYY-MM-DD");
+
+                const startDateTime = moment(`${currentD} ${testStart}`);
+                const endDateTime = moment(`${currentD} ${testEnd}`);
+
+                const dayDifference = day - moment(startDateTime).day()
+
+                let startDateToAddOrSubtract = startDateTime;
+                let endDateToAddOrSubtract = endDateTime;
+                if (get().difference > 0) {
+                    startDateToAddOrSubtract = startDateToAddOrSubtract.add(
+                        Math.abs(get().difference),
+                        "week"
+                    );
+                    endDateToAddOrSubtract = endDateToAddOrSubtract.add(
+                        Math.abs(get().difference),
+                        "week"
+                    );
+                } else if (get().difference < 0) {
+                    startDateToAddOrSubtract =
+                        startDateToAddOrSubtract.subtract(
+                            Math.abs(get().difference),
+                            "week"
+                        );
+                    endDateToAddOrSubtract = endDateToAddOrSubtract.subtract(
+                        Math.abs(get().difference),
+                        "week"
+                    );
+                }
+                if (dayDifference > 0) {
+                    startDateToAddOrSubtract = startDateToAddOrSubtract.add(
                         dayDifference,
+                        "day"
+                    );
+                    endDateToAddOrSubtract = endDateToAddOrSubtract.add(
+                        dayDifference,
+                        "day"
+                    );
+                } else if (dayDifference < 0) {
+                    startDateToAddOrSubtract =
+                        startDateToAddOrSubtract.subtract(Math.abs(dayDifference), "day");
+                    endDateToAddOrSubtract = endDateToAddOrSubtract.subtract(
+                        Math.abs(dayDifference),
                         "day"
                     );
                 }
@@ -137,22 +250,22 @@ const useCalendarStore = create((set, get) => ({
 
     getEventsForTeacher: (currentSection) => {
         set({loading: false})
-        const days = currentSection?.timetableSections[0]?.timetable?.weekday?.which_days?.map(
+        const days = get().currentSectionTimetable?.timetable?.weekday?.which_days?.map(
             day => translateDayToNumber(day)
         )?.sort((a, b) => a - b) || []
         let events = []
 
         days.forEach((day) => {
             const startTime = moment(
-                currentSection?.timetableSections[0]?.timetable?.workday_start,
+                get().currentSectionTimetable?.timetable?.workday_start,
                 "HH:mm:ss"
             );
             const endTime = moment(
-                currentSection?.timetableSections[0]?.timetable?.workday_end,
+                get().currentSectionTimetable?.timetable?.workday_end,
                 "HH:mm:ss"
             );
             const lessonTime = moment.duration(
-                currentSection?.timetableSections[0]?.timetable?.lesson_time
+                get().currentSectionTimetable?.timetable?.lesson_time
             );
 
             let currentTime = moment(startTime);
@@ -171,7 +284,7 @@ const useCalendarStore = create((set, get) => ({
                 if (day === moment(startDateTime).day()) {
                     events.push({
                         title: `${
-                            get().currentSectionTimetable.lesson_price
+                            get().currentSectionTimetable?.lesson_price
                         }р.`,
                         start: startDateTime.toDate(),
                         end: endDateTime.toDate(),
@@ -179,7 +292,7 @@ const useCalendarStore = create((set, get) => ({
                 } else {
                     events.push({
                         title: `${
-                            get().currentSectionTimetable.lesson_price
+                            get().currentSectionTimetable?.lesson_price
                         }p.`,
                         start: moment(startDateTime)
                             .subtract(moment(startDateTime).day() - day, "day")
@@ -205,7 +318,7 @@ const useCalendarStore = create((set, get) => ({
 
     getTestEvents: () => {
         set({loading: true});
-        console.log('currentSectionTimeTable', get().currentSectionTimetable)
+
         const days =
             get()
                 .currentSectionTimetable?.timetable?.weekday?.which_days?.map(

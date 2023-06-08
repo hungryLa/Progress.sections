@@ -1,11 +1,9 @@
 import { useEffect } from "react";
 import { Subtitle } from "../../components/UI/Subtitle";
 import api from "../../middlewares/auth.middleware";
-import useReservationStore from "../../store/useReservationsStore";
-import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import useSectionsStore from "../../store/useSectionsStore";
-import useSchoolsStore from "../../store/useSchoolsStore";
 
 export const SuccessPay = () => {
     const [searchParams] = useSearchParams()

@@ -232,6 +232,7 @@ img {
 }
 
 .one-col {
+    overflow: auto;
     display: grid;
     grid-template-columns: repeat(1, 1fr);
     gap: 2.4rem;
@@ -359,7 +360,7 @@ img {
     transition: var(--transition);
     min-width: 60px;
     &:hover {
-        background-color: var(--orange);
+        background-color: var(--orange-transparent);
     }
 }
 
@@ -421,11 +422,6 @@ img {
             border-color: var(--blue);
         }
 
-        &:active {
-            border-color: var(--blue);
-            background-color: var(--blue) !important;
-            color: var(--white) !important;
-        }
     }
 }
 
@@ -482,5 +478,37 @@ img {
             width: 100%;
             text-align: center !important;
         }
+    }
+}
+
+.teacher-event-success {
+    background-color: #265985;
+    transition: var(--transition);
+
+    &:hover {
+        background-color: var(--orange);
+    }
+}
+
+.teacher-event-fail {
+    background-color: gray;
+    opacity: .5;
+    pointer-events: none;
+}
+
+.modal-full-button {
+    width: 100% !important;
+}
+
+.teacher-modal-info {
+    span {
+        font-weight: 600;
+    }
+
+    &:first-of-type {
+        margin-top: 1.2rem;
+    }
+    &:last-of-type {
+        margin-bottom: 1.2rem;
     }
 }
