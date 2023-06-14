@@ -6,8 +6,10 @@ import useMenuStore from "../../store/useMenuStore";
 
 export const Header = () => {
     const [isSticky, setIsSticky] = useState(false)
+
     const isMenuActive = useMenuStore(state => state.isMenuActive)
     const toggleMenu = useMenuStore(state => state.toggleIsMenuActive)
+
 
     useEffect(() => {
         const handleScroll = () => {
