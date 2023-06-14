@@ -20,33 +20,31 @@ class SchoolController extends Controller
     public function index()
     {
         $user = Auth::user();
-        if($user->hasRole(User::ROLES['admin'])){
+        $all_schools = [];
+        if ($user->hasRole(User::ROLES['admin'])) {
             $schools = School::orderBy('id')->get();
-        }
-        elseif ($user->hasRole(User::ROLES['schools_owner'])){
+        } elseif ($user->hasRole(User::ROLES['schools_owner'])) {
             $schools = $user->schools()->orderBy('id')->get();
-        }
-        elseif ($user->hasRole(User::ROLES['teacher'])){
+        } elseif ($user->hasRole(User::ROLES['teacher'])) {
             $schools = $user->schools()->orderBy('id')->get();
+            $all_schools = School::where('status', School::STATUS['active'])->get();
+            $all_schools = $all_schools->diff($schools);
+            return view('cabinet.schools.index', compact('schools', 'all_schools'));
+        } elseif ($user->hasRole(User::ROLES['user'])) {
+            $schools = School::where('status', School::STATUS['active'])->orderBy('id')->get();
+        } else {
+            $schools = School::where('status', School::STATUS['active'])->orderBy('id')->get();
         }
-        elseif ($user->hasRole(User::ROLES['user'])){
-            $schools = School::where('status',School::STATUS['active'])->orderBy('id')->get();
-        }
-        else{
-            $schools = School::where('status',School::STATUS['active'])->orderBy('id')->get();
-        }
-        $data['schools'] = $schools;
-        return $data;
-//        return view('cabinet.schools.index',compact('schools'));
+        return view('cabinet.schools.index', compact('schools', 'all_schools'));
     }
 
-//    /**
-//     * Show the form for creating a new resource.
-//     */
-//    public function create()
-//    {
-//        return view('cabinet.schools.create');
-//    }
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        return view('cabinet.schools.create');
+    }
 
     /**
      * Store a newly created resource in storage.
@@ -56,27 +54,37 @@ class SchoolController extends Controller
         try {
             $school = School::create([
                 'status' => $request->status,
+                'recruitment_open' => $request->recruitment_open,
                 'type' => $request->type,
                 'title' => $request->title,
                 'description' => $request->description,
                 'phone_number' => $request->phone_number,
                 'address' => $request->address,
             ]);
-            if($request->hasFile('images')){
-                FileController::storeFile($request,School::TYPE, $school->id, File::TYPE['image'],'images');
+            if ($request->hasFile('images')) {
+                FileController::storeFile($request, School::TYPE, $school->id, File::TYPE['image'], 'images');
+            }
+            if ($request->school_types) {
+                foreach ($request->school_types as $school_type) {
+                    ModelSchool::create([
+                        'model_type' => ModelSchool::TYPES['school_types'],
+                        'model_id' => $school_type,
+                        'school_id' => $school->id,
+                    ]);
+                }
             }
             $success = ModelSchool::create([
                 'model_type' => ModelSchool::TYPES['user'],
                 'model_id' => Auth::user()->id,
                 'school_id' => $school->id,
             ]);
-            if($success){
-                session()->flash('success',__('other.Record successfully added'));
+            if ($success) {
+                session()->flash('success', __('other.Record successfully added'));
             }
-        }catch (Exception $exception){
+        } catch (Exception $exception) {
             return $exception->getMessage();
         }
-//        return redirect()->route('school.index');
+        return redirect()->route('school.index');
     }
 
     /**
@@ -85,9 +93,8 @@ class SchoolController extends Controller
     public function show(School $school)
     {
         $images = $school->images;
-        $data['images'] = $images;
-        return $data;
-//        return view('cabinet.schools.show',compact('school','images'));
+
+        return view('cabinet.schools.show', compact('school', 'images'));
     }
 
     /**
@@ -96,9 +103,7 @@ class SchoolController extends Controller
     public function edit(School $school)
     {
         $images = $school->images;
-        $data['images'] = $images;
-        return $data;
-//        return view('cabinet.schools.edit',compact('school','images'));
+        return view('cabinet.schools.edit', compact('school', 'images'));
     }
 
     /**
@@ -115,13 +120,13 @@ class SchoolController extends Controller
                 'address' => $request->address,
                 'phone_number' => $request->phone_number,
             ]);
-            if($success){
-                session()->flash('success',__('other.Information changed successfully'));
+            if ($success) {
+                session()->flash('success', __('other.Information changed successfully'));
             }
-        }catch (Exception $exception){
+        } catch (Exception $exception) {
             return $exception->getMessage();
         }
-//        return redirect()->route('school.edit',compact('school'));
+        return redirect()->route('school.edit', compact('school'));
     }
 
     /**
@@ -130,21 +135,21 @@ class SchoolController extends Controller
     public function destroy(Request $request, School $school)
     {
         try {
-            if($request->school_title == $school->title){
-                if(count($school->files) != 0){
-                    foreach ($school->files as $file){
+            if ($request->school_title == $school->title) {
+                if (count($school->files) != 0) {
+                    foreach ($school->files as $file) {
                         FileController::deleteFile($file->id);
                     }
                 }
-                ModelSchool::where('school_id',$school->id)->delete();
+                ModelSchool::where('school_id', $school->id)->delete();
                 $success = $school->delete();
-                if($success){
-                    session()->flash('success',__('other.The record was successfully deleted'));
+                if ($success) {
+                    session()->flash('success', __('other.The record was successfully deleted'));
                 }
             }
-        }catch (\Exception $exception){
+        } catch (\Exception $exception) {
             return $exception->getMessage();
         }
-//        return redirect()->route('school.index');
+        return redirect()->route('school.index');
     }
 }

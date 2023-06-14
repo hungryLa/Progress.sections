@@ -1,0 +1,23 @@
+.school-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2.4rem;
+    &__type {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: .8rem;
+    }
+
+    &__phone {
+
+    }
+
+    &__address {
+
+    }
+
+    &__description {
+
+    }
+}

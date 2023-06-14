@@ -1,0 +1,40 @@
+.form {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-gap: 2.4rem;
+    margin-bottom: 2.4rem;
+
+    &__inputs {
+        display: grid;
+        grid-template-columns: repeat(1, 1fr);
+        grid-template-rows: auto;
+        grid-gap: 2rem;
+    }
+
+    &__buttons {
+        //display: flex;
+        //flex-direction: row;
+        //flex-wrap: wrap;
+        //gap: 2rem;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        grid-gap: 2.4rem;
+
+        .button {
+            width: 100%;
+        }
+    }
+
+    @media screen and (max-width: 810px) {
+        &__inputs {
+            grid-template-columns: 1fr;
+        }
+
+        &__buttons {
+            grid-template-columns: repeat(1, 1fr);
+            .button {
+                width: 100%;
+            }
+        }
+    }
+}

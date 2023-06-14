@@ -1,0 +1,15 @@
+.subtitle {
+    font-weight: 500;
+    font-size: 2rem;
+    margin-bottom: 3.2rem;
+
+    @media screen and (max-width: 768px) {
+        text-align: center;
+    }
+
+    &-mini {
+        font-weight: 400;
+        font-size: 1.6rem;
+        margin-bottom: .8rem;
+    }
+}

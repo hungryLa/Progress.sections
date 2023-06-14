@@ -7,16 +7,18 @@ import useMenuStore from "../../store/useMenuStore";
 export const Header = () => {
     const [isSticky, setIsSticky] = useState(false)
 
-    const toggleMenu = useMenuStore(state => state.toggleMenu)
+    const isMenuActive = useMenuStore(state => state.isMenuActive)
+    const toggleMenu = useMenuStore(state => state.toggleIsMenuActive)
+
 
     useEffect(() => {
-       const handleScroll = () => {
-           const currentPosition = window.scrollY;
-           currentPosition > 0 ? setIsSticky(true) : setIsSticky(false);
-       };
+        const handleScroll = () => {
+            const currentPosition = window.scrollY;
+            currentPosition > 0 ? setIsSticky(true) : setIsSticky(false);
+        };
 
-       window.addEventListener('scroll', handleScroll);
-       return () => window.removeEventListener('scroll', handleScroll)
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll)
     }, []);
 
     return (
@@ -29,7 +31,14 @@ export const Header = () => {
                     </NavLink>
                     <div className="header__info">
                         <a className="header__number" href={'tel:+79961234567'}>+7 (996) 123-45-67</a>
-                        <button className="header__burger" onClick={() => toggleMenu()}>x</button>
+                        <button
+                            className={`header__burger ${isMenuActive ? 'header__burger-active' : ''}`}
+                            onClick={() => toggleMenu()}
+                        >
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                        </button>
                     </div>
                 </div>
             </Container>

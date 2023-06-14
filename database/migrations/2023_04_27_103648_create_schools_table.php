@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -13,8 +12,8 @@ return new class extends Migration
     {
         Schema::create('schools', function (Blueprint $table) {
             $table->id();
-            $table->enum('status',\App\Models\School::STATUS);
-            $table->enum('type',\App\Models\School::SCHOOL_TYPES);
+            $table->enum('status', \App\Models\School::STATUS);
+            $table->boolean('recruitment_open')->default(false);
             $table->string('title');
             $table->string('description');
             $table->string('phone_number');

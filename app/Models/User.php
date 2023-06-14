@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -59,38 +60,50 @@ class User extends Authenticatable implements MustVerifyEmail, JWTSubject
         return [];
     }
 
-    public function hasRole($role){
-        if($this->role == $role){
+    public function hasRole($role)
+    {
+        if ($this->role == $role) {
             return true;
-        }
-        else{
+        } else {
             return false;
         }
     }
 
-    public function linked_users(): BelongsToMany
+    public function getTeacher()
     {
-        return $this->belongsToMany(User::class,'model_users','user_id','model_id')
-            ->where('model_type',ModelUser::TYPES['users']);
+        $teacher = Teacher::find($this->id);
+        return $teacher;
     }
 
-    public function teachers(): BelongsToMany
+    public function linked_users(): BelongsToMany
     {
-        return $this->belongsToMany(User::class,'model_users','user_id','model_id')
-            ->where('model_type',ModelUser::TYPES['teachers']);
+        return $this->belongsToMany(User::class, 'model_users', 'user_id', 'model_id')
+            ->where('model_type', ModelUser::TYPES['users']);
     }
 
     public function people(): HasMany
     {
-        return $this->hasMany(Person::class,'user_id');
+        return $this->hasMany(Person::class, 'user_id');
     }
 
-    public function schools(){
-        return $this->belongsToMany(School::class,'model_schools','model_id','school_id');
-    }
-
-    public function sections(): BelongsToMany
+    public function schools()
     {
-        return $this->belongsToMany(Section::class,'model_sections','model_id','section_id');
+        return $this->belongsToMany(School::class, 'model_schools', 'model_id', 'school_id');
+    }
+
+    public function teacher(): BelongsTo
+    {
+        return $this->belongsTo(Teacher::class, 'user_id');
+    }
+
+    public function subscriptions(): BelongsToMany
+    {
+        return $this->belongsToMany(Subscription::class, 'subscription_users')
+            ->withPivot(['price_subscription', 'deposit', 'remaining_classes']);
+    }
+
+    public function reservations(): HasMany
+    {
+        return $this->hasMany(Reservation::class,'user_id');
     }
 }

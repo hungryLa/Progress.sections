@@ -14,7 +14,8 @@ return new class extends Migration
         Schema::create('model_schools', function (Blueprint $table) {
             $table->id();
             $table->unique(['model_type','model_id','school_id']);
-            $table->enum('status',\App\Models\ModelSchool::STATUS)->nullable();
+            $table->enum('status',\App\Models\ModelSchool::STATUS)->nullable()
+                ->default(null);
             $table->enum('model_type',\App\Models\ModelSchool::TYPES);
             $table->unsignedBigInteger('model_id');
             $table->unsignedBigInteger('school_id');

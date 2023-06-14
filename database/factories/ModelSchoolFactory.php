@@ -4,7 +4,6 @@ namespace Database\Factories;
 
 use App\Models\ModelSchool;
 use App\Models\School;
-use App\Models\Section;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -20,9 +19,21 @@ class ModelSchoolFactory extends Factory
      */
     public function definition(): array
     {
+        $model_type = $this->faker->randomElement(ModelSchool::TYPES_FOR_FACTORY);
+        if ($model_type == ModelSchool::TYPES_FOR_FACTORY['teacher']) {
+            $model_id = User::where('role', User::ROLES['teacher'])->get()->random()->id;
+        } else {
+            $model_id = User::where('role', User::ROLES['user'])->get()->random()->id;
+        }
+        if ($model_type == ModelSchool::TYPES_FOR_FACTORY['teacher']) {
+            $status = ModelSchool::STATUS['works'];
+        } else {
+            $status = null;
+        }
         return [
-            'model_type' => $this->faker->randomElement(ModelSchool::TYPES),
-            'model_id' => User::where('role', User::ROLES['schools_owner'])->first()->id,
+            'status' => $status,
+            'model_type' => $model_type,
+            'model_id' => $model_id,
             'school_id' => School::get()->random()->id,
         ];
     }

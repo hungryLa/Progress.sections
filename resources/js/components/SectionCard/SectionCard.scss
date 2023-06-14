@@ -1,0 +1,42 @@
+.section-card {
+    border: 1px solid rgba(44, 61, 115, 0.25);
+    border-radius: 1rem;
+    text-decoration: none;
+    transition: var(--transition);
+
+    &__inner {
+        display: flex;
+        flex-direction: column;
+        padding: 1.2rem;
+        gap: 1.2rem;
+    }
+
+    img {
+        border-radius: .6rem;
+        aspect-ratio: 16/9;
+    }
+
+    &__title {
+        font-size: 1.8rem;
+        font-weight: 600;
+    }
+
+    &__description {
+        word-break: break-all;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -moz-box;
+        -moz-box-orient: vertical;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        line-clamp: 3;
+        box-orient: vertical;
+    }
+
+    &:hover {
+        border-color: var(--white);
+        background-color: var(--white);
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    }
+}

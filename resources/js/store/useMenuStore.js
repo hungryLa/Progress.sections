@@ -1,10 +1,9 @@
-import { create } from "zustand";
+import {create} from "zustand";
 
 const useMenuStore = create((set) => ({
-    menuActive: false,
-    toggleMenu: () => {
-        set((state) => {menuActive: !state.menuActive})
-    }
+    isMenuActive: false,
+    toggleIsMenuActive: () => set(state => ({isMenuActive: !state.isMenuActive})),
+    closeMenu: () => set({isMenuActive: false})
 }))
 
 export default useMenuStore

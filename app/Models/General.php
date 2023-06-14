@@ -19,7 +19,12 @@ class General extends Model
     const TYPES = self::TYPES_WITHOUT_SCHOOL + [
         'school' => School::TYPE,
         'section' => Section::TYPE,
+        'subscription' => Subscription::TYPE,
     ];
 
-
+    static function model($name_table){
+        $model = '\App\Models\\'.\ucfirst(\Illuminate\Support\Str::singular($name_table));
+        $model = new $model();
+        return $model;
+    }
 }

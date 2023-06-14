@@ -1,0 +1,97 @@
+.how-it-works {
+    &__inner {
+        padding: 6rem 0;
+        display: flex;
+        flex-direction: column;
+        gap: 6rem;
+
+        @media screen and (max-width: 1280px) {
+            padding: 4.8rem 0;
+            gap: 4.8rem;
+        }
+
+        @media screen and (max-width: 768px) {
+            padding: 3.6rem 0;
+            gap: 3.2rem;
+        }
+    }
+
+    &__item:hover {
+        .how-it-works__item__number {
+            color: var(--blue);
+        }
+        .how-it-works__item__body {
+            box-shadow: 0px 0px 2rem rgba(0, 0, 0, 0.25);
+            background-color: #fff;
+        }
+    }
+
+    &__list {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        grid-template-rows: auto;
+        grid-gap: 2rem;
+
+        @media screen and (max-width: 1280px) {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        @media screen and (max-width: 768px) {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    &__item {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+
+        &__number {
+            font-size: 9.6rem;
+            font-weight: 700;
+            padding: 1rem;
+            min-width: 8rem;
+            text-align: center;
+            color: rgba(44, 61, 115, 0.5);
+            transition: var(--transition);
+            -webkit-transition: var(--transition);
+            -moz-transition: var(--transition);
+            -ms-transition: var(--transition);
+            -o-transition: var(--transition);
+}
+
+        &__body {
+            width: 100%;
+            border-radius: 1rem;
+            -webkit-border-radius: 1rem;
+            -moz-border-radius: 1rem;
+            -ms-border-radius: 1rem;
+            -o-border-radius: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 2.4rem;
+            padding: 2rem;
+            height: 100%;
+            background: rgba(44, 61, 115, 0.05);
+            transition: var(--transition);
+            -webkit-transition: var(--transition);
+            -moz-transition: var(--transition);
+            -ms-transition: var(--transition);
+            -o-transition: var(--transition);
+
+            h4 {
+                font-size: 1.6rem;
+                font-weight: 700;
+            }
+        }
+    }
+}
+
+.how-it-works__item:hover {
+    &__number {
+        color: var(--blue);
+    }
+    &__body {
+        box-shadow: 0px 0px 25px rgba(0, 0, 0, 0.75);
+    }
+}

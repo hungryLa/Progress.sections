@@ -4,12 +4,13 @@ return [
     'Status' => 'Статус',
     'Select the status' => 'Выберите статус',
     'active' => 'Активна',
+    'inactive' => 'Не активна',
     'not active' => 'Не активна',
 
     'Role' => 'Роль',
     'Choose a role' => 'Выберите роль',
     'admin' => 'Админ',
-    'sections_admin' => 'Админ секций',
+    'schools_owner' => 'Владелец школ',
     'teacher' => 'Преподаватель',
     'user' => 'Пользователь',
     'Title' => 'Название',
@@ -43,4 +44,24 @@ return [
     "You entered an incorrect password" => "Вы ввели неверный пароль",
     "New password" => "Новый пароль",
     "Enter new password" => "Введите новый пароль",
+
+    'Price' => 'Цена',
+    'Specify the price' => 'Укажите стоимость',
+    'Price of lesson' => 'Стоимость занятия',
+    'Price of trial lesson' => 'Стоимость пробного занятия',
+    'Count in group' => 'Макс. кол-во людей в группе',
+    'Price of group lesson' => 'Стоимость груповых занятий',
+
+    'Subscription type' => 'Тип абонемента',
+    'Choose a subscription type' => 'Выберите тип абонемента',
+    'deposit' => 'Депозит',
+    'section card' => 'Карта секции',
+    'Value' => 'Значение',
+    'Specify the number of classes or the amount of the deposit' => 'Укажите количество занятий или сумму депозита',
+
+    'Teaching experience' => 'Преподавательский опыт',
+    'Describe your teaching experience' => 'Опишите свой преподавательский опыт',
+    'About me' => 'Обо мне',
+    'Provide information about yourself' => 'Укажите информацию о себе',
+
 ];

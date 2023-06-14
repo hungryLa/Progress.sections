@@ -13,10 +13,9 @@ class PersonController extends Controller
      */
     public function index()
     {
-        $data['linked_users'] = Auth::user()->linked_users;
-        $data['people'] = Auth::user()->people;
-        return $data;
-//        return view('cabinet.people.index',compact('linked_users','people'));
+        $linked_users = Auth::user()->linked_users;
+        $people = Auth::user()->people;
+        return view('cabinet.people.index', compact('linked_users', 'people'));
     }
 
     /**
@@ -34,18 +33,18 @@ class PersonController extends Controller
     {
         try {
             $success = Person::create([
-               'user_id' => Auth::user()->id,
-               'gender' => $request->gender,
-               'full_name' => $request->full_name,
-               'date_birth' => $request->date_birth,
+                'user_id' => Auth::user()->id,
+                'gender' => $request->gender,
+                'full_name' => $request->full_name,
+                'date_birth' => $request->date_birth,
             ]);
-            if($success){
-                session()->flash('success',__('other.Record successfully added'));
+            if ($success) {
+                session()->flash('success', __('other.Record successfully added'));
             }
-        }catch (\Exception $exception){
+        } catch (\Exception $exception) {
             return $exception->getMessage();
         }
-//        return redirect()->route('cabinet.people.index');
+        return redirect()->route('cabinet.people.index');
     }
 
     /**
@@ -79,12 +78,12 @@ class PersonController extends Controller
     {
         try {
             $success = $person->delete();
-            if($success){
-                session()->flash('success',__('other.The record was successfully deleted'));
+            if ($success) {
+                session()->flash('success', __('other.The record was successfully deleted'));
             }
-        }catch (\Exception $exception){
+        } catch (\Exception $exception) {
             return $exception->getMessage();
         }
-//        return redirect()->route('cabinet.people.index');
+        return redirect()->route('cabinet.people.index');
     }
 }

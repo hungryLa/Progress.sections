@@ -18,7 +18,7 @@ class OccupationFactory extends Factory
     public function definition(): array
     {
         return [
-            'title' => $this->faker->text(100),
+            'title' => $this->faker->text(15),
         ];
     }
 }

@@ -1,52 +1,154 @@
 import {Container} from "../Container";
+import "./Login.scss";
 import {LoginSwiper} from "./LoginSwiper";
-import React, {useState} from "react";
-import {Navigate, useNavigate} from "react-router-dom";
-import {Title} from "../Title";
+import React, {useEffect, useState} from "react";
+import {Link, useNavigate} from "react-router-dom";
+import {Title} from "../UI/Title";
 import useAuthStore from "../../store/useAuthStore";
-import './Login.scss'
+import {Input} from "../UI/Input";
+import {Button} from "../UI/Button";
+import {Error} from "../Error";
+import {validateEmail} from "../../helpers/validateEmail";
 
 export const Login = () => {
-    const navigate = useNavigate()
-    const [email, setEmail] = useState('admin@mail.ru')
-    const [password, setPassword] = useState('password')
+    const navigate = useNavigate();
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const {login, user, error, clearError, loading} = useAuthStore()
 
-    const login = useAuthStore((state) => state.login)
+    const [errors, setErrors] = useState([])
 
-    const user = useAuthStore((state) => state.user)
-    const accessToken = useAuthStore((state) => state.accessToken)
-    const errorMessage = useAuthStore((state) => state.errorMessage)
+    const handleError = (value) => {
+        setErrors(prev => [...prev, value])
+    }
+
+    useEffect(() => {
+        console.log(import.meta?.env?.FRONT_URL)
+        setErrors([])
+        if (user && !user.email_verified_at) {
+            console.log('true')
+            navigate("/not-verified", {replace: true})
+        }
+        if (user) {
+            switch (user.role) {
+                case "admin":
+                    navigate("/admin/users");
+                    break;
+                case "teacher":
+                    navigate("/teacher/sections");
+                    break;
+                case "schools_owner":
+                    navigate("/schools_owner/schools");
+                    break;
+                default:
+                    navigate("/user/schedule");
+                    break;
+            }
+        }
+    }, [user]);
 
     const handleSubmit = async (e) => {
-        e.preventDefault()
-        await login(email, password).then(() => {
-            if(accessToken) {
-                localStorage.setItem('token', accessToken)
-            }
-        })
-        if(user.role === 'admin') {
-            console.log('i am admin, please let me go to the users page')
-            navigate('/users')
+        setErrors([])
+        clearError()
+        e.preventDefault();
+
+        let isValid = true
+
+        if (!email) {
+            handleError('Введите почту')
+            isValid = false
         }
+        if (!validateEmail(email)) {
+            handleError('Почта введена некорректно')
+            isValid = false
+        }
+        if (!password) {
+            handleError('Введите пароль')
+            isValid = false;
+        }
+        if (password.length < 8) {
+            handleError('Пароль должен быть не короче 8 символов')
+            isValid = false;
+        }
+
+        if (isValid) {
+            await login(email, password);
+        }
+    };
+
+    useEffect(() => {
+        setErrors([])
+        if (error !== "") handleError(error)
+    }, [error])
+
+    useEffect(() => {
+        clearError()
+    }, [])
+
+    useEffect(() => {
+        console.log(errors);
+    }, [errors])
+
+    const emailHandler = (e) => {
+        setEmail(e.target.value)
+        clearError()
+        setErrors([])
+    }
+
+    const passwordHandler = (e) => {
+        setPassword(e.target.value)
+        clearError()
+        setErrors([])
+    }
+
+    const handleRedirect = (e) => {
+        e.preventDefault()
+        navigate('/register')
     }
 
     return (
-        <div className={'login'}>
+        <div className={"login"}>
             <Container>
                 <div className="login__inner">
-                    <div className='login__form'>
-                        <Title>Единая система оплаты дополнительного образования, секция и кружков</Title>
+                    <div className="login__form">
+                        <Title className={"login__title"}>
+                            Единая система оплаты дополнительного образования,
+                            секция и кружков
+                        </Title>
+                        <p className="login__text">
+                            Решение проблем с безналичной оплатой, контролем
+                            посещаемости, табелированием и отчетностью
+                        </p>
+                        {errors.length > 0 ? <Error errors={errors}/> : ''}
                         <form onSubmit={handleSubmit}>
-                            <input type="text" placeholder={'Login'} value={email} onChange={(e) => setEmail(e.target.value)}/>
-                            <input type="text" placeholder={'Password'} value={password} onChange={(e) => setPassword(e.target.value)}/>
-                            <button type='submit'>Login</button>
-                            {errorMessage && errorMessage}
-                            {accessToken && accessToken}
+                            <Input
+                                type={"text"}
+                                id={"email"}
+                                placeholder={"email@email.com"}
+                                value={email}
+                                onChange={emailHandler}
+                            />
+                            <Input
+                                type={"password"}
+                                id={"password"}
+                                placeholder={"Пароль"}
+                                value={password}
+                                onChange={passwordHandler}
+                            />
+                            <Link className="login__link" to={'/password-reset'}>Восстановить пароль</Link>
+                            <div className="login__buttons">
+                                <Button type="button" variant={"white"} onClick={handleRedirect}>
+                                    Зарегистрироваться
+                                </Button>
+                                <Button type="submit" variant={"blue"}>
+                                    {loading ? 'Вход...' : 'Войти'}
+                                </Button>
+                            </div>
                         </form>
                     </div>
                     <LoginSwiper/>
                 </div>
             </Container>
         </div>
-    )
-}
+    );
+};

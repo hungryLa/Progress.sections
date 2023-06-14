@@ -1,10 +1,9 @@
 <?php
 
-namespace App\Http\Controllers\api;
+namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\User\UserResource;
-use Illuminate\Http\Request;
 
 class AuthController extends Controller
 {
@@ -27,18 +26,13 @@ class AuthController extends Controller
     {
         $credentials = request(['email', 'password']);
 
-        if (! $token = auth()->attempt($credentials)) {
-            return response()->json(['error' => 'Unauthorized'], 401);
+        if (!$token = auth()->attempt($credentials)) {
+            // return response()->json(['error' => 'Unauthorized'], 401);
+            $data['status'] = 'error';
+            $data['message'] = 'Логин или пароль неверны';
+            return $data;
         }
-        $data = [
-            'access_token' => $token,
-            'refresh_token' => auth()->refresh(),
-            'user' => auth()->user()
-        ];
-//        $data['token'] = $this->respondWithToken($token);
-//        $data['refresh_token'] = $this->respondWithToken(auth()->refresh());
-//        $data['user'] = new UserResource(auth()->user());
-        return $data;
+        return $this->respondWithToken($token);
     }
 
     /**
@@ -49,6 +43,11 @@ class AuthController extends Controller
     public function me()
     {
         return response()->json(auth()->user());
+    }
+
+    public function meResource()
+    {
+        return response()->json(new UserResource(auth()->user()));
     }
 
     /**
@@ -76,7 +75,7 @@ class AuthController extends Controller
     /**
      * Get the token array structure.
      *
-     * @param  string $token
+     * @param  string  $token
      *
      * @return \Illuminate\Http\JsonResponse
      */

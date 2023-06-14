@@ -30,9 +30,13 @@
                         <option value="{{$status}}" {{$status == $school->status ? 'selected' : ''}}>{{__('form.'.$status)}}</option>
                     @endforeach
                 </x-form.Select>
-                <x-form.Select name="type" label="{{__('form.Type of school')}}" default-value="{{__('form.Select type of school')}}" disabled="">
+                <div class="mb-3">
+                    <label for="recruitment_open">{{__('other.Recruitment is open')}}</label>
+                    <input type="checkbox" id="recruitment_open" name="recruitment_open" {{$school->recruitment_open ? 'checked': ''}}>
+                </div>
+                <x-form.Select name="type" label="{{__('other.Type of school')}}" default-value="{{__('other.Select type of school')}}" disabled="">
                     @foreach(\App\Models\School::SCHOOL_TYPES as $type)
-                        <option value="{{$type}}" {{$type == $school->type ? 'selected' : ''}}>{{__('form.'.$type)}}</option>
+                        <option value="{{$type}}" {{$type == $school->type ? 'selected' : ''}}>{{__('other.'.$type)}}</option>
                     @endforeach
                 </x-form.Select>
                 <x-form.inputText name="title" title="{{__('form.Title')}}"

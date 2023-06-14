@@ -1,25 +1,98 @@
 .login {
     background-color: var(--beige);
 
+    &__form {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
     form {
         display: flex;
         flex-direction: column;
-        gap: 24px;
+        justify-content: space-between;
+        gap: 2rem;
+    }
+
+    &__title {
+        margin-bottom: 0.8rem;
+    }
+
+    &__text {
+        margin-bottom: 8rem;
+    }
+
+    &__error {
+        font-size: 1.4rem;
+        color: var(--orange);
+    }
+
+    &__link {
+        font-size: 1.4rem;
+        // margin: 1rem 0;
+        text-decoration: underline;
+    }
+
+    &__buttons {
+        display: flex;
+        flex-direction: row;
+        gap: 2rem;
+
+        button {
+            width: 50%;
+        }
     }
 
     &__inner {
-        padding: 8rem 0;
+        padding: 6rem 0;
 
         display: grid;
         grid-template-columns: repeat(2, minmax(30rem, 50%));
-        grid-gap: 24px;
-
-        @media screen and (max-width: 1280px){
-            grid-template-columns: 1fr;
-        }
+        grid-template-rows: 1fr;
+        grid-gap: 2rem;
     }
 
     &__swiper {
         width: 100%;
+    }
+
+    @media screen and (max-width: 1280px) {
+        &__inner {
+            padding: 4.8rem 0;
+            grid-template-columns: 1fr;
+        }
+
+        &__title {
+            margin-bottom: 2.4rem;
+        }
+    }
+
+    @media screen and (max-width: 768px) {
+        &__inner {
+            padding: 3.6rem 0;
+            grid-template-columns: 1fr;
+        }
+
+        &__text {
+            text-align: center;
+            margin-bottom: 4.8rem;
+        }
+    }
+
+    @media screen and (max-width: 480px) {
+        &__buttons {
+            flex-direction: column;
+
+            button {
+                width: 100%;
+            }
+        }
+    }
+
+    @media screen and (max-width: 360px) {
+        &__title {
+            word-break: break-word;
+            font-size: 2.4rem;
+        }
     }
 }

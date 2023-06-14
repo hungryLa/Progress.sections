@@ -1,0 +1,68 @@
+.school-card {
+    border: 1px solid rgba(44, 61, 115, 0.25);
+    border-radius: 1rem;
+    text-decoration: none;
+    transition: var(--transition);
+
+    &__inner {
+        display: flex;
+        flex-direction: column;
+        padding: 1.2rem;
+        gap: 1.2rem;
+    }
+
+    &__image {
+        border-radius: .5rem;
+        max-width: 100%;
+        width: 100%;
+        height: auto;
+        aspect-ratio: 16/9;
+    }
+
+    &__title {
+        font-size: 1.8rem;
+        font-weight: 600;
+
+    }
+
+    &__type {
+        font-size: 1.4rem;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: .8rem;
+    }
+
+    &__badge {
+        padding: .6rem 1.6rem;
+        border-radius: .6rem;
+        color: var(--blue);
+        background-color: var(--orange);
+
+        span {
+            color: #fff;
+            text-transform: uppercase;
+            font-weight: 500;
+            text-shadow: 1px 1px 1px rgba(0, 0, 0, .33);
+            font-family: SF, -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+    }
+
+    &__description {
+        word-break:break-all;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -moz-box;
+        -moz-box-orient: vertical;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        line-clamp: 3;
+        box-orient: vertical;
+    }
+
+    &:hover {
+        background-color: var(--white);
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    }
+}
