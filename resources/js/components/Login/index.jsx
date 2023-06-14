@@ -1,15 +1,14 @@
-import { Container } from "../Container";
+import {Container} from "../Container";
 import "./Login.scss";
-import { LoginSwiper } from "./LoginSwiper";
-import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { Title } from "../UI/Title";
+import {LoginSwiper} from "./LoginSwiper";
+import React, {useEffect, useState} from "react";
+import {Link, useNavigate} from "react-router-dom";
+import {Title} from "../UI/Title";
 import useAuthStore from "../../store/useAuthStore";
-import { Input } from "../UI/Input";
-import { Button } from "../UI/Button";
-import {shallow} from "zustand/shallow";
-import { Error } from "../Error";
-import { validateEmail } from "../../helpers/validateEmail";
+import {Input} from "../UI/Input";
+import {Button} from "../UI/Button";
+import {Error} from "../Error";
+import {validateEmail} from "../../helpers/validateEmail";
 
 export const Login = () => {
     const navigate = useNavigate();
@@ -24,6 +23,7 @@ export const Login = () => {
     }
 
     useEffect(() => {
+        console.log(import.meta?.env?.FRONT_URL)
         setErrors([])
         if (user && !user.email_verified_at) {
             console.log('true')
@@ -54,34 +54,36 @@ export const Login = () => {
 
         let isValid = true
 
-        if(!email){
+        if (!email) {
             handleError('Введите почту')
             isValid = false
         }
-        if(!validateEmail(email)) {
+        if (!validateEmail(email)) {
             handleError('Почта введена некорректно')
             isValid = false
         }
-        if(!password){
+        if (!password) {
             handleError('Введите пароль')
             isValid = false;
         }
-        if(password.length < 8) {
+        if (password.length < 8) {
             handleError('Пароль должен быть не короче 8 символов')
             isValid = false;
         }
 
-        if(isValid) {
+        if (isValid) {
             await login(email, password);
         }
     };
 
     useEffect(() => {
         setErrors([])
-        if(error !== "") handleError(error)
+        if (error !== "") handleError(error)
     }, [error])
 
-    useEffect(() => {clearError()}, [])
+    useEffect(() => {
+        clearError()
+    }, [])
 
     useEffect(() => {
         console.log(errors);
@@ -117,7 +119,7 @@ export const Login = () => {
                             Решение проблем с безналичной оплатой, контролем
                             посещаемости, табелированием и отчетностью
                         </p>
-                        {errors.length > 0 ? <Error errors={errors} /> : ''}
+                        {errors.length > 0 ? <Error errors={errors}/> : ''}
                         <form onSubmit={handleSubmit}>
                             <Input
                                 type={"text"}
@@ -144,7 +146,7 @@ export const Login = () => {
                             </div>
                         </form>
                     </div>
-                    <LoginSwiper />
+                    <LoginSwiper/>
                 </div>
             </Container>
         </div>

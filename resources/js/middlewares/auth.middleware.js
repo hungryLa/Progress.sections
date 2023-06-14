@@ -1,7 +1,15 @@
 import axios from "axios";
 
+let URL;
+
+if (import.meta.env.MODE === "development") {
+    URL = `http://127.0.0.1:8000/api`
+} else {
+    URL = import.meta.env.VITE_API_KEY
+}
+
 const api = axios.create({
-    baseURL: 'http://127.0.0.1:8000/api/'
+    baseURL: URL
 })
 
 const getToken = () => {
@@ -22,7 +30,7 @@ api.interceptors.response.use(
     (response) => response,
     (error) => {
         if (error?.response?.status === 401) {
-            if(window.location.href === 'http://localhost:8000/') {
+            if (window.location.href === URL) {
                 localStorage.clear()
             } else {
                 localStorage.clear()
