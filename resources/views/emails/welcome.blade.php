@@ -14,7 +14,7 @@
 <p>{{$data['user']->email}}</p>
 <h3>Password: </h3>
 <p>{{$data['password']}}</p>
-<a href="{{url($data['url'])}}" class="btn btn-success">{{__('other.Confirm Email')}}</a>
+<a href="{{url($data['url'])}}" class="btn btn-success">{{__('form.Confirm Email')}}</a>
 
 <p>{{$data['url']}}</p>
 </body>
