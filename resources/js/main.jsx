@@ -4,7 +4,7 @@ import {App} from "./App";
 import './index.scss'
 import { ToastContainer } from 'react-toastify';
 
-ReactDOM.createRoot(document.getElementById('root')).render(
+ReactDOM.createRoot(document.getElementById("root")).render(
     <React.StrictMode>
         <App/>
         <ToastContainer
@@ -19,4 +19,4 @@ ReactDOM.createRoot(document.getElementById('root')).render(
                 theme="light"
             />
     </React.StrictMode>
-)
+);

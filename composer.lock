@@ -8884,6 +8884,7 @@
         },
         {
             "name": "spatie/laravel-ignition",
+          
             "version": "2.1.2",
             "source": {
                 "type": "git",
@@ -8972,6 +8973,7 @@
                     "type": "github"
                 }
             ],
+
             "time": "2023-05-09T07:19:31+00:00"
         },
         {

@@ -44,8 +44,19 @@ import {NewPerson} from "./pages/User/NewPerson";
 import {TeacherSections} from "./pages/Teacher/TeacherSections";
 import {Verify} from "./pages/Verify";
 
+const AdminRoute = ({children}) => {
+    const user = useAuthStore(state => state.user)
+    let location = useLocation()
+
+    if(user.role !== 'admin') {
+        return <Navigate to={'/'} state={{from: location}} />
+    }
+
+    return children
+}
 
 export const App = () => {
+  
     const user = useAuthStore(({user}) => user)
 
     return (
@@ -74,7 +85,6 @@ export const App = () => {
                         <Route path={'/admin/settings'} element={<Settings/>}/>
                     </Route>
                 )}
-
 
                 {user && user.role === 'schools_owner' && (
                     <Route path={'/schools_owner/'} element={<AuthorizedLayout/>}>
@@ -165,6 +175,7 @@ export const App = () => {
                 )}
                 <Route path={`/email/verify/:id/:hash`} element={<Verify/>}/>
                 <Route path={'*'} element={<Navigate to={'/user/schedule'}/>}/>
+
             </Routes>
         </BrowserRouter>
     )
