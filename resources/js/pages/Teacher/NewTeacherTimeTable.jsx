@@ -19,7 +19,7 @@ export const NewTeacherTimeTable = () => {
     const [lessonTime, setLessonTime] = useState("");
     const [workdayStart, setWorkdayStart] = useState("");
     const [workdayEnd, setWorkdayEnd] = useState("");
-    const [withRest, setWithRest] = useState(false);
+    const [withRest, setWithRest] = useState(0);
     const [restStart, setRestStart] = useState("");
     const [restEnd, setRestEnd] = useState("");
     const [errors, setErrors] = useState([]);
@@ -38,7 +38,7 @@ export const NewTeacherTimeTable = () => {
         if (e.target.checked) {
             setWithRest(e.target.value);
         } else {
-            setWithRest(false);
+            setWithRest(0);
         }
     };
 
@@ -257,7 +257,7 @@ export const NewTeacherTimeTable = () => {
                                 <div className={"three-col"}>
                                     <Checkbox
                                         id={"rest"}
-                                        value="1"
+                                        value={1}
                                         name={"rest"}
                                         label={"Без обеда"}
                                         onChange={handleRest}
