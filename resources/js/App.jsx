@@ -44,19 +44,29 @@ import {NewPerson} from "./pages/User/NewPerson";
 import {TeacherSections} from "./pages/Teacher/TeacherSections";
 import {Verify} from "./pages/Verify";
 
-const AdminRoute = ({children}) => {
-    const user = useAuthStore(state => state.user)
-    let location = useLocation()
+const navigateToPath = (user) => {
+    if(user) {
+        if(user.role === 'teacher') {
+            return ''
+        }
 
-    if(user.role !== 'admin') {
-        return <Navigate to={'/'} state={{from: location}} />
+        switch (user) {
+            case 'teacher':
+                return '/teacher/sections'
+            case 'admin':
+                return '/admin/users'
+            case 'user':
+                return '/user/schools'
+            case 'schools_owner':
+                return '/schools_owner/schools'
+            default:
+                return '/'
+        }
     }
-
-    return children
 }
 
 export const App = () => {
-  
+
     const user = useAuthStore(({user}) => user)
 
     return (
@@ -174,8 +184,7 @@ export const App = () => {
                     </Route>
                 )}
                 <Route path={`/email/verify/:id/:hash`} element={<Verify/>}/>
-                <Route path={'*'} element={<Navigate to={'/user/schedule'}/>}/>
-
+                <Route path={'*'} element={<Navigate to={navigateToPath(user)}/>}/>
             </Routes>
         </BrowserRouter>
     )

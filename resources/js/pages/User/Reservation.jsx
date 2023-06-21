@@ -225,42 +225,48 @@ export const Reservation = () => {
                             <option key={0} value="" disabled defaultChecked>
                                 Выберите расписание
                             </option>
-                            {sectionTimetables?.map((item) => (
-                                <option key={item?.id} value={item?.id}>
-                                    {item?.timetable?.owner
-                                        ? item?.timetable?.owner + " | "
-                                        : ""}
-                                    {item?.timetable?.weekday?.which_days.map(
-                                        (day, index) => (
-                                            <Fragment
-                                                key={day + index}
-                                            >{`${getShortWeekdayName(day)}${
-                                                index !==
-                                                item?.timetable?.weekday
-                                                    ?.which_days.length -
-                                                    1
-                                                    ? ", "
-                                                    : " | "
-                                            }`}</Fragment>
-                                        )
-                                    )}
-                                    {item?.timetable?.workday_start.split(
-                                        ":"
-                                    )[0] +
-                                        ":" +
-                                        item?.timetable?.workday_start.split(
-                                            ":"
-                                        )[1]}
-                                    -
-                                    {item?.timetable?.workday_end.split(
-                                        ":"
-                                    )[0] +
-                                        ":" +
-                                        item?.timetable?.workday_end.split(
-                                            ":"
-                                        )[1]}
-                                </option>
-                            ))}
+                            {sectionTimetables?.map(
+                                (item) =>
+                                    item?.timetable !== null && (
+                                        <option key={item?.id} value={item?.id}>
+                                            {item?.timetable?.owner
+                                                ? item?.timetable?.owner + " | "
+                                                : ""}
+                                            {item?.timetable?.weekday?.which_days?.map(
+                                                (day, index) => (
+                                                    <Fragment
+                                                        key={day + index}
+                                                    >{`${getShortWeekdayName(
+                                                        day
+                                                    )}${
+                                                        index !==
+                                                        item?.timetable?.weekday
+                                                            ?.which_days
+                                                            ?.length -
+                                                            1
+                                                            ? ", "
+                                                            : " | "
+                                                    }`}</Fragment>
+                                                )
+                                            )}
+                                            {item?.timetable?.workday_start?.split(
+                                                ":"
+                                            )[0] +
+                                                ":" +
+                                                item?.timetable?.workday_start?.split(
+                                                    ":"
+                                                )[1]}
+                                            -
+                                            {item?.timetable?.workday_end?.split(
+                                                ":"
+                                            )[0] +
+                                                ":" +
+                                                item?.timetable?.workday_end?.split(
+                                                    ":"
+                                                )[1]}
+                                        </option>
+                                    )
+                            )}
                         </Select>
                     </div>
                     {events &&
@@ -289,17 +295,27 @@ export const Reservation = () => {
                                         onChange={handleSelectUser}
                                         label={"Выберите кого хотите записать"}
                                     >
-                                        <option value={user?.full_name}>Себя</option>
+                                        <option value={user?.full_name}>
+                                            Себя
+                                        </option>
                                         {/* IN FUTURE ADD PERSONS AND ACCOUNTS */}
                                         {linkedUsers &&
                                             linkedUsers.map((linkedUser) => (
-                                                <option key={linkedUser?.id} value={linkedUser?.full_name}>
+                                                <option
+                                                    key={linkedUser?.id}
+                                                    value={
+                                                        linkedUser?.full_name
+                                                    }
+                                                >
                                                     {linkedUser?.full_name}
                                                 </option>
                                             ))}
                                         {people &&
                                             people.map((person) => (
-                                                <option key={person?.id} value={person?.full_name}>
+                                                <option
+                                                    key={person?.id}
+                                                    value={person?.full_name}
+                                                >
                                                     {person?.full_name}
                                                 </option>
                                             ))}

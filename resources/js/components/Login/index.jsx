@@ -23,25 +23,23 @@ export const Login = () => {
     }
 
     useEffect(() => {
-        console.log(import.meta?.env?.FRONT_URL)
         setErrors([])
         if (user && !user.email_verified_at) {
-            console.log('true')
             navigate("/not-verified", {replace: true})
         }
         if (user) {
             switch (user.role) {
                 case "admin":
-                    navigate("/admin");
+                    navigate("/admin/users");
                     break;
                 case "teacher":
-                    navigate("/teacher");
+                    navigate("/teacher/sections");
                     break;
                 case "schools_owner":
-                    navigate("/schools_owner");
+                    navigate("/schools_owner/schools");
                     break;
                 default:
-                    navigate("/user");
+                    navigate("/user/schools");
                     break;
             }
         }
