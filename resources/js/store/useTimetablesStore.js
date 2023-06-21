@@ -175,7 +175,7 @@ const useTimetablesStore = create(
                 const {data} = response.data
                 console.log('data', data)
                 let allTimetables = []
-                if (data?.timetables?.length > 0) {
+                if (data?.timetables) {
                     allTimetables = data?.timetables
                     if (data?.teachers?.length > 0) {
                         data.teachers.forEach(teacher => {
