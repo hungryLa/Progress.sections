@@ -1,4 +1,5 @@
 <?php
+
 return [
     'Gallery' => 'Галерея',
     'Status' => 'Статус',
@@ -29,6 +30,7 @@ return [
     'Enter a full name' => 'Введите ФИО',
     'Email address' => 'Email',
     'Enter a email address' => 'Введите email',
+    'Confirm Email' => 'Подтвердить почту',
     'Gender' => 'Пол',
     'male' => 'Мужской',
     'female' => 'Женский',

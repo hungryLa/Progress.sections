@@ -1,17 +1,17 @@
-import { useEffect, useState } from "react";
+import {useEffect, useState} from "react";
 
-import { useNavigate } from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import ReactSelect from "react-select";
-import { toast } from "react-toastify";
-import { Error } from "../../components/Error";
-import { Button } from "../../components/UI/Button";
-import { Form } from "../../components/UI/Form";
-import { Input } from "../../components/UI/Input";
-import { Loader } from "../../components/UI/Loader";
-import { Select } from "../../components/UI/Select";
-import { Subtitle } from "../../components/UI/Subtitle";
-import { TextArea } from "../../components/UI/TextArea";
-import { validatePhone } from '../../helpers/validatePhone';
+import {toast} from "react-toastify";
+import {Error} from "../../components/Error";
+import {Button} from "../../components/UI/Button";
+import {Form} from "../../components/UI/Form";
+import {Input} from "../../components/UI/Input";
+import {Loader} from "../../components/UI/Loader";
+import {Select} from "../../components/UI/Select";
+import {Subtitle} from "../../components/UI/Subtitle";
+import {TextArea} from "../../components/UI/TextArea";
+import {validatePhone} from '../../helpers/validatePhone';
 import useSchoolTypesStore from "../../store/useSchoolTypesStore";
 import useSchoolsStore from "../../store/useSchoolsStore";
 
@@ -24,7 +24,7 @@ export const NewSchool = () => {
     } = useSchoolsStore()
 
     const [status, setStatus] = useState('active')
-    const [recruitment, setRecruitment] = useState('TRUE')
+    const [recruitment, setRecruitment] = useState(1)
     const [types, setTypes] = useState([])
     const [title, setTitle] = useState('')
     const [description, setDescription] = useState('')
@@ -84,52 +84,52 @@ export const NewSchool = () => {
 
         let isValid = true
 
-        if(!title) {
+        if (!title) {
             handleErrors('Поле "Название" обязательно для заполнения')
             isValid = false
         }
-
-        if(title.length < 8) {
-            handleErrors('Поле "Название" должно содержать не менее 8 символов')
+        const lengthTitle = 3
+        if (title.length < lengthTitle) {
+            handleErrors(`Поле "Название" должно содержать не менее ${lengthTitle} символов`)
             isValid = false
         }
 
-        if(typesToSend.length === 0) {
+        if (typesToSend.length === 0) {
             handleErrors('Поле "Тип школы" обязательно для заполнения')
             isValid = false
         }
 
-        if(!address) {
+        if (!address) {
             handleErrors('Поле "Адрес" обязательно для заполнения')
             isValid = false
         }
 
-        if(address.length < 12) {
+        if (address.length < 12) {
             handleErrors('Поле "Адрес" должно содержать не менее 12 символов')
             isValid = false
         }
 
-        if(!phone) {
+        if (!phone) {
             handleErrors('Поле "Номер телефона" обязательно для заполнения')
             isValid = false
         }
 
-        if(!validatePhone(phone)) {
+        if (!validatePhone(phone)) {
             handleErrors('Поле "Номер телефона" имеет некрректное значение')
             isValid = false
         }
 
-        if(!description) {
+        if (!description) {
             handleErrors('Поле "Описание" обязательно для заполнения')
             isValid = false
         }
 
-        if(description.length < 48 || description.length > 255) {
+        if (description.length < 48 || description.length > 255) {
             handleErrors('Поле "Описание" должно содержать не менее 48 символов и не более 255 символов')
             isValid = false
         }
 
-        if(isValid) {
+        if (isValid) {
             await addSchool(status, recruitment, title, description, phone, address, images, typesToSend)
             toast('Школа создана')
             navigate('/schools_owner/schools')
@@ -204,14 +204,15 @@ export const NewSchool = () => {
                                         <option value="not active">Не активна</option>
                                     </Select>
                                     <Select label={'Набор учеников'} onChange={handleRecruitment}>
-                                        <option value="TRUE">Открыт</option>
-                                        <option value="FALSE">Закрыт</option>
+                                        <option value="1">Открыт</option>
+                                        <option value="0">Закрыт</option>
                                     </Select>
                                     <Input label={'Адрес'} value={address} onChange={handleAddress}/>
                                     <Input label={'Телефон'} value={phone} onChange={handlePhone}/>
                                 </div>
                                 <div className="one-col">
-                                    <Input id={'files'} name={'files'} label={'Изображения'} type={'file'} onChange={handleImages} multiple/>
+                                    <Input id={'files'} name={'files'} label={'Изображения'} type={'file'}
+                                           onChange={handleImages} multiple/>
                                     <TextArea
                                         label={'Описание'}
                                         value={description}

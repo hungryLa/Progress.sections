@@ -32,16 +32,16 @@ export const Login = () => {
         if (user) {
             switch (user.role) {
                 case "admin":
-                    navigate("/admin/users");
+                    navigate("/admin");
                     break;
                 case "teacher":
-                    navigate("/teacher/sections");
+                    navigate("/teacher");
                     break;
                 case "schools_owner":
-                    navigate("/schools_owner/schools");
+                    navigate("/schools_owner");
                     break;
                 default:
-                    navigate("/user/schedule");
+                    navigate("/user");
                     break;
             }
         }

@@ -5,7 +5,7 @@ let URL;
 if (import.meta.env.MODE === "development") {
     URL = `http://127.0.0.1:8000/api`
 } else {
-    URL = import.meta.env.VITE_API_KEY
+    URL = `/api`
 }
 
 const api = axios.create({
