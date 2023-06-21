@@ -146,8 +146,10 @@ class ReservationController extends Controller
                 "OrderId" => uniqid(),               //идентификатор платежа
                 "Amount" => $amount * 100,              //сумма всего платежа в копейках
                 "Description" => $description,  //описание платежа
-                "SuccessURL" => "http://127.0.0.1:8000/user/successPay?user_id=$request->user&timetable_section_id=$request->timetableSection&client=$request->client&date=$request->date&time=$request->time",
-                "FailURL" => 'http://127.0.0.1:8000/user/failPay',
+                "SuccessURL" => getenv(
+                        'APP_URL'
+                    )."/user/successPay?user_id=$request->user&timetable_section_id=$request->timetableSection&client=$request->client&date=$request->date&time=$request->time",
+                "FailURL" => getenv('APP_URL').'/user/failPay',
                 'Receipt' => $receipt,                  //данные для чека
                 'DATA' => [
                     'Email' => $user->email,
