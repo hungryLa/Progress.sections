@@ -113,7 +113,7 @@ export const Reservation = () => {
             id: user?.id,
             sectionTimetableId: currentSectionTimetable?.id,
             client: selectedUser,
-            date: moment(eventInfo?.start).format("MM-DD-YYYY"),
+            date: moment(eventInfo?.start).format("YYYY-MM-DD"),
             time: eventInfo?.start?.toLocaleTimeString(),
         };
 

@@ -33,7 +33,7 @@ export const SuccessPay = () => {
         };
 
         fetchSuccess();
-    }, []);
+    }, [navigate, section])
 
     return (
         <>

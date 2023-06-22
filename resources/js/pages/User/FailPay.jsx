@@ -23,7 +23,7 @@ export const FailPay = () => {
         };
 
         fetchFail();
-    }, [])
+    }, [navigate, section])
 
     return (
         <>
