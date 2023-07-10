@@ -23,10 +23,8 @@ export const Login = () => {
     }
 
     useEffect(() => {
-        console.log(import.meta?.env?.FRONT_URL)
         setErrors([])
         if (user && !user.email_verified_at) {
-            console.log('true')
             navigate("/not-verified", {replace: true})
         }
         if (user) {
@@ -41,7 +39,7 @@ export const Login = () => {
                     navigate("/schools_owner/schools");
                     break;
                 default:
-                    navigate("/user/schedule");
+                    navigate("/user/schools");
                     break;
             }
         }

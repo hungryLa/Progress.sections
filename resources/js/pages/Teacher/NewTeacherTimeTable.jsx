@@ -1,25 +1,25 @@
-import { Subtitle } from "../../components/UI/Subtitle";
-import { useNavigate } from "react-router-dom";
+import {Subtitle} from "../../components/UI/Subtitle";
+import {useNavigate} from "react-router-dom";
 import useTimetablesStore from "../../store/useTimetablesStore";
 import useAuthStore from "../../store/useAuthStore";
-import { useState } from "react";
-import { Error } from "../../components/Error";
-import { Checkbox } from "../../components/UI/Checkbox";
-import { Input } from "../../components/UI/Input";
-import { Button } from "../../components/UI/Button";
-import { Form } from "../../components/UI/Form";
-import { Loader } from "../../components/UI/Loader";
+import {useState} from "react";
+import {Error} from "../../components/Error";
+import {Checkbox} from "../../components/UI/Checkbox";
+import {Input} from "../../components/UI/Input";
+import {Button} from "../../components/UI/Button";
+import {Form} from "../../components/UI/Form";
+import {Loader} from "../../components/UI/Loader";
 import moment from "moment";
 
 export const NewTeacherTimeTable = () => {
     const navigate = useNavigate();
-    const { loading: authLoading, user } = useAuthStore();
-    const { loading, createTeacherTimeTable } = useTimetablesStore();
+    const {loading: authLoading, user} = useAuthStore();
+    const {loading, createTeacherTimeTable} = useTimetablesStore();
     const [weekdays, setWeekdays] = useState([]);
     const [lessonTime, setLessonTime] = useState("");
     const [workdayStart, setWorkdayStart] = useState("");
     const [workdayEnd, setWorkdayEnd] = useState("");
-    const [withRest, setWithRest] = useState(false);
+    const [withRest, setWithRest] = useState(0);
     const [restStart, setRestStart] = useState("");
     const [restEnd, setRestEnd] = useState("");
     const [errors, setErrors] = useState([]);
@@ -38,7 +38,7 @@ export const NewTeacherTimeTable = () => {
         if (e.target.checked) {
             setWithRest(e.target.value);
         } else {
-            setWithRest(false);
+            setWithRest(0);
         }
     };
 
@@ -112,7 +112,7 @@ export const NewTeacherTimeTable = () => {
                 }
             });
 
-            if(occurrences > 1) {
+            if (occurrences > 1) {
                 validationErrors.push("Время обеда и занятий пересекаются");
             }
         }
@@ -144,7 +144,7 @@ export const NewTeacherTimeTable = () => {
         <>
             <Subtitle>Новое расписание</Subtitle>
             {loading || authLoading ? (
-                <Loader />
+                <Loader/>
             ) : (
                 <>
                     <Form
@@ -257,7 +257,7 @@ export const NewTeacherTimeTable = () => {
                                 <div className={"three-col"}>
                                     <Checkbox
                                         id={"rest"}
-                                        value={true}
+                                        value={1}
                                         name={"rest"}
                                         label={"Без обеда"}
                                         onChange={handleRest}
@@ -284,7 +284,7 @@ export const NewTeacherTimeTable = () => {
                                         />
                                     </div>
                                 )}
-                                {errors.length !== 0 ? <Error errors={errors} /> : ""}
+                                {errors.length !== 0 ? <Error errors={errors}/> : ""}
                             </>
                         }
                         buttons={

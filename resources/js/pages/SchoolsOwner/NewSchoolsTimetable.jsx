@@ -1,24 +1,24 @@
 import moment from "moment";
-import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { toast } from "react-toastify";
-import { Error } from "../../components/Error";
-import { Button } from "../../components/UI/Button";
-import { Checkbox } from "../../components/UI/Checkbox";
-import { Form } from "../../components/UI/Form";
-import { Input } from "../../components/UI/Input";
-import { Subtitle } from "../../components/UI/Subtitle";
+import {useEffect, useState} from "react";
+import {useNavigate, useParams} from "react-router-dom";
+import {toast} from "react-toastify";
+import {Error} from "../../components/Error";
+import {Button} from "../../components/UI/Button";
+import {Checkbox} from "../../components/UI/Checkbox";
+import {Form} from "../../components/UI/Form";
+import {Input} from "../../components/UI/Input";
+import {Subtitle} from "../../components/UI/Subtitle";
 import useTimetablesStore from "../../store/useTimetablesStore";
 
 export const NewSchoolsTimetable = () => {
     const navigate = useNavigate();
-    const { schoolId } = useParams();
-    const { loading, createSchoolTimeTable } = useTimetablesStore();
+    const {schoolId} = useParams();
+    const {loading, createSchoolTimeTable} = useTimetablesStore();
     const [weekdays, setWeekdays] = useState([]);
     const [lessonTime, setLessonTime] = useState("");
     const [workdayStart, setWorkdayStart] = useState("");
     const [workdayEnd, setWorkdayEnd] = useState("");
-    const [withRest, setWithRest] = useState(false);
+    const [withRest, setWithRest] = useState(0);
     const [restStart, setRestStart] = useState("");
     const [restEnd, setRestEnd] = useState("");
     const [errors, setErrors] = useState([]);
@@ -40,7 +40,7 @@ export const NewSchoolsTimetable = () => {
         if (e.target.checked) {
             setWithRest(e.target.value);
         } else {
-            setWithRest(false);
+            setWithRest(0);
         }
     };
 
@@ -141,7 +141,7 @@ export const NewSchoolsTimetable = () => {
     return (
         <>
             <Subtitle>Новое расписание</Subtitle>
-            {errors.length !== 0 ? <Error errors={errors} /> : ""}
+            {errors.length !== 0 ? <Error errors={errors}/> : ""}
             <Form
                 onSubmit={handleSubmit}
                 inputs={
@@ -251,7 +251,7 @@ export const NewSchoolsTimetable = () => {
                         <div className={"three-col"}>
                             <Checkbox
                                 id={"rest"}
-                                value={true}
+                                value={1}
                                 name={"rest"}
                                 label={"Без обеда"}
                                 onChange={handleRest}
