@@ -12,7 +12,6 @@ use App\Models\Subscription;
 use App\Models\SubscriptionUser;
 use App\Models\Teacher;
 use App\Models\TeacherInformation;
-use App\Models\Timetable;
 use App\Models\TimetableSection;
 use App\Models\User;
 use Carbon\Carbon;
@@ -54,7 +53,7 @@ class DatabaseSeeder extends Seeder
             'password' => Hash::make('password'),
             'email_verified_at' => Carbon::now(),
         ]);
-        $teacher_count = 5;
+        $teacher_count = 20;
         $school_count = 30;
         $section_count = 30;
         User::factory(5)->create();
@@ -63,7 +62,7 @@ class DatabaseSeeder extends Seeder
         TeacherInformation::factory(5)->create();
         SchoolType::factory($school_count / 2)->create();
         School::factory($school_count)->create();
-        Timetable::factory($teacher_count * 6)->create();
+//        Timetable::factory($teacher_count * 6)->create();
         Section::factory($section_count)->create();
         TimetableSection::factory($section_count + 10)->create();
         ModelSchool::factory($school_count / $teacher_count)->create();

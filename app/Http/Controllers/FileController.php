@@ -7,6 +7,8 @@ use App\Models\File;
 use App\Models\Mail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+use Intervention\Image\Facades\Image;
 
 class FileController extends Controller
 {
@@ -21,9 +23,33 @@ class FileController extends Controller
     {
         foreach ($request->file($key) as $file) {
             $upload_folder = $modelType.'/'.$modelId.'/'.$fileType;
-            $upload_file = $file->store($upload_folder, 'public');
-            $mas = explode('/', $upload_file);
-            $name = end($mas);
+            dd($upload_folder);
+            // Оригинальное имя файла
+            $name = $file->getClientOriginalName();
+
+            // Формат файла
+            $format = $file->getClientOriginalExtension();
+
+            if ($format == 'jpg' || $format == 'png') {
+                // Убирается подстрока с форматом файла из названия
+                $name = pathinfo($name, PATHINFO_FILENAME);
+
+                // Добавляется ".webp" в конец строки
+                $name = Str::finish($name, '.webp');
+
+                // Создается изображение
+                $img = Image::make($file);
+
+                // Конвертируется в формат webp
+                $img->encode('webp', 75);
+
+                // Загрузка на диск
+                Storage::disk('public')->put($upload_folder.'/'.$name, $img);
+
+                $upload_file = $upload_folder.'/'.$name;
+            } else {
+                $upload_file = $file->store($upload_folder, 'public');
+            }
 
             $last_position = File::where([
                 'model_type' => $modelType,
